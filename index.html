@@ -76,9 +76,6 @@
     display:block;
     user-select:none;
     -webkit-user-drag:none;
-    transform-origin:center center;
-    transition:transform 0.1s ease-out;
-    will-change:transform;
   }
   /* dots hidden — no longer needed */
   #photo-dots { display:none; }
@@ -169,7 +166,7 @@
     background:#fff; z-index:150; overflow:hidden;
   }
   #kurosaki-scroll { flex:1; overflow-y:auto; overflow-x:hidden; -webkit-overflow-scrolling:touch; }
-  #kurosaki-scroll img { width:100%; height:auto; display:block; cursor:pointer; transform-origin:center center; transition:transform 0.1s ease-out; will-change:transform; }
+  #kurosaki-scroll img { width:100%; height:auto; display:block; cursor:pointer; }
   .kurosaki-meta-block { padding:60px 20px 32px; border-bottom:1px solid var(--rule-light); }
   .kurosaki-meta-title { font-size:24px; font-weight:300; color:var(--text); margin-bottom:12px; }
   .kurosaki-meta-sub { font-size:11px; letter-spacing:0.05em; margin-bottom:32px; font-family:'IBM Plex Mono',monospace; color:var(--meta); }
@@ -209,7 +206,7 @@
 
 <div class="page-label" id="page-label">
   <span id="page-label-left">Voices / Experience</span>
-  <span id="page-label-right">V115</span>
+  <span id="page-label-right">V117</span>
 </div>
 
 <div id="screen-0" class="screen">
@@ -415,12 +412,12 @@ function goTo(n) {
   pb.classList.toggle('on-white', whiteScreens.includes(String(n)) || n===2 || n==='proc' || n===1 || n===0);
   const left=document.getElementById('page-label-left'),right=document.getElementById('page-label-right');
   const map={
-    0:['Voices / Experience','V115'],1:['Voices / Experience','V115'],
+    0:['Voices / Experience','V117'],1:['Voices / Experience','V117'],
     2:['Select File','Step 02'],proc:['Building Audio Map',''],
     mp3:[currentFile==='noda'?'野田結太.MP3':'菊地佑樹.MP3','Transcribe'],
     kuro:['野田結太.mp5','Gallery']
   };
-  const l=map[n]||['Voices / Experience','V115'];
+  const l=map[n]||['Voices / Experience','V117'];
   if(left)left.innerText=l[0]; if(right)right.innerText=l[1];
 }
 
@@ -452,26 +449,9 @@ function handleGyro(e){
     lbImg.style.transform=`translate(${px}px,${py}px) scale(${1.5-zoomT*0.5})`;
   }
 
-  // mp3 photo bg: same params as lightbox
-  const mp3main=document.getElementById('mp3-main');
-  if(mp3main&&mp3main.style.display==='block'){
-    const activeSlide=document.querySelector('.photo-slide img');
-    if(activeSlide){
-      const px=Math.max(-25,Math.min(25,xAdj*0.7)), py=Math.max(-20,Math.min(20,yAdj*-0.5));
-      const zoomT=Math.max(0,Math.min(1,(rawBeta-20)/50));
-      activeSlide.style.transform=`translate(${px}px,${py}px) scale(${1+zoomT*0.5})`;
-    }
-  }
+  // mp3 photo bg: no gyro — gyro only active in lightbox
 
-  // Kurosaki scroll: same params as lightbox
-  const kMain=document.getElementById('kurosaki-main');
-  if(kMain&&kMain.style.display==='flex'){
-    const px=Math.max(-25,Math.min(25,xAdj*0.7)), py=Math.max(-20,Math.min(20,yAdj*-0.5));
-    const zoomT=Math.max(0,Math.min(1,(rawBeta-20)/50));
-    document.querySelectorAll('#kurosaki-scroll img').forEach(img=>{
-      img.style.transform=`translate(${px}px,${py}px) scale(${1+zoomT*0.5})`;
-    });
-  }
+  // Kurosaki scroll images: no gyro — gyro only active in lightbox
 }
 
 /* ── START ── */
