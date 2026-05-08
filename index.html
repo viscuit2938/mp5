@@ -39,8 +39,8 @@
   .preset-thumb-sq { width:48px; height:48px; object-fit:cover; flex-shrink:0; border:1px solid #000; display:block; }
 
   /* PAGE LABEL */
-  .page-label { position:fixed; top:16px; left:20px; right:20px; display:flex; justify-content:space-between; font-size:10px; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; color:#000; z-index:500; pointer-events:none; }
-  .page-label span { color:#fff; mix-blend-mode:difference; filter:invert(0); }
+  .page-label { position:fixed; top:16px; left:20px; right:20px; display:flex; justify-content:space-between; font-size:10px; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; color:#000; z-index:500; pointer-events:none; mix-blend-mode:difference; }
+  .page-label span { color:#fff; }
 
   /* PROCESSING */
   #processing-screen { position:fixed; inset:0; background:#fff; display:none; flex-direction:column; align-items:center; justify-content:center; gap:24px; z-index:200; }
@@ -49,168 +49,82 @@
   .loader-inner { position:absolute; width:50%; height:100%; background:#000; animation:slide 1.5s ease-in-out infinite; }
   @keyframes slide { from{left:-100%} to{left:100%} }
 
-  /* ===== GALLERY + TRANSCRIPT MAIN VIEW ===== */
-  #gallery-main { position:fixed; inset:0; display:none; flex-direction:column; background:#000; z-index:150; overflow:hidden; }
+  /* ===== GALLERY MAIN VIEW ===== */
+  #gallery-main { position:fixed; inset:0; display:none; flex-direction:column; background:#fff; z-index:150; overflow:hidden; }
 
-  /* Scrollable gallery */
-  #gallery-scroll { flex:1; overflow-y:auto; overflow-x:hidden; -webkit-overflow-scrolling:touch; scroll-snap-type:y mandatory; }
-  #gallery-scroll img { width:100%; display:block; scroll-snap-align:start; }
+  /* Transcript strip — fixed top bar */
+  #transcript-strip {
+    position:fixed; top:0; left:0; right:0;
+    background:#fff; border-bottom:1px solid var(--rule-light);
+    z-index:260; padding:38px 20px 10px; min-height:78px;
+    display:flex; flex-direction:column; justify-content:flex-end;
+  }
+  .strip-entry { display:none; }
+  .strip-entry.active { display:block; }
+  .strip-speaker { font-size:9px; font-weight:600; letter-spacing:0.14em; text-transform:uppercase; color:var(--accent); margin-bottom:3px; font-family:var(--font); }
+  .strip-text { font-size:13px; line-height:1.6; color:var(--text); font-family:var(--font); }
+  .strip-time { font-size:9px; color:var(--meta); font-family:'IBM Plex Mono',monospace; margin-top:2px; }
 
-  /* Transcript overlay — sits at top, over gallery */
-  #transcript-overlay {
-    position:fixed;
-    top:0; left:0; right:0;
-    height:40vh;
-    pointer-events:none;
-    z-index:260;
-    display:flex;
-    flex-direction:column;
-    justify-content:flex-end;
-    padding-bottom:16px;
+  /* Section nav */
+  #section-nav-bar {
+    position:fixed; top:78px; left:0; right:0;
+    display:flex; overflow-x:auto; scrollbar-width:none;
+    z-index:255; padding:5px 16px;
+    background:#fff; border-bottom:1px solid var(--rule-light);
   }
-  /* gradient mask so text fades into photos */
-  #transcript-overlay::before {
-    content:'';
-    position:absolute;
-    inset:0;
-    background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.55) 60%, rgba(0,0,0,0.72) 100%);
-    pointer-events:none;
-  }
+  #section-nav-bar::-webkit-scrollbar { display:none; }
+  .snav-btn { flex-shrink:0; font-size:9px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--dim); font-family:var(--font); background:none; border:none; cursor:pointer; padding:6px 12px 6px 0; white-space:nowrap; transition:color 0.3s; }
+  .snav-btn.active { color:var(--text); }
 
-  .overlay-entry {
-    padding: 0 20px;
-    opacity: 0;
-    transform: translateY(8px);
-    transition: opacity 0.5s ease, transform 0.5s ease;
-    position: relative;
-    z-index: 1;
-  }
-  .overlay-entry.active {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  .overlay-speaker {
-    font-size: 9px;
-    font-weight: 600;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 4px;
-    font-family: var(--font);
-  }
-  .overlay-text {
-    font-size: 15px;
-    line-height: 1.65;
-    color: #fff;
-    font-family: var(--font);
-    font-weight: 300;
-    letter-spacing: 0.01em;
-    text-shadow: 0 1px 8px rgba(0,0,0,0.5);
-  }
-  .overlay-time {
-    font-size: 9px;
-    color: rgba(255,255,255,0.45);
-    font-family: 'IBM Plex Mono', monospace;
-    margin-top: 3px;
-  }
+  /* Scrollable area */
+  #gallery-scroll { position:absolute; top:110px; left:0; right:0; bottom:0; overflow-y:auto; overflow-x:hidden; -webkit-overflow-scrolling:touch; }
+  #gallery-scroll.no-sections { top:78px; }
 
-  /* Section nav overlay — bottom strip */
-  #section-nav-overlay {
-    position:fixed;
-    bottom: calc(var(--player-height) + 8px);
-    left: 0; right: 0;
-    display:flex;
-    gap: 0;
-    overflow-x: auto;
-    scrollbar-width: none;
-    z-index: 260;
-    pointer-events: auto;
-    padding: 0 16px;
-  }
-  #section-nav-overlay::-webkit-scrollbar { display:none; }
-  .snav-btn {
-    flex-shrink: 0;
-    font-size: 9px;
-    font-weight: 600;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: rgba(255,255,255,0.45);
-    font-family: var(--font);
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 8px 12px 8px 0;
-    white-space: nowrap;
-    transition: color 0.3s;
-  }
-  .snav-btn.active { color: #fff; }
+  /* Meta block */
+  #gallery-meta-block { padding:24px 20px 32px; border-bottom:1px solid var(--rule-light); display:none; }
+  #gallery-meta-block.visible { display:block; }
+  .gallery-meta-title { font-size:24px; font-weight:300; color:var(--text); margin-bottom:12px; }
+  .gallery-meta-sub { font-size:11px; letter-spacing:0.05em; margin-bottom:32px; font-family:'IBM Plex Mono',monospace; color:var(--meta); }
+  .gallery-meta-desc { font-size:14px; line-height:1.9; margin-bottom:32px; color:var(--text); }
+  .gallery-meta-credits { font-size:11px; line-height:1.8; letter-spacing:0.02em; color:var(--meta); padding-top:16px; border-top:1px solid var(--rule-light); }
 
-  /* Meta block overlay (kurosaki etc.) */
-  #meta-overlay {
-    position:fixed;
-    top: 48px; left: 0; right: 0;
-    padding: 0 20px;
-    z-index: 260;
-    pointer-events: none;
-    opacity: 1;
-    transition: opacity 0.4s;
-  }
-  .meta-title { font-size:18px; font-weight:300; color:#fff; letter-spacing:-0.02em; }
-  .meta-sub { font-size:10px; color:rgba(255,255,255,0.5); letter-spacing:0.08em; font-family:'IBM Plex Mono',monospace; margin-top:4px; }
+  /* Images */
+  #gallery-imgs-wrap { display:flex; flex-direction:column; gap:0; padding-bottom:calc(var(--player-height) + 60px); }
+  #gallery-imgs-wrap img { width:100%; height:auto; display:block; cursor:pointer; }
 
-  /* Back button */
-  #gallery-back {
-    position:fixed;
-    bottom: calc(var(--player-height) + 16px);
-    right: 16px;
-    background:rgba(255,255,255,0.12);
-    border:1px solid rgba(255,255,255,0.3);
-    color:#fff;
-    font-size:9px;
-    font-weight:600;
-    letter-spacing:0.12em;
-    text-transform:uppercase;
-    padding:8px 14px;
-    cursor:pointer;
-    font-family:var(--font);
-    z-index:270;
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-  }
+  /* BACK BUTTON — original style & position */
+  #gallery-back { position:fixed; bottom:calc(var(--player-height) + 16px); left:16px; background:#fff; border:1px solid #000; font-size:10px; padding:8px 16px; font-weight:600; cursor:pointer; z-index:270; letter-spacing:0.1em; font-family:var(--font); color:#000; }
 
   /* PLAYER BAR */
-  #player-bar { position:fixed; bottom:0; left:0; right:0; height:var(--player-height); background:rgba(0,0,0,0.88); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); border-top:1px solid rgba(255,255,255,0.08); display:none; align-items:center; padding:0 20px; padding-bottom:env(safe-area-inset-bottom); z-index:300; }
+  #player-bar { position:fixed; bottom:0; left:0; right:0; height:var(--player-height); background:#fff; border-top:1px solid var(--rule-light); display:none; align-items:center; padding:0 20px; padding-bottom:env(safe-area-inset-bottom); z-index:300; }
   .player-inner { display:flex; align-items:center; gap:16px; width:100%; }
-  .play-btn { width:44px; height:44px; border-radius:50%; border:1px solid rgba(255,255,255,0.3); background:transparent; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
-  .timecode { font-size:10px; letter-spacing:0.02em; min-width:72px; font-family:'IBM Plex Mono',monospace; white-space:nowrap; color:#fff; }
-  .mini-area { flex:1; border-left:1px solid rgba(255,255,255,0.1); padding-left:16px; overflow:hidden; height:56px; display:flex; flex-direction:column; gap:2px; justify-content:flex-start; padding-top:4px; }
+  .play-btn { width:44px; height:44px; border-radius:50%; border:1px solid #000; background:transparent; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .timecode { font-size:10px; letter-spacing:0.02em; min-width:72px; font-family:var(--font); white-space:nowrap; color:var(--text); }
+  .mini-area { flex:1; border-left:1px solid var(--rule-light); padding-left:16px; overflow:hidden; height:56px; display:flex; flex-direction:column; gap:2px; justify-content:flex-start; padding-top:4px; }
   .mini-speaker { font-size:9px; font-weight:600; color:var(--accent); text-transform:uppercase; letter-spacing:0.1em; flex-shrink:0; }
-  .mini-text { font-size:12px; color:#fff; line-height:1.3; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; height:2.6em; }
+  .mini-text { font-size:12px; color:var(--text); line-height:1.3; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; height:2.6em; }
 
   /* LIGHTBOX */
   #lightbox { position:fixed; inset:0; background:#000; display:none; align-items:center; justify-content:center; z-index:9999; padding:16px; }
   #lightbox img { max-width:100%; max-height:88vh; object-fit:contain; display:block; transform-origin:center center; transition:transform 0.1s ease-out; }
-
-  /* Legacy screens kept for nav */
-  #main { display:none; }
 </style>
 </head>
 <body>
 
-<!-- GLOBAL PAGE LABEL -->
+<!-- PAGE LABEL -->
 <div class="page-label" id="page-label">
   <span id="page-label-left">Voices / Experience</span>
-  <span id="page-label-right">V92</span>
+  <span id="page-label-right">V93</span>
 </div>
 
-<!-- SCREEN 0: Entry -->
+<!-- SCREEN 0 -->
 <div id="screen-0" class="screen">
   <div class="frame-fixed" style="text-align:center;">
     <button class="start-btn" id="entry-permission-btn">EXPERIENCE?</button>
   </div>
 </div>
 
-<!-- SCREEN 1: Wordmark -->
+<!-- SCREEN 1 -->
 <div id="screen-1" class="screen">
   <div class="frame-fixed">
     <div class="wordmark" id="gyro-logo">.mp5</div>
@@ -219,7 +133,7 @@
   </div>
 </div>
 
-<!-- SCREEN 2: File select -->
+<!-- SCREEN 2 -->
 <div id="screen-2" class="screen">
   <div class="frame-fixed">
     <div class="preset-card" onclick="startExperience('noda')">
@@ -258,40 +172,33 @@
   <div class="loader-bar"><div class="loader-inner"></div></div>
 </div>
 
-<!-- GALLERY MAIN (replaces old gallery-screen + main) -->
+<!-- GALLERY MAIN -->
 <div id="gallery-main">
-  <!-- scrollable photos -->
-  <div id="gallery-scroll"></div>
-
-  <!-- transcript overlay at top -->
-  <div id="transcript-overlay">
-    <div id="overlay-entries"></div>
+  <div id="transcript-strip"><div id="strip-entries"></div></div>
+  <div id="section-nav-bar"></div>
+  <div id="gallery-scroll">
+    <div id="gallery-meta-block">
+      <div class="gallery-meta-title"   id="gm-title"></div>
+      <div class="gallery-meta-sub"     id="gm-sub"></div>
+      <div class="gallery-meta-desc"    id="gm-desc"></div>
+      <div class="gallery-meta-credits" id="gm-credits"></div>
+    </div>
+    <div id="gallery-imgs-wrap"></div>
   </div>
-
-  <!-- kurosaki meta (shown when no transcript) -->
-  <div id="meta-overlay" style="display:none;">
-    <div class="meta-title" id="meta-title-text"></div>
-    <div class="meta-sub" id="meta-sub-text"></div>
-  </div>
-
-  <!-- section nav at bottom -->
-  <div id="section-nav-overlay"></div>
-
-  <!-- back button -->
-  <button id="gallery-back" onclick="goTo(2)">← FILES</button>
+  <button id="gallery-back" onclick="goTo(2)">← BACK</button>
 </div>
 
 <!-- PLAYER BAR -->
 <div id="player-bar">
   <div class="player-inner">
     <button class="play-btn" onclick="togglePlay()">
-      <svg id="icon-play"  width="18" height="18" viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg>
-      <svg id="icon-pause" width="18" height="18" viewBox="0 0 24 24" fill="#fff" style="display:none"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+      <svg id="icon-play"  width="18" height="18" viewBox="0 0 24 24" fill="#000"><path d="M8 5v14l11-7z"/></svg>
+      <svg id="icon-pause" width="18" height="18" viewBox="0 0 24 24" fill="#000" style="display:none"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
     </button>
     <div class="timecode" id="timecode">00:00 / 00:00</div>
     <div class="mini-area">
       <div class="mini-speaker" id="mini-speaker"></div>
-      <div class="mini-text" id="mini-text"></div>
+      <div class="mini-text"    id="mini-text"></div>
     </div>
   </div>
 </div>
@@ -301,17 +208,13 @@
   <img id="lightbox-img" src="" />
 </div>
 
-<!-- legacy hidden div so old JS refs don't break -->
-<div id="main" style="display:none;"></div>
-
 <script src="./noda_data.js"></script>
 <script src="./kikuchi_data.js"></script>
 
 <script>
-/* ── DATA ── */
+/* DATA */
 const NODA_IMAGES   = ['./nodayuta.jpg','./nodayuta_2.jpg','./nodayuta_3.jpg','./nodayuta_4.jpg'];
-const NODA_THUMB    = './nodayuta.jpg';
-const NODA_LINK     = 'https://www.instagram.com/yutand___';
+const NODA_META     = { title:'野田結太.mp3', sub:'nodayuta.mp3 / 10:55', desc:'', credits:'sound: @yutand___<br>Production: @___.mp5' };
 
 const KUROSAKI_IMAGES = [
   './kurosaki/kurosaki_film-01.webp','./kurosaki/kurosaki_film-02.webp','./kurosaki/kurosaki_film-03.webp',
@@ -319,163 +222,129 @@ const KUROSAKI_IMAGES = [
   './kurosaki/kurosaki_film-07.webp'
 ];
 const KUROSAKI_META = {
-  title: "野田結太.mp5", loc: "loc. 葉山 黒崎海岸", date: "2026.12.16"
+  title: '野田結太.mp5', sub: 'loc. 葉山 黒崎海岸 / 2026.12.16',
+  desc: '今回の葉山市、黒崎海岸での.mp5では、レコーダーを持ち音の収集を行った。<br>日没ごろ、野田の制作音源を海に正対し演奏。<br>録音音源は撮影後、「Kurosaki ambient」 として発展。',
+  credits: 'sound: @yutand___<br>Photography: @la_viscuit<br>Production: @___.mp5'
 };
 
 const KIKUCHI_IMAGES = ['./yukikikuchi.jpg','./yukikikuchi_2.jpg'];
-const KIKUCHI_THUMB  = './yukikikuchi.jpg';
-const KIKUCHI_LINK   = 'https://www.instagram.com/memo.riesreview';
+const KIKUCHI_META   = { title:'菊地佑樹.mp3', sub:'kikuchiyuki_jgoe.mp3 / 53:49', desc:'', credits:'sound: @memo.riesreview<br>Production: @___.mp5' };
 
-/* ── STATE ── */
+/* STATE */
 const audio = new Audio();
-let playing = false, transcript = [], sections = [], currentFile = null;
+let playing = false, transcript = [], sections = [], currentFile = null, lastActiveIdx = -1;
 
-/* ── NAVIGATION ── */
+/* NAV */
 function goTo(n) {
-  const ids = ['screen-0','screen-1','screen-2','processing-screen','gallery-main','main'];
-  ids.forEach(id => { const el=document.getElementById(id); if(el) el.style.display='none'; });
+  ['screen-0','screen-1','screen-2','processing-screen','gallery-main'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.style.display = 'none';
+  });
+  if (n===0)          document.getElementById('screen-0').style.display='flex';
+  else if (n===1)     document.getElementById('screen-1').style.display='flex';
+  else if (n===2)     document.getElementById('screen-2').style.display='flex';
+  else if (n==='proc')    document.getElementById('processing-screen').style.display='flex';
+  else if (n==='gallery') document.getElementById('gallery-main').style.display='flex';
 
-  if (n===0)        document.getElementById('screen-0').style.display='flex';
-  else if (n===1)   document.getElementById('screen-1').style.display='flex';
-  else if (n===2)   document.getElementById('screen-2').style.display='flex';
-  else if (n==='proc') document.getElementById('processing-screen').style.display='flex';
-  else if (n==='gallery') {
-    document.getElementById('gallery-main').style.display='flex';
-  }
+  document.getElementById('player-bar').style.display = (audio.src && audio.src!=='') ? 'flex' : 'none';
 
-  // player bar visible whenever audio is loaded
-  document.getElementById('player-bar').style.display = (audio.src && audio.src !== '') ? 'flex' : 'none';
-
-  // page label
-  const left = document.getElementById('page-label-left');
-  const right = document.getElementById('page-label-right');
-  const labels = {
-    0: ['Voices / Experience','V92'], 1: ['Voices / Experience','V92'],
-    2: ['Select File','Step 02'], proc: ['Building Audio Map',''],
-    gallery: [currentFile==='kurosaki'?'野田結太.mp5':'.MP5','Gallery']
-  };
-  const l = labels[n] || ['Voices / Experience','V91'];
-  if(left)  left.innerText  = l[0];
-  if(right) right.innerText = l[1];
+  const left=document.getElementById('page-label-left'), right=document.getElementById('page-label-right');
+  const map = { 0:['Voices / Experience','V93'], 1:['Voices / Experience','V93'], 2:['Select File','Step 02'], proc:['Building Audio Map',''], gallery:[currentFile==='kurosaki'?'野田結太.mp5':'.MP5','Gallery'] };
+  const l = map[n]||['Voices / Experience','V93'];
+  if(left) left.innerText=l[0]; if(right) right.innerText=l[1];
 }
 
-/* ── ENTRY BUTTON ── */
+/* ENTRY */
 document.getElementById('entry-permission-btn').addEventListener('click', async () => {
-  if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
-    try { const s = await DeviceOrientationEvent.requestPermission(); if(s==='granted') window.addEventListener('deviceorientation', handleGyro, true); } catch(e){}
-  } else { window.addEventListener('deviceorientation', handleGyro, true); }
+  if (typeof DeviceOrientationEvent!=='undefined' && typeof DeviceOrientationEvent.requestPermission==='function') {
+    try { const s=await DeviceOrientationEvent.requestPermission(); if(s==='granted') window.addEventListener('deviceorientation',handleGyro,true); } catch(e){}
+  } else { window.addEventListener('deviceorientation',handleGyro,true); }
   goTo(1);
 });
 
-/* ── GYRO ── */
-function handleGyro(event) {
-  const xAdj = (event.gamma||0), yAdj = (event.beta||0)-34;
-  const logo = document.getElementById('gyro-logo');
-  const s1 = document.getElementById('screen-1');
-  if (s1 && s1.style.display !== 'none' && logo) {
-    const mx = Math.max(-60,Math.min(60,xAdj/1.1)), my = Math.max(-60,Math.min(60,yAdj/1.1));
-    logo.style.transform = `translate3d(${mx}px,${my}px,0) rotateX(${-my*3.5}deg) rotateY(${mx*3.5}deg)`;
+/* GYRO */
+function handleGyro(e) {
+  const xAdj=e.gamma||0, yAdj=(e.beta||0)-34;
+  const logo=document.getElementById('gyro-logo'), s1=document.getElementById('screen-1');
+  if (s1&&s1.style.display!=='none'&&logo) {
+    const mx=Math.max(-60,Math.min(60,xAdj/1.1)), my=Math.max(-60,Math.min(60,yAdj/1.1));
+    logo.style.transform=`translate3d(${mx}px,${my}px,0) rotateX(${-my*3.5}deg) rotateY(${mx*3.5}deg)`;
   }
-  const lb = document.getElementById('lightbox'), lbImg = document.getElementById('lightbox-img');
-  if (lb && lb.style.display==='flex' && lbImg) {
+  const lb=document.getElementById('lightbox'), lbImg=document.getElementById('lightbox-img');
+  if (lb&&lb.style.display==='flex'&&lbImg) {
     const px=Math.max(-25,Math.min(25,xAdj*0.7)), py=Math.max(-20,Math.min(20,yAdj*-0.5));
-    const rawBeta=(event.beta||45), zoomT=Math.max(0,Math.min(1,(rawBeta-20)/50)), scale=1+(zoomT*0.5);
-    lbImg.style.transform=`translate(${px}px,${py}px) scale(${scale})`;
+    lbImg.style.transform=`translate(${px}px,${py}px) scale(${1+Math.max(0,Math.min(1,((e.beta||45)-20)/50))*0.5})`;
   }
 }
 
-/* ── GALLERY BUILD ── */
+/* BUILD */
 function buildGallery(images) {
-  const scroll = document.getElementById('gallery-scroll');
-  scroll.innerHTML = images.map(src =>
-    `<img src="${src}" onclick="openLightbox('${src}')" style="cursor:zoom-in;" loading="lazy" />`
-  ).join('');
-  scroll.scrollTop = 0;
+  document.getElementById('gallery-imgs-wrap').innerHTML = images.map(src=>`<img src="${src}" onclick="openLightbox('${src}')" loading="lazy" />`).join('');
+  document.getElementById('gallery-scroll').scrollTop=0;
 }
 
-/* ── TRANSCRIPT OVERLAY ── */
-function buildOverlayEntries() {
-  const container = document.getElementById('overlay-entries');
-  if (!transcript.length) { container.innerHTML = ''; return; }
-  container.innerHTML = transcript.map((t,i) =>
-    `<div class="overlay-entry" id="oe-${i}" data-start="${t.start}" data-end="${t.end||t.start+30}">
-      <div class="overlay-speaker">${t.speaker}</div>
-      <div class="overlay-text">${t.text}</div>
-      <div class="overlay-time">${t.startText||''}</div>
+function setMeta(meta) {
+  const block=document.getElementById('gallery-meta-block');
+  if (!meta||(!meta.title&&!meta.desc)) { block.classList.remove('visible'); return; }
+  document.getElementById('gm-title').innerText   = meta.title||'';
+  document.getElementById('gm-sub').innerText     = meta.sub||'';
+  document.getElementById('gm-desc').innerHTML    = meta.desc||'';
+  document.getElementById('gm-credits').innerHTML = meta.credits||'';
+  block.classList.add('visible');
+}
+
+function buildStripEntries() {
+  const c=document.getElementById('strip-entries');
+  c.innerHTML = transcript.map((t,i)=>
+    `<div class="strip-entry" id="se-${i}">
+      <div class="strip-speaker">${t.speaker}</div>
+      <div class="strip-text">${t.text}</div>
+      <div class="strip-time">${t.startText||''}</div>
     </div>`
   ).join('');
 }
 
 function buildSectionNav() {
-  const nav = document.getElementById('section-nav-overlay');
-  nav.innerHTML = sections.map((s,i) =>
+  const nav=document.getElementById('section-nav-bar'), scroll=document.getElementById('gallery-scroll');
+  if (!sections.length) { nav.innerHTML=''; nav.style.display='none'; scroll.classList.add('no-sections'); return; }
+  nav.style.display='flex'; scroll.classList.remove('no-sections');
+  nav.innerHTML = sections.map((s,i)=>
     `<button class="snav-btn" id="snav-${i}" onclick="jumpTo(${s.start})">
-      <span style="opacity:0.4;font-size:8px;display:block;margin-bottom:2px;">0${i+1}</span>${s.title}
+      <span style="opacity:0.4;font-size:8px;display:block;margin-bottom:1px;">0${i+1}</span>${s.title}
     </button>`
   ).join('');
 }
 
-/* ── START EXPERIENCE ── */
+/* START */
 function startExperience(file) {
-  currentFile = file;
-  audio.pause(); audio.src = '';
+  currentFile=file; audio.pause(); audio.src=''; lastActiveIdx=-1;
 
-  // hide meta overlay by default
-  document.getElementById('meta-overlay').style.display = 'none';
-  document.getElementById('transcript-overlay').style.display = 'flex';
-
-  if (file === 'kurosaki') {
-    buildGallery(KUROSAKI_IMAGES);
-    transcript = []; sections = [];
-    buildOverlayEntries();
-    buildSectionNav();
-
-    // show meta instead of transcript overlay
-    document.getElementById('transcript-overlay').style.display = 'none';
-    document.getElementById('meta-overlay').style.display = 'block';
-    document.getElementById('meta-title-text').innerText = KUROSAKI_META.title;
-    document.getElementById('meta-sub-text').innerText = `${KUROSAKI_META.loc} / ${KUROSAKI_META.date}`;
-
+  if (file==='kurosaki') {
+    transcript=[]; sections=[];
+    buildGallery(KUROSAKI_IMAGES); setMeta(KUROSAKI_META); buildStripEntries(); buildSectionNav();
     goTo('proc');
-    setTimeout(() => {
-      goTo('gallery');
-      audio.src = './kurosaki.mp3';
-      audio.loop = false;
-      audio.load();
+    setTimeout(()=>{
+      goTo('gallery'); audio.src='./kurosaki.mp3'; audio.loop=false; audio.load();
       audio.play().then(()=>{ playing=true; updateIcons(); document.getElementById('player-bar').style.display='flex'; }).catch(()=>{});
-      document.getElementById('player-bar').style.display = 'flex';
-    }, 3000);
-
-  } else if (file === 'noda') {
-    transcript = (typeof NODA_TRANSCRIPT !== 'undefined') ? NODA_TRANSCRIPT.slice() : [];
-    sections   = (typeof NODA_SECTIONS  !== 'undefined') ? NODA_SECTIONS.slice()  : [];
-    buildGallery(NODA_IMAGES);
-    buildOverlayEntries();
-    buildSectionNav();
-    audio.src = './nodayuta.mp3';
-    loadAndStart();
-
-  } else if (file === 'kikuchi') {
-    transcript = (typeof KIKUCHI_TRANSCRIPT !== 'undefined') ? KIKUCHI_TRANSCRIPT.slice() : [];
-    sections   = (typeof KIKUCHI_SECTIONS   !== 'undefined') ? KIKUCHI_SECTIONS.slice()   : [];
-    buildGallery(KIKUCHI_IMAGES);
-    buildOverlayEntries();
-    buildSectionNav();
-    audio.src = './kikuchiyuki_compressed.mp3';
-    loadAndStart();
+    },3000);
+  } else if (file==='noda') {
+    transcript=(typeof NODA_TRANSCRIPT!=='undefined')?NODA_TRANSCRIPT.slice():[];
+    sections=(typeof NODA_SECTIONS!=='undefined')?NODA_SECTIONS.slice():[];
+    buildGallery(NODA_IMAGES); setMeta(NODA_META); buildStripEntries(); buildSectionNav();
+    audio.src='./nodayuta.mp3'; loadAndStart();
+  } else if (file==='kikuchi') {
+    transcript=(typeof KIKUCHI_TRANSCRIPT!=='undefined')?KIKUCHI_TRANSCRIPT.slice():[];
+    sections=(typeof KIKUCHI_SECTIONS!=='undefined')?KIKUCHI_SECTIONS.slice():[];
+    buildGallery(KIKUCHI_IMAGES); setMeta(KIKUCHI_META); buildStripEntries(); buildSectionNav();
+    audio.src='./kikuchiyuki_compressed.mp3'; loadAndStart();
   }
 }
 
 function loadAndStart() {
-  audio.load();
-  goTo('proc');
-  setTimeout(() => {
-    goTo('gallery');
-    audio.play().then(()=>{ playing=true; updateIcons(); }).catch(()=>{});
-  }, 3000);
+  audio.load(); goTo('proc');
+  setTimeout(()=>{ goTo('gallery'); audio.play().then(()=>{ playing=true; updateIcons(); }).catch(()=>{}); },3000);
 }
 
-/* ── PLAYBACK ── */
+/* PLAYBACK */
 function jumpTo(sec) { audio.currentTime=sec; audio.play().then(()=>{ playing=true; updateIcons(); }); }
 function togglePlay() { if(playing) audio.pause(); else audio.play().then(()=>playing=true); }
 function updateIcons() {
@@ -485,45 +354,29 @@ function updateIcons() {
 audio.onplay  = ()=>{ playing=true;  updateIcons(); };
 audio.onpause = ()=>{ playing=false; updateIcons(); };
 
-/* ── TIME UPDATE → sync overlay entries ── */
-let lastActiveIdx = -1;
-
+/* TIME UPDATE */
 audio.ontimeupdate = () => {
   const cur=audio.currentTime, dur=audio.duration||0;
   const fmt=s=>`${String(Math.floor(s/60)).padStart(2,'0')}:${String(Math.floor(s%60)).padStart(2,'0')}`;
-  document.getElementById('timecode').innerText = `${fmt(cur)} / ${fmt(dur)}`;
-
-  // find active transcript entry
-  let activeIdx = -1;
-  transcript.forEach((t,i) => {
-    const on = cur >= t.start && cur <= (t.end||t.start+30);
-    if (on) { activeIdx = i; document.getElementById('mini-speaker').innerText=t.speaker; document.getElementById('mini-text').innerText=t.text; }
+  document.getElementById('timecode').innerText=`${fmt(cur)} / ${fmt(dur)}`;
+  let activeIdx=-1;
+  transcript.forEach((t,i)=>{
+    if (cur>=t.start&&cur<=(t.end||t.start+30)) {
+      activeIdx=i;
+      document.getElementById('mini-speaker').innerText=t.speaker;
+      document.getElementById('mini-text').innerText=t.text;
+    }
   });
-
-  // update overlay: show only active entry
-  if (activeIdx !== lastActiveIdx) {
-    document.querySelectorAll('.overlay-entry').forEach((el,i) => {
-      el.classList.toggle('active', i === activeIdx);
-    });
-    lastActiveIdx = activeIdx;
+  if (activeIdx!==lastActiveIdx) {
+    document.querySelectorAll('.strip-entry').forEach((el,i)=>el.classList.toggle('active',i===activeIdx));
+    lastActiveIdx=activeIdx;
   }
-
-  // section nav highlight
-  sections.forEach((s,i) => {
-    const el = document.getElementById(`snav-${i}`);
-    if (el) el.classList.toggle('active', cur>=s.start && (sections[i+1]?cur<sections[i+1].start:true));
-  });
+  sections.forEach((s,i)=>{ const el=document.getElementById(`snav-${i}`); if(el) el.classList.toggle('active',cur>=s.start&&(sections[i+1]?cur<sections[i+1].start:true)); });
 };
 
-/* ── LIGHTBOX ── */
-function openLightbox(src) {
-  document.getElementById('lightbox-img').src = src;
-  document.getElementById('lightbox').style.display = 'flex';
-}
-function closeLightbox() {
-  document.getElementById('lightbox').style.display = 'none';
-  document.getElementById('lightbox-img').style.transform = 'none';
-}
+/* LIGHTBOX */
+function openLightbox(src) { document.getElementById('lightbox-img').src=src; document.getElementById('lightbox').style.display='flex'; }
+function closeLightbox() { document.getElementById('lightbox').style.display='none'; document.getElementById('lightbox-img').style.transform='none'; }
 
 goTo(0);
 </script>
