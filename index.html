@@ -186,6 +186,9 @@
   .kurosaki-meta-sub { font-size:11px; letter-spacing:0.05em; margin-bottom:32px; font-family:'IBM Plex Mono',monospace; color:var(--meta); }
   .kurosaki-meta-desc { font-size:14px; line-height:1.9; margin-bottom:32px; color:var(--text); }
   .kurosaki-meta-credits { font-size:11px; line-height:1.8; letter-spacing:0.02em; color:var(--meta); padding-top:16px; border-top:1px solid var(--rule-light); }
+  .kurosaki-credits-row { display:flex; align-items:flex-start; gap:16px; }
+  .kurosaki-credits-text { flex:1; }
+  .kurosaki-mini-player { flex-shrink:0; width:140px; height:90px; border:none; display:block; background:#000; }
   #kurosaki-back {
     position:fixed; bottom:calc(var(--player-height) + 16px); left:16px;
     background:#fff; border:1px solid #000; font-size:10px; padding:8px 16px;
@@ -211,7 +214,7 @@
 
 <div class="page-label" id="page-label">
   <span id="page-label-left">Voices / Experience</span>
-  <span id="page-label-right">V99</span>
+  <span id="page-label-right">V101</span>
 </div>
 
 <div id="screen-0" class="screen">
@@ -300,7 +303,12 @@
       <div class="kurosaki-meta-title">野田結太.mp5</div>
       <div class="kurosaki-meta-sub">loc. 葉山 黒崎海岸 / 2026.12.16</div>
       <div class="kurosaki-meta-desc">今回の葉山市、黒崎海岸での.mp5では、レコーダーを持ち音の収集を行った。<br>日没ごろ、野田の制作音源を海に正対し演奏。<br>録音音源は撮影後、「Kurosaki ambient」 として発展。</div>
-      <div class="kurosaki-meta-credits">sound: <a class="credit-link" href="https://www.instagram.com/yutand___/" target="_blank">@yutand___</a><br>Photography: <a class="credit-link" href="https://www.instagram.com/la_viscuit/" target="_blank">@la_viscuit</a><br>Production: <a class="credit-link" href="https://www.instagram.com/___.mp5/" target="_blank">@___.mp5</a></div>
+      <div class="kurosaki-meta-credits">
+        <div class="kurosaki-credits-row">
+          <div class="kurosaki-credits-text">sound: <a class="credit-link" href="https://www.instagram.com/yutand___/" target="_blank">@yutand___</a><br>Photography: <a class="credit-link" href="https://www.instagram.com/la_viscuit/" target="_blank">@la_viscuit</a><br>Production: <a class="credit-link" href="https://www.instagram.com/___.mp5/" target="_blank">@___.mp5</a></div>
+          <iframe class="kurosaki-mini-player" src="https://www.youtube.com/embed/ebGPpMet_l8?rel=0&modestbranding=1" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
+        </div>
+      </div>
     </div>
     <img src="./kurosaki/kurosaki_film-01.webp" onclick="openLightbox(this.src)" loading="lazy" />
     <img src="./kurosaki/kurosaki_film-02.webp" onclick="openLightbox(this.src)" loading="lazy" />
@@ -338,7 +346,7 @@
 const NODA_IMAGES    = ['./nodayuta.jpg','./nodayuta_2.jpg','./nodayuta_3.jpg','./nodayuta_4.jpg'];
 const NODA_META      = { title:'野田結太.mp3', sub:'nodayuta.mp3 / 10:55', desc:'', credits:'sound: <a class="credit-link" href="https://www.instagram.com/yutand___/" target="_blank">@yutand___</a><br>Production: <a class="credit-link" href="https://www.instagram.com/___.mp5/" target="_blank">@___.mp5</a>' };
 const KIKUCHI_IMAGES = ['./yukikikuchi.jpg','./yukikikuchi_2.jpg'];
-const KIKUCHI_META   = { title:'菊地佑樹.mp3', sub:'kikuchiyuki_jgoe.mp3 / 53:49', desc:'', credits:'sound: 菊地佑希<br>Host: <a class="credit-link" href="https://www.instagram.com/la_viscuit/" target="_blank">@la_viscuit</a><br>Production: <a class="credit-link" href="https://www.instagram.com/___.mp5/" target="_blank">@___.mp5</a>' };
+const KIKUCHI_META   = { title:'菊地佑樹.mp3', sub:'kikuchiyuki_jgoe.mp3 / 53:49', desc:'', credits:'Talk: 菊池佑樹 (yuki_not_rinko)<br>Host: <a class="credit-link" href="https://www.instagram.com/la_viscuit/" target="_blank">@la_viscuit</a><br>Production: <a class="credit-link" href="https://www.instagram.com/___.mp5/" target="_blank">@___.mp5</a>' };
 
 const audio = new Audio();
 let playing=false, transcript=[], sections=[], currentFile=null;
@@ -409,12 +417,12 @@ function goTo(n) {
   document.getElementById('player-bar').style.display=(audio.src&&audio.src!=='')?'flex':'none';
   const left=document.getElementById('page-label-left'),right=document.getElementById('page-label-right');
   const map={
-    0:['Voices / Experience','V99'],1:['Voices / Experience','V99'],
+    0:['Voices / Experience','V101'],1:['Voices / Experience','V101'],
     2:['Select File','Step 02'],proc:['Building Audio Map',''],
     mp3:[currentFile==='noda'?'野田結太.MP3':'菊地佑樹.MP3','Transcribe'],
     kuro:['野田結太.mp5','Gallery']
   };
-  const l=map[n]||['Voices / Experience','V99'];
+  const l=map[n]||['Voices / Experience','V101'];
   if(left)left.innerText=l[0]; if(right)right.innerText=l[1];
 }
 
@@ -489,7 +497,19 @@ function startExperience(file){
 }
 
 /* ── PLAYBACK ── */
-function jumpTo(sec){audio.currentTime=sec;audio.play().then(()=>{playing=true;updateIcons();});}
+function jumpTo(sec){
+  audio.currentTime=sec;
+  audio.play().then(()=>{playing=true;updateIcons();});
+  // scroll active entry to vertical center
+  const idx = transcript.findIndex(t=>sec>=t.start&&sec<=(t.end||t.start+30));
+  if(idx<0) return;
+  // small delay to let active class apply
+  setTimeout(()=>{
+    const el=document.getElementById('te-'+idx);
+    const c=document.getElementById('mp3-scroll');
+    if(el&&c) c.scrollTop=el.offsetTop - c.clientHeight/2 + el.clientHeight/2;
+  },50);
+}
 function togglePlay(){if(playing)audio.pause();else audio.play().then(()=>playing=true);}
 function updateIcons(){
   document.getElementById('icon-play').style.display=playing?'none':'block';
