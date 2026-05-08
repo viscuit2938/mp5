@@ -119,10 +119,10 @@
   /* project meta — white on photo bg */
   .project-meta-block { margin-bottom:80px; }
   .project-meta-title { font-size:24px; font-weight:300; color:#fff; margin-bottom:12px; }
-  .project-meta-sub { font-size:11px; letter-spacing:0.05em; margin-bottom:32px; font-family:'IBM Plex Mono',monospace; color:rgba(255,255,255,0.5); }
+  .project-meta-sub { font-size:11px; letter-spacing:0.05em; margin-bottom:32px; font-family:'IBM Plex Mono',monospace; color:#fff; }
   .project-meta-desc { font-size:14px; line-height:1.9; margin-bottom:32px; color:#fff; }
-  .project-meta-credits { font-size:11px; line-height:1.8; letter-spacing:0.02em; color:rgba(255,255,255,0.5); padding-top:16px; border-top:1px solid rgba(255,255,255,0.15); }
-  .credit-link { color:var(--accent); text-decoration:none; }
+  .project-meta-credits { font-size:11px; line-height:1.8; letter-spacing:0.02em; color:#fff; padding-top:16px; border-top:1px solid rgba(255,255,255,0.3); }
+  .credit-link { color:var(--accent); text-decoration:underline; text-decoration-color:rgba(255,255,255,0.4); text-underline-offset:3px; }
   .credit-link:hover { opacity:0.7; }
 
   /* transcript entries — original style */
@@ -338,7 +338,7 @@
 const NODA_IMAGES    = ['./nodayuta.jpg','./nodayuta_2.jpg','./nodayuta_3.jpg','./nodayuta_4.jpg'];
 const NODA_META      = { title:'野田結太.mp3', sub:'nodayuta.mp3 / 10:55', desc:'', credits:'sound: <a class="credit-link" href="https://www.instagram.com/yutand___/" target="_blank">@yutand___</a><br>Production: <a class="credit-link" href="https://www.instagram.com/___.mp5/" target="_blank">@___.mp5</a>' };
 const KIKUCHI_IMAGES = ['./yukikikuchi.jpg','./yukikikuchi_2.jpg'];
-const KIKUCHI_META   = { title:'菊地佑樹.mp3', sub:'kikuchiyuki_jgoe.mp3 / 53:49', desc:'', credits:'sound: <a class="credit-link" href="https://www.instagram.com/memo.riesreview/" target="_blank">@memo.riesreview</a><br>Production: <a class="credit-link" href="https://www.instagram.com/___.mp5/" target="_blank">@___.mp5</a>' };
+const KIKUCHI_META   = { title:'菊地佑樹.mp3', sub:'kikuchiyuki_jgoe.mp3 / 53:49', desc:'', credits:'sound: 菊地佑希<br>Host: <a class="credit-link" href="https://www.instagram.com/la_viscuit/" target="_blank">@la_viscuit</a><br>Production: <a class="credit-link" href="https://www.instagram.com/___.mp5/" target="_blank">@___.mp5</a>' };
 
 const audio = new Audio();
 let playing=false, transcript=[], sections=[], currentFile=null;
@@ -464,7 +464,7 @@ function startExperience(file){
 
   // transcript
   document.getElementById('mp3-transcript-container').innerHTML=transcript.map((t,i)=>
-    `<div class="transcript-entry" id="te-${i}">
+    `<div class="transcript-entry" id="te-${i}" onclick="jumpTo(${t.start})" style="cursor:pointer;">
       <div class="entry-meta">
         <span class="speaker-name">${t.speaker}</span>
         <span class="time-stamp">${t.startText||''}</span>
