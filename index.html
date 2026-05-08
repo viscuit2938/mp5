@@ -40,7 +40,25 @@
 .preset-details { font-size:11px; color:var(--meta); }
 .preset-thumb-sq { width:48px; height:48px; object-fit:cover; flex-shrink:0; border:1px solid #000; display:block; }
 
-/* PROCESSING SCREEN */
+/* PAGE LABEL */
+.page-label {
+  position: fixed;
+  top: 16px;
+  left: 20px;
+  right: 20px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #000;
+  z-index: 500;
+  pointer-events: none;
+  mix-blend-mode: difference;
+  filter: invert(0);
+}
+.page-label span { color: #fff; }
 #processing-screen { position:fixed; inset:0; background:#fff; display:none; flex-direction:column; align-items:center; justify-content:center; gap:24px; z-index:200; }
 .proc-label { font-size:10px; letter-spacing:0.3em; text-transform:uppercase; color: var(--text); }
 .loader-bar { width:160px; height:1px; background:#eee; position:relative; overflow:hidden; }
@@ -93,6 +111,12 @@
 </head>
 <body>
 
+<!-- GLOBAL PAGE LABEL -->
+<div class="page-label" id="page-label">
+  <span id="page-label-left">Voices / Experience</span>
+  <span id="page-label-right">V88</span>
+</div>
+
 <div id="screen-0" class="screen">
   <div class="frame-fixed" style="text-align:center;">
     <button class="start-btn" id="entry-permission-btn">EXPERIENCE?</button>
@@ -101,7 +125,6 @@
 
 <div id="screen-1" class="screen">
   <div class="frame-fixed">
-    <div class="top-rule"><span>Voices / Experience</span><span>V87</span></div>
     <div class="wordmark" id="gyro-logo">.mp5</div>
     <div class="tagline">Audio &amp; Transcription</div>
     <button class="start-btn" onclick="goTo(2)">Start Experience</button>
@@ -110,7 +133,6 @@
 
 <div id="screen-2" class="screen">
   <div class="frame-fixed">
-    <div class="top-rule"><span>Select File</span><span>Step 02</span></div>
     <div class="preset-card" onclick="startExperience('noda')">
       <div class="preset-card-inner">
         <div class="play-circle"><div class="play-triangle"></div></div>
@@ -226,6 +248,21 @@ function goTo(n) {
   if (n==='gallery') document.getElementById('gallery-screen').style.display='flex';
   if (audio.src && audio.src !== "") document.getElementById('player-bar').style.display = 'flex';
   else document.getElementById('player-bar').style.display = 'none';
+
+  // ページラベル更新
+  const left  = document.getElementById('page-label-left');
+  const right = document.getElementById('page-label-right');
+  const labels = {
+    0:         ['Voices / Experience', 'V88'],
+    1:         ['Voices / Experience', 'V88'],
+    2:         ['Select File',         'Step 02'],
+    'proc':    ['Building Audio Map',  ''],
+    'main':    ['.MP5',                'Transcribe'],
+    'gallery': ['.MP5',                'Gallery'],
+  };
+  const l = labels[n] || ['Voices / Experience', 'V88'];
+  if (left)  left.innerText  = l[0];
+  if (right) right.innerText = l[1];
 }
 
 document.getElementById('entry-permission-btn').addEventListener('click', async () => {
