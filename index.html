@@ -1,9 +1,10 @@
 <!DOCTYPE html>
+
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>.mp5 — Audio Experience</title>
+<title>.mp5 -- Audio Experience</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
   @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400&display=swap');
@@ -16,78 +17,96 @@
     --font: "Inter","Helvetica Neue","Hiragino Sans",sans-serif;
   }
   body { background:#fff; color:#000; font-family:var(--font); height:100dvh; overflow:hidden; display:flex; flex-direction:column; -webkit-font-smoothing:antialiased; }
-  
-  /* SCREEN SYSTEM */
-  .screen { position:fixed; inset:0; background:#fff; display:none; flex-direction:column; align-items:center; justify-content:center; padding:20px; z-index:100; overflow-y:auto; }
-  #screen-0 { display: flex; z-index: 110; }
-  #screen-1 { perspective: 1200px; }
-  #screen-2 { justify-content:flex-start; padding-top:60px; }
-  .frame-fixed { width:100%; max-width:480px; position: relative; }
-  .top-rule { border-top:1.5px solid #000; padding-top:10px; display:flex; justify-content:space-between; font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:0.12em; margin-bottom:48px; }
-  .wordmark { font-size:clamp(56px,15vw,88px); font-weight:300; letter-spacing:-0.04em; line-height:0.9; margin-bottom:12px; transition: transform 0.08s ease-out; will-change: transform; display: inline-block; }
-  .tagline { font-size:10px; letter-spacing:0.2em; color:var(--meta); text-transform:uppercase; margin-bottom:48px; }
-  .start-btn { background:#000; color:#fff; padding:18px; font-size:11px; letter-spacing:0.3em; text-transform:uppercase; cursor:pointer; width:100%; border:none; outline:none; font-family:var(--font); }
 
-  /* STEP 02 CARD */
-  .preset-card { border-top:1px solid #000; padding:24px 0; cursor:pointer; -webkit-tap-highlight-color:transparent; width: 100%; }
-  .preset-card:last-child { border-bottom: 1px solid var(--rule-light); }
-  .preset-card-inner { display:flex; align-items:center; gap:20px; }
-  .play-circle { width:48px; height:48px; border-radius:50%; border:1px solid #000; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
-  .play-triangle { width: 0; height: 0; border-style: solid; border-width: 8px 0 8px 14px; border-color: transparent transparent transparent #000; margin-left: 4px; }
-  .preset-info { display: flex; flex-direction: column; gap: 4px; }
-  .preset-filename { font-size:14px; font-weight:600; letter-spacing: 0.02em; }
-  .preset-details { font-size:11px; color:var(--meta); }
-  .preset-thumb-sq { width:48px; height:48px; object-fit:cover; flex-shrink:0; border:1px solid #000; display:block; }
+/* SCREEN SYSTEM */
+.screen { position:fixed; inset:0; background:#fff; display:none; flex-direction:column; align-items:center; justify-content:center; padding:20px; z-index:100; overflow-y:auto; }
+#screen-0 { display: flex; z-index: 110; }
+#screen-1 { perspective: 1200px; }
+#screen-2 { justify-content:flex-start; padding-top:60px; }
+.frame-fixed { width:100%; max-width:480px; position: relative; }
+.top-rule { border-top:1.5px solid #000; padding-top:10px; display:flex; justify-content:space-between; font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:0.12em; margin-bottom:48px; }
+.wordmark { font-size:clamp(56px,15vw,88px); font-weight:300; letter-spacing:-0.04em; line-height:0.9; margin-bottom:12px; transition: transform 0.08s ease-out; will-change: transform; display: inline-block; }
+.tagline { font-size:10px; letter-spacing:0.2em; color:var(–meta); text-transform:uppercase; margin-bottom:48px; }
+.start-btn { background:#000; color:#fff; padding:18px; font-size:11px; letter-spacing:0.3em; text-transform:uppercase; cursor:pointer; width:100%; border:none; outline:none; font-family:var(–font); }
 
-  /* PROCESSING SCREEN */
-  #processing-screen { position:fixed; inset:0; background:#fff; display:none; flex-direction:column; align-items:center; justify-content:center; gap:24px; z-index:200; }
-  .proc-label { font-size:10px; letter-spacing:0.3em; text-transform:uppercase; color: var(--text); }
-  .loader-bar { width:160px; height:1px; background:#eee; position:relative; overflow:hidden; }
-  .loader-inner { position:absolute; width:50%; height:100%; background:#000; animation:slide 1.5s ease-in-out infinite; }
-  @keyframes slide { from{left:-100%} to{left:100%} }
+/* STEP 02 CARD */
+.preset-card { border-top:1px solid #000; padding:24px 0; cursor:pointer; -webkit-tap-highlight-color:transparent; width: 100%; }
+.preset-card:last-child { border-bottom: 1px solid var(–rule-light); }
+.preset-card-inner { display:flex; align-items:center; gap:20px; }
+.play-circle { width:48px; height:48px; border-radius:50%; border:1px solid #000; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.play-triangle { width: 0; height: 0; border-style: solid; border-width: 8px 0 8px 14px; border-color: transparent transparent transparent #000; margin-left: 4px; }
+.preset-info { display: flex; flex-direction: column; gap: 4px; }
+.preset-filename { font-size:14px; font-weight:600; letter-spacing: 0.02em; }
+.preset-details { font-size:11px; color:var(–meta); }
+.preset-thumb-sq { width:48px; height:48px; object-fit:cover; flex-shrink:0; border:1px solid #000; display:block; }
 
-  /* SIDE NAV (110px) */
-  #side-nav { width:var(--nav-width); min-width:var(--nav-width); border-right:1px solid var(--rule-light); padding:24px 12px 12px; display:flex; flex-direction:column; background:#fff; z-index:50; height:100%; overflow:hidden; }
-  .nav-logo { font-size:14px; font-weight:500; letter-spacing:0.1em; cursor:pointer; flex-shrink:0; margin-bottom:20px; }
-  .nav-sections-list { flex:1; display:flex; flex-direction:column; gap:16px; overflow-y:auto; scrollbar-width: none; }
-  .nav-sections-list::-webkit-scrollbar { display: none; }
-  .section-item { font-size:11px; line-height:1.4; color:var(--text); cursor:pointer; border:none; background:none; text-align:left; font-family:var(--font); padding:0; }
-  .section-item.active { color:var(--accent); font-weight:500; }
-  .section-num { display:block; font-size:9px; margin-bottom:3px; opacity:0.4; }
-  .nav-link-btn { display:flex; width:44px; height:44px; background:#000; color:#fff; text-decoration:none; align-items:center; justify-content:center; margin-bottom:12px; flex-shrink:0; overflow:hidden; }
-  .nav-thumb { flex-shrink:0; border-top:1px solid var(--rule-light); padding-top:10px; margin-top:8px; cursor:pointer; }
-  .nav-thumb img { width:100%; aspect-ratio:1; object-fit:cover; display:block; }
+/* PROCESSING SCREEN */
+#processing-screen { position:fixed; inset:0; background:#fff; display:none; flex-direction:column; align-items:center; justify-content:center; gap:24px; z-index:200; }
+.proc-label { font-size:10px; letter-spacing:0.3em; text-transform:uppercase; color: var(–text); }
+.loader-bar { width:160px; height:1px; background:#eee; position:relative; overflow:hidden; }
+.loader-inner { position:absolute; width:50%; height:100%; background:#000; animation:slide 1.5s ease-in-out infinite; }
+@keyframes slide { from{left:-100%} to{left:100%} }
 
-  /* CONTENT AREA & PROJECT META */
-  #main { display:none; width:100%; height:100dvh; flex-direction:row; overflow:hidden; padding-bottom:var(--player-height); }
-  #content { flex:1; overflow-y:auto; padding:35vh 24px 15vh; -webkit-overflow-scrolling:touch; scroll-behavior: auto; }
-  .transcript-container { max-width:540px; margin:0 auto; }
-  .project-meta-block { max-width:540px; margin: 0 auto 80px; color:var(--meta); }
-  .project-meta-title { font-size:24px; font-weight:300; color:var(--text); margin-bottom:12px; }
-  .project-meta-sub { font-size:11px; letter-spacing:0.05em; margin-bottom:32px; font-family: 'IBM Plex Mono'; }
-  .project-meta-desc { font-size:14px; line-height:1.9; margin-bottom:32px; color:var(--text); }
-  .project-meta-credits { font-size:11px; line-height:1.8; letter-spacing:0.02em; color:var(--meta); padding-top:16px; border-top:1px solid var(--rule-light); }
+/* SIDE NAV (110px) */
+#side-nav { width:var(–nav-width); min-width:var(–nav-width); border-right:1px solid var(–rule-light); padding:24px 12px 12px; display:flex; flex-direction:column; background:#fff; z-index:50; height:100%; overflow:hidden; }
+.nav-logo { font-size:14px; font-weight:500; letter-spacing:0.1em; cursor:pointer; flex-shrink:0; margin-bottom:20px; }
+.nav-sections-list { flex:1; display:flex; flex-direction:column; gap:16px; overflow-y:auto; scrollbar-width: none; }
+.nav-sections-list::-webkit-scrollbar { display: none; }
+.section-item { font-size:11px; line-height:1.4; color:var(–text); cursor:pointer; border:none; background:none; text-align:left; font-family:var(–font); padding:0; }
+.section-item.active { color:var(–accent); font-weight:500; }
+.section-num { display:block; font-size:9px; margin-bottom:3px; opacity:0.4; }
+.nav-link-btn { display:flex; width:44px; height:44px; background:#000; color:#fff; text-decoration:none; align-items:center; justify-content:center; margin-bottom:12px; flex-shrink:0; overflow:hidden; }
+.nav-thumb { flex-shrink:0; border-top:1px solid var(–rule-light); padding-top:10px; margin-top:8px; cursor:pointer; }
+.nav-thumb img { width:100%; aspect-ratio:1; object-fit:cover; display:block; }
 
-  .transcript-entry { margin-bottom:48px; font-size:17px; line-height:1.9; color:var(--meta); transition:color 0.5s ease; }
-  .transcript-entry.active { color:var(--text); }
-  .entry-meta { display:flex; align-items:center; gap:10px; margin-bottom:6px; }
-  .speaker-name { font-size:10px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--dim); }
-  .transcript-entry.active .speaker-name { color:var(--accent); }
-  .time-stamp { font-size:9px; color:var(--dim); font-family: 'IBM Plex Mono'; }
+/* CONTENT AREA & PROJECT META */
+#main { display:none; width:100%; height:100dvh; flex-direction:row; overflow:hidden; padding-bottom:var(–player-height); }
+#content { flex:1; overflow-y:auto; padding:35vh 24px 15vh; -webkit-overflow-scrolling:touch; scroll-behavior: auto; }
+.transcript-container { max-width:540px; margin:0 auto; }
+.project-meta-block { max-width:540px; margin: 0 auto 80px; color:var(–meta); }
+.project-meta-title { font-size:24px; font-weight:300; color:var(–text); margin-bottom:12px; }
+.project-meta-sub { font-size:11px; letter-spacing:0.05em; margin-bottom:32px; font-family: ‘IBM Plex Mono’; }
+.project-meta-desc { font-size:14px; line-height:1.9; margin-bottom:32px; color:var(–text); }
+.project-meta-credits { font-size:11px; line-height:1.8; letter-spacing:0.02em; color:var(–meta); padding-top:16px; border-top:1px solid var(–rule-light); }
 
-  /* PLAYER BAR */
-  #player-bar { position:fixed; bottom:0; left:0; right:0; height:var(--player-height); background:#fff; border-top:1px solid var(--rule-light); display:none; align-items:center; padding:0 20px; padding-bottom:env(safe-area-inset-bottom); z-index:300; }
-  .player-inner { display:flex; align-items:center; gap:16px; width:100%; }
-  .play-btn { width:44px; height:44px; border-radius:50%; border:1px solid #000; background:transparent; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
-  .timecode { font-size:10px; letter-spacing:0.02em; min-width:72px; font-family: 'IBM Plex Mono'; white-space:nowrap; }
-  .mini-area { flex:1; border-left:1px solid var(--rule-light); padding-left:16px; overflow:hidden; height:56px; display:flex; flex-direction:column; gap:2px; justify-content: flex-start; padding-top: 4px; }
-  .mini-speaker { font-size:9px; font-weight:600; color:var(--accent); text-transform:uppercase; letter-spacing:0.1em; flex-shrink:0; }
-  .mini-text { font-size:12px; color:var(--text); line-height:1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; height: 2.6em; }
+.transcript-entry { margin-bottom:48px; font-size:17px; line-height:1.9; color:var(–meta); transition:color 0.5s ease; }
+.transcript-entry.active { color:var(–text); }
+.entry-meta { display:flex; align-items:center; gap:10px; margin-bottom:6px; }
+.speaker-name { font-size:10px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(–dim); }
+.transcript-entry.active .speaker-name { color:var(–accent); }
+.time-stamp { font-size:9px; color:var(–dim); font-family: ‘IBM Plex Mono’; }
 
-  #gallery-screen { position:fixed; inset:0; background:#fff; display:none; flex-direction:column; z-index:150; overflow-y:auto; }
-  #lightbox { position:fixed; inset:0; background:rgba(0,0,0,0.95); display:none; align-items:center; justify-content:center; z-index:400; padding:16px; }
-  #lightbox img { max-width:100%; max-height:90vh; object-fit:contain; }
+/* PLAYER BAR */
+#player-bar { position:fixed; bottom:0; left:0; right:0; height:var(–player-height); background:#fff; border-top:1px solid var(–rule-light); display:none; align-items:center; padding:0 20px; padding-bottom:env(safe-area-inset-bottom); z-index:300; }
+.player-inner { display:flex; align-items:center; gap:16px; width:100%; }
+.play-btn { width:44px; height:44px; border-radius:50%; border:1px solid #000; background:transparent; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.timecode { font-size:10px; letter-spacing:0.02em; min-width:72px; font-family: ‘IBM Plex Mono’; white-space:nowrap; }
+.mini-area { flex:1; border-left:1px solid var(–rule-light); padding-left:16px; overflow:hidden; height:56px; display:flex; flex-direction:column; gap:2px; justify-content: flex-start; padding-top: 4px; }
+.mini-speaker { font-size:9px; font-weight:600; color:var(–accent); text-transform:uppercase; letter-spacing:0.1em; flex-shrink:0; }
+.mini-text { font-size:12px; color:var(–text); line-height:1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; height: 2.6em; }
+
+#gallery-screen { position:fixed; inset:0; background:#fff; display:none; flex-direction:column; z-index:150; overflow-y:auto; }
+#lightbox {
+position:fixed; inset:0; background:#000;
+display:none; align-items:center; justify-content:center;
+z-index:400; overflow:hidden;
+}
+#lightbox img {
+/* 画面の1.6倍のサイズで配置 -- ジャイロで視野を移動 */
+width: 160vw;
+height: 160vh;
+object-fit: cover;
+display: block;
+flex-shrink: 0;
+transform-origin: center center;
+will-change: transform;
+transition: transform 0.12s ease-out;
+position: absolute;
+top: 50%; left: 50%;
+transform: translate(-50%, -50%);
+}
 </style>
+
 </head>
 <body>
 
@@ -99,7 +118,7 @@
 
 <div id="screen-1" class="screen">
   <div class="frame-fixed">
-    <div class="top-rule"><span>Voices / Experience</span><span>V75</span></div>
+    <div class="top-rule"><span>Voices / Experience</span><span>V76</span></div>
     <div class="wordmark" id="gyro-logo">.mp5</div>
     <div class="tagline">Audio &amp; Transcription</div>
     <button class="start-btn" onclick="goTo(2)">Start Experience</button>
@@ -114,7 +133,7 @@
         <div class="play-circle"><div class="play-triangle"></div></div>
         <div class="preset-info">
           <div class="preset-filename">nodayuta.mp3</div>
-          <div class="preset-details">野田結太 — 10:55</div>
+          <div class="preset-details">野田結太 -- 10:55</div>
         </div>
       </div>
     </div>
@@ -123,7 +142,7 @@
         <div class="play-circle"><div class="play-triangle"></div></div>
         <div class="preset-info">
           <div class="preset-filename">kikuchiyuki_jgoe.mp3</div>
-          <div class="preset-details">菊地佑樹 — 53:49</div>
+          <div class="preset-details">菊地佑樹 -- 53:49</div>
         </div>
       </div>
     </div>
@@ -132,7 +151,7 @@
         <img src="./kurosaki/kurosaki_film-02.webp" class="preset-thumb-sq" alt="icon" />
         <div class="preset-info">
           <div class="preset-filename">kurosaki.mp5</div>
-          <div class="preset-details">野田結太 / 葉山 黒崎海岸 — 10:55</div>
+          <div class="preset-details">野田結太 / 葉山 黒崎海岸 -- 10:55</div>
         </div>
       </div>
     </div>
@@ -185,7 +204,9 @@
 </div>
 
 <script src="./noda_data.js"></script>
+
 <script src="./kikuchi_data.js"></script>
+
 <script>
 const NODA_IMAGES = ['./nodayuta.jpg','./nodayuta_2.jpg','./nodayuta_3.jpg','./nodayuta_4.jpg'];
 const NODA_THUMB  = './nodayuta.jpg';
@@ -244,13 +265,22 @@ function handleGyro(event) {
     logo.style.transform = `translate3d(${moveX}px, ${moveY}px, 0) rotateX(${-moveY * 3.5}deg) rotateY(${moveX * 3.5}deg)`;
   }
 
-  // ライトボックスの画像
+  // ライトボックス -- ビューファインダー体験
   const lb = document.getElementById('lightbox');
   const lbImg = document.getElementById('lightbox-img');
   if (lb && lb.style.display === 'flex' && lbImg) {
-    const moveX = Math.max(-30, Math.min(30, xAdj / 2));
-    const moveY = Math.max(-30, Math.min(30, yAdj / 2));
-    lbImg.style.transform = `translate3d(${moveX}px, ${moveY}px, 0) rotateX(${-moveY * 2}deg) rotateY(${moveX * 2}deg)`;
+    // gamma: 左右傾き (-90〜90) → 画像を左右にシフト
+    // beta:  前後傾き (0〜180) → 画像を上下にシフト & 拡大
+    const panX = Math.max(-30, Math.min(30, xAdj * 0.8)); // 左右パン (vw換算)
+    const panY = Math.max(-25, Math.min(25, (yAdj) * 0.6)); // 上下パン
+
+    // 前に傾けると拡大（betaが0に近いほど水平 = 拡大）
+    // betaの範囲: 約15(水平) 〜 60(自然な持ち方) 〜 90(立てる)
+    const rawBeta = (event.beta || 45);
+    const zoomT = Math.max(0, Math.min(1, (rawBeta - 20) / 50)); // 0=水平(最大拡大) 1=立てる(等倍)
+    const scale = 1.6 - (zoomT * 0.6); // 1.0〜1.6の範囲でズーム
+
+    lbImg.style.transform = `translate(calc(-50% + ${panX}vw), calc(-50% + ${panY}vh)) scale(${scale})`;
   }
 }
 
@@ -331,8 +361,9 @@ function smoothScroll(el, to, dur) {
 
 document.getElementById('content').addEventListener('touchstart',()=>{ userScrolling=true; clearTimeout(uScrollTimer); uScrollTimer=setTimeout(()=>{ userScrolling=false; },3000); },{passive:true});
 function openLightbox(src) { document.getElementById('lightbox-img').src=src; document.getElementById('lightbox').style.display='flex'; }
-function closeLightbox() { document.getElementById('lightbox').style.display='none'; document.getElementById('lightbox-img').style.transform=''; }
+function closeLightbox() { document.getElementById('lightbox').style.display='none'; document.getElementById('lightbox-img').style.transform='translate(-50%,-50%)'; }
 goTo(0);
 </script>
+
 </body>
 </html>
