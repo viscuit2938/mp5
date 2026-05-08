@@ -206,7 +206,7 @@
 
 <div class="page-label" id="page-label">
   <span id="page-label-left">Voices / Experience</span>
-  <span id="page-label-right">V121</span>
+  <span id="page-label-right">V122</span>
 </div>
 
 <div id="screen-0" class="screen">
@@ -417,12 +417,12 @@ function goTo(n) {
   pb.classList.toggle('on-white', whiteScreens.includes(String(n)) || n===2 || n==='proc' || n===1 || n===0);
   const left=document.getElementById('page-label-left'),right=document.getElementById('page-label-right');
   const map={
-    0:['Voices / Experience','V121'],1:['Voices / Experience','V121'],
+    0:['Voices / Experience','V122'],1:['Voices / Experience','V122'],
     2:['Select File','Step 02'],proc:['Building Audio Map',''],
     mp3:[currentFile==='noda'?'野田結太.MP3':'菊地佑樹.MP3','Transcribe'],
     kuro:['野田結太.mp5','Gallery']
   };
-  const l=map[n]||['Voices / Experience','V121'];
+  const l=map[n]||['Voices / Experience','V122'];
   if(left)left.innerText=l[0]; if(right)right.innerText=l[1];
 }
 
@@ -543,9 +543,17 @@ function updateIcons(){
 }
 audio.onplay=()=>{playing=true;updateIcons();};
 audio.onpause=()=>{playing=false;updateIcons();};
+audio.onended=()=>{ playing=false; updateIcons(); audio.volume=1; };
 
 /* ── TIME UPDATE ── */
 audio.ontimeupdate=()=>{
+  // Fade-out: last 13 seconds of kurosaki audio
+  if((currentFile==='kurosaki'||currentFile==='kurosaki_digital') && audio.duration){
+    const remaining = audio.duration - audio.currentTime;
+    if(remaining <= 13 && remaining > 0){
+      audio.volume = Math.max(0.001, remaining / 13);
+    }
+  }
   const cur=audio.currentTime,dur=audio.duration||0;
   const fmt=s=>`${String(Math.floor(s/60)).padStart(2,'0')}:${String(Math.floor(s%60)).padStart(2,'0')}`;
   document.getElementById('timecode').innerText=`${fmt(cur)} / ${fmt(dur)}`;
