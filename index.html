@@ -48,20 +48,20 @@
 @keyframes slide { from{left:-100%} to{left:100%} }
 
 /* SIDE NAV (110px) */
-#side-nav { width:var(–nav-width); min-width:var(–nav-width); border-right:1px solid var(–rule-light); padding:24px 12px 12px; display:flex; flex-direction:column; background:#fff; z-index:50; height:100%; overflow:hidden; }
+#side-nav { width:var(–nav-width); min-width:var(–nav-width); max-width:var(–nav-width); border-right:1px solid var(–rule-light); padding:24px 12px 12px; display:flex; flex-direction:column; background:#fff; z-index:50; height:100%; overflow:hidden; flex-shrink:0; }
 .nav-logo { font-size:14px; font-weight:500; letter-spacing:0.1em; cursor:pointer; flex-shrink:0; margin-bottom:20px; }
 .nav-sections-list { flex:1; display:flex; flex-direction:column; gap:16px; overflow-y:auto; scrollbar-width: none; }
 .nav-sections-list::-webkit-scrollbar { display: none; }
 .section-item { font-size:11px; line-height:1.4; color:var(–text); cursor:pointer; border:none; background:none; text-align:left; font-family:var(–font); padding:0; }
 .section-item.active { color:var(–accent); font-weight:500; }
 .section-num { display:block; font-size:9px; margin-bottom:3px; opacity:0.4; }
-.nav-link-btn { display:flex; width:44px; height:44px; background:#000; color:#fff; text-decoration:none; align-items:center; justify-content:center; margin-bottom:12px; flex-shrink:0; overflow:hidden; }
+.nav-link-btn { display:flex; width:44px; min-width:44px; max-width:44px; height:44px; min-height:44px; max-height:44px; background:#000; color:#fff; text-decoration:none; align-items:center; justify-content:center; margin-bottom:12px; flex-shrink:0; overflow:hidden; }
 .nav-thumb { flex-shrink:0; border-top:1px solid var(–rule-light); padding-top:10px; margin-top:8px; cursor:pointer; }
-.nav-thumb img { width:100%; aspect-ratio:1; object-fit:cover; display:block; }
+.nav-thumb img { width:100%; max-width:100%; aspect-ratio:1; object-fit:cover; display:block; overflow:hidden; }
 
 /* CONTENT AREA & PROJECT META */
-#main { display:none; width:100%; height:100dvh; flex-direction:row; overflow:hidden; padding-bottom:var(–player-height); writing-mode:horizontal-tb; }
-#content { flex:1; min-width:0; max-width:calc(100% - var(–nav-width)); overflow-y:auto; overflow-x:hidden; padding:35vh 24px 15vh; -webkit-overflow-scrolling:touch; scroll-behavior:auto; writing-mode:horizontal-tb; }
+#main { display:none; width:100%; height:100dvh; flex-direction:row; overflow:hidden; padding-bottom:var(–player-height); }
+#content { flex:1; min-width:0; overflow-y:auto; overflow-x:hidden; padding:35vh 24px 15vh; -webkit-overflow-scrolling:touch; scroll-behavior:auto; }
 .transcript-container { max-width:540px; margin:0 auto; }
 .project-meta-block { max-width:540px; margin: 0 auto 80px; color:var(–meta); }
 .project-meta-title { font-size:24px; font-weight:300; color:var(–text); margin-bottom:12px; }
@@ -69,7 +69,7 @@
 .project-meta-desc { font-size:14px; line-height:1.9; margin-bottom:32px; color:var(–text); }
 .project-meta-credits { font-size:11px; line-height:1.8; letter-spacing:0.02em; color:var(–meta); padding-top:16px; border-top:1px solid var(–rule-light); }
 
-.transcript-entry { margin-bottom:48px; font-size:17px; line-height:1.9; color:var(–meta); transition:color 0.5s ease; writing-mode:horizontal-tb; word-break:break-word; overflow-wrap:break-word; }
+.transcript-entry { margin-bottom:48px; font-size:17px; line-height:1.9; color:var(–meta); transition:color 0.5s ease; }
 .transcript-entry.active { color:var(–text); }
 .entry-meta { display:flex; align-items:center; gap:10px; margin-bottom:6px; }
 .speaker-name { font-size:10px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(–dim); }
@@ -86,7 +86,7 @@
 .mini-text { font-size:12px; color:var(–text); line-height:1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; height: 2.6em; }
 
 #gallery-screen { position:fixed; inset:0; background:#fff; display:none; flex-direction:column; z-index:150; overflow-y:auto; }
-#lightbox { position:fixed; inset:0; background:#000; display:none; align-items:center; justify-content:center; z-index:9999; overflow:hidden; writing-mode:horizontal-tb; }
+#lightbox { position:fixed; inset:0; background:rgba(0,0,0,0.95); display:none; align-items:center; justify-content:center; z-index:400; padding:16px; }
 #lightbox img { max-width:100%; max-height:90vh; object-fit:contain; }
 </style>
 
@@ -101,7 +101,7 @@
 
 <div id="screen-1" class="screen">
   <div class="frame-fixed">
-    <div class="top-rule"><span>Voices / Experience</span><span>V78</span></div>
+    <div class="top-rule"><span>Voices / Experience</span><span>V79</span></div>
     <div class="wordmark" id="gyro-logo">.mp5</div>
     <div class="tagline">Audio &amp; Transcription</div>
     <button class="start-btn" onclick="goTo(2)">Start Experience</button>
