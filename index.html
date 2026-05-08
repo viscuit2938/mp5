@@ -221,7 +221,7 @@
 
 <div class="page-label" id="page-label">
   <span id="page-label-left">Voices / Experience</span>
-  <span id="page-label-right">V124</span>
+  <span id="page-label-right">V125</span>
 </div>
 
 <div id="screen-0" class="screen">
@@ -433,12 +433,12 @@ function goTo(n) {
   pb.classList.toggle('on-white', whiteScreens.includes(String(n)) || n===2 || n==='proc' || n===1 || n===0);
   const left=document.getElementById('page-label-left'),right=document.getElementById('page-label-right');
   const map={
-    0:['Voices / Experience','V124'],1:['Voices / Experience','V124'],
+    0:['Voices / Experience','V125'],1:['Voices / Experience','V125'],
     2:['Select File','Step 02'],proc:['Building Audio Map',''],
     mp3:[currentFile==='noda'?'野田結太.MP3':'菊地佑樹.MP3','Transcribe'],
     kuro:['野田結太.mp5','Gallery']
   };
-  const l=map[n]||['Voices / Experience','V124'];
+  const l=map[n]||['Voices / Experience','V125'];
   if(left)left.innerText=l[0]; if(right)right.innerText=l[1];
 }
 
@@ -498,7 +498,7 @@ function startExperience(file){
         if(dbg) dbg.style.display='block';
         const fadeStep=setInterval(()=>{
           t=Math.min(1, t+0.00462); // t: 0→1 over ~13sec
-          const vol=Math.pow(t, 2.5); // easeIn curve: slow start, fast end
+          const vol=Math.pow(t, 5); // easeIn curve: slow start, fast end
           audio.volume=Math.max(0.001, vol);
           if(fill) fill.style.height=(vol*100)+'%';
           if(t>=1){ audio.volume=1; clearInterval(fadeStep); }
@@ -573,7 +573,7 @@ audio.ontimeupdate=()=>{
     const remaining = audio.duration - audio.currentTime;
     if(remaining <= 13 && remaining > 0){
       const t = remaining / 13; // t: 1→0
-      const vol = Math.pow(t, 2.5); // easeOut: fast start of fade, slow end
+      const vol = Math.pow(t, 5); // easeOut: fast start of fade, slow end
       audio.volume = Math.max(0.001, vol);
     }
     // debug bar
