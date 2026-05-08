@@ -44,7 +44,7 @@
 #processing-screen { position:fixed; inset:0; background:#fff; display:none; flex-direction:column; align-items:center; justify-content:center; gap:24px; z-index:200; }
 .proc-label { font-size:10px; letter-spacing:0.3em; text-transform:uppercase; color: var(–text); }
 .loader-bar { width:160px; height:1px; background:#eee; position:relative; overflow:hidden; }
-.loader-inner { position:absolute; width:50%; height:100%; background:#000; animation:slide 1.5s ease-in-out infinite; }
+.loader-inner {  width:50%; height:100%; background:#000; animation:slide 1.5s ease-in-out infinite; }
 @keyframes slide { from{left:-100%} to{left:100%} }
 
 /* SIDE NAV (110px) */
@@ -86,8 +86,8 @@
 .mini-text { font-size:12px; color:var(–text); line-height:1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; height: 2.6em; }
 
 #gallery-screen { position:fixed; inset:0; background:#fff; display:none; flex-direction:column; z-index:150; overflow-y:auto; }
-#lightbox { position:fixed; inset:0; background:#000; display:none; align-items:center; justify-content:center; z-index:9999; }
-#lightbox img { max-width:92vw; max-height:88vh; object-fit:contain; display:block; transition:transform 0.1s ease-out; }
+#lightbox { position:fixed; inset:0; background:#000; display:none; align-items:center; justify-content:center; z-index:9999; padding:16px; }
+#lightbox img { max-width:100%; max-height:88vh; object-fit:contain; display:block; transform-origin:center center; transition:transform 0.1s ease-out; }
 </style>
 
 </head>
@@ -101,7 +101,7 @@
 
 <div id="screen-1" class="screen">
   <div class="frame-fixed">
-    <div class="top-rule"><span>Voices / Experience</span><span>V82</span></div>
+    <div class="top-rule"><span>Voices / Experience</span><span>V83</span></div>
     <div class="wordmark" id="gyro-logo">.mp5</div>
     <div class="tagline">Audio &amp; Transcription</div>
     <button class="start-btn" onclick="goTo(2)">Start Experience</button>
@@ -183,7 +183,7 @@
 </div>
 
 <div id="lightbox" onclick="closeLightbox()">
-  <img id="lightbox-img" src="" style="transition:transform 0.08s ease-out;will-change:transform;" />
+  <img id="lightbox-img" src="" />
 </div>
 
 <script src="./noda_data.js"></script>
