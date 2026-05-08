@@ -221,7 +221,7 @@
 
 <div class="page-label" id="page-label">
   <span id="page-label-left">Voices / Experience</span>
-  <span id="page-label-right">V123</span>
+  <span id="page-label-right">V124</span>
 </div>
 
 <div id="screen-0" class="screen">
@@ -433,12 +433,12 @@ function goTo(n) {
   pb.classList.toggle('on-white', whiteScreens.includes(String(n)) || n===2 || n==='proc' || n===1 || n===0);
   const left=document.getElementById('page-label-left'),right=document.getElementById('page-label-right');
   const map={
-    0:['Voices / Experience','V123'],1:['Voices / Experience','V123'],
+    0:['Voices / Experience','V124'],1:['Voices / Experience','V124'],
     2:['Select File','Step 02'],proc:['Building Audio Map',''],
     mp3:[currentFile==='noda'?'野田結太.MP3':'菊地佑樹.MP3','Transcribe'],
     kuro:['野田結太.mp5','Gallery']
   };
-  const l=map[n]||['Voices / Experience','V123'];
+  const l=map[n]||['Voices / Experience','V124'];
   if(left)left.innerText=l[0]; if(right)right.innerText=l[1];
 }
 
@@ -492,15 +492,16 @@ function startExperience(file){
       audio.volume=0.001;
       audio.play().then(()=>{
         playing=true; updateIcons(); document.getElementById('player-bar').style.display='flex';
-        let vol=0.001;
+        let t=0;
         const dbg=document.getElementById('vol-debug');
         const fill=document.getElementById('vol-debug-fill');
         if(dbg) dbg.style.display='block';
         const fadeStep=setInterval(()=>{
-          vol=Math.min(1, vol+0.00462);
-          audio.volume=vol;
+          t=Math.min(1, t+0.00462); // t: 0→1 over ~13sec
+          const vol=Math.pow(t, 2.5); // easeIn curve: slow start, fast end
+          audio.volume=Math.max(0.001, vol);
           if(fill) fill.style.height=(vol*100)+'%';
-          if(vol>=1) clearInterval(fadeStep);
+          if(t>=1){ audio.volume=1; clearInterval(fadeStep); }
         },60);
       }).catch(()=>{});
     },3000);
@@ -571,7 +572,9 @@ audio.ontimeupdate=()=>{
   if((currentFile==='kurosaki'||currentFile==='kurosaki_digital') && audio.duration){
     const remaining = audio.duration - audio.currentTime;
     if(remaining <= 13 && remaining > 0){
-      audio.volume = Math.max(0.001, remaining / 13);
+      const t = remaining / 13; // t: 1→0
+      const vol = Math.pow(t, 2.5); // easeOut: fast start of fade, slow end
+      audio.volume = Math.max(0.001, vol);
     }
     // debug bar
     const dbg=document.getElementById('vol-debug');
