@@ -206,7 +206,7 @@
 
 <div class="page-label" id="page-label">
   <span id="page-label-left">Voices / Experience</span>
-  <span id="page-label-right">V120</span>
+  <span id="page-label-right">V121</span>
 </div>
 
 <div id="screen-0" class="screen">
@@ -417,12 +417,12 @@ function goTo(n) {
   pb.classList.toggle('on-white', whiteScreens.includes(String(n)) || n===2 || n==='proc' || n===1 || n===0);
   const left=document.getElementById('page-label-left'),right=document.getElementById('page-label-right');
   const map={
-    0:['Voices / Experience','V120'],1:['Voices / Experience','V120'],
+    0:['Voices / Experience','V121'],1:['Voices / Experience','V121'],
     2:['Select File','Step 02'],proc:['Building Audio Map',''],
     mp3:[currentFile==='noda'?'野田結太.MP3':'菊地佑樹.MP3','Transcribe'],
     kuro:['野田結太.mp5','Gallery']
   };
-  const l=map[n]||['Voices / Experience','V120'];
+  const l=map[n]||['Voices / Experience','V121'];
   if(left)left.innerText=l[0]; if(right)right.innerText=l[1];
 }
 
@@ -473,21 +473,15 @@ function startExperience(file){
       const scroll=document.getElementById('kurosaki-scroll');
       imgs.forEach(src=>{ const im=document.createElement('img'); im.src=src; im.className='kuro-img'; im.onclick=()=>openLightbox(src); im.loading='lazy'; scroll.appendChild(im); });
       audio.src='./kurosaki.mp3'; audio.loop=false; audio.load();
+      audio.volume=0.001;
       audio.play().then(()=>{
         playing=true; updateIcons(); document.getElementById('player-bar').style.display='flex';
-        // Web Audio API fade-in for iOS compatibility
-        try {
-          const ctx = new (window.AudioContext||window.webkitAudioContext)();
-          const src = ctx.createMediaElementSource(audio);
-          const gain = ctx.createGain();
-          src.connect(gain); gain.connect(ctx.destination);
-          gain.gain.setValueAtTime(0, ctx.currentTime);
-          gain.gain.linearRampToValueAtTime(1, ctx.currentTime + 13);
-        } catch(e) {
-          // fallback: audio.volume fade
-          audio.volume=0;
-          let vol=0; const fadeStep=setInterval(()=>{ vol=Math.min(1,vol+0.00462); audio.volume=vol; if(vol>=1)clearInterval(fadeStep); },60);
-        }
+        let vol=0.001;
+        const fadeStep=setInterval(()=>{
+          vol=Math.min(1, vol+0.00462);
+          audio.volume=vol;
+          if(vol>=1) clearInterval(fadeStep);
+        },60);
       }).catch(()=>{});
     },3000);
     return;
