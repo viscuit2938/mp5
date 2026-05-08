@@ -206,7 +206,7 @@
 
 <div class="page-label" id="page-label">
   <span id="page-label-left">Voices / Experience</span>
-  <span id="page-label-right">V118</span>
+  <span id="page-label-right">V119</span>
 </div>
 
 <div id="screen-0" class="screen">
@@ -417,12 +417,12 @@ function goTo(n) {
   pb.classList.toggle('on-white', whiteScreens.includes(String(n)) || n===2 || n==='proc' || n===1 || n===0);
   const left=document.getElementById('page-label-left'),right=document.getElementById('page-label-right');
   const map={
-    0:['Voices / Experience','V118'],1:['Voices / Experience','V118'],
+    0:['Voices / Experience','V119'],1:['Voices / Experience','V119'],
     2:['Select File','Step 02'],proc:['Building Audio Map',''],
     mp3:[currentFile==='noda'?'野田結太.MP3':'菊地佑樹.MP3','Transcribe'],
     kuro:['野田結太.mp5','Gallery']
   };
-  const l=map[n]||['Voices / Experience','V118'];
+  const l=map[n]||['Voices / Experience','V119'];
   if(left)left.innerText=l[0]; if(right)right.innerText=l[1];
 }
 
@@ -476,7 +476,7 @@ function startExperience(file){
       audio.volume=0;
       audio.play().then(()=>{
         playing=true; updateIcons(); document.getElementById('player-bar').style.display='flex';
-        let vol=0; const fadeStep=setInterval(()=>{ vol=Math.min(1,vol+0.02); audio.volume=vol; if(vol>=1)clearInterval(fadeStep); },60);
+        let vol=0; const fadeStep=setInterval(()=>{ vol=Math.min(1,vol+0.00462); audio.volume=vol; if(vol>=1)clearInterval(fadeStep); },60);
       }).catch(()=>{});
     },3000);
     return;
