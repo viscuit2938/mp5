@@ -49,53 +49,117 @@
   .loader-inner { position:absolute; width:50%; height:100%; background:#000; animation:slide 1.5s ease-in-out infinite; }
   @keyframes slide { from{left:-100%} to{left:100%} }
 
-  /* ===== GALLERY MAIN VIEW ===== */
-  #gallery-main { position:fixed; inset:0; display:none; flex-direction:column; background:#fff; z-index:150; overflow:hidden; }
-
-  /* Transcript strip — fixed top bar */
-  #transcript-strip {
-    position:fixed; top:0; left:0; right:0;
-    background:#fff; border-bottom:1px solid var(--rule-light);
-    z-index:260; padding:38px 20px 10px; min-height:78px;
-    display:flex; flex-direction:column; justify-content:flex-end;
+  /* ===================== */
+  /* MP3 MAIN VIEW         */
+  /* ===================== */
+  #mp3-main {
+    position:fixed; inset:0; display:none; background:#fff; z-index:150;
+    padding-bottom: var(--player-height);
+    overflow:hidden;
   }
-  .strip-entry { display:none; }
-  .strip-entry.active { display:block; }
-  .strip-speaker { font-size:9px; font-weight:600; letter-spacing:0.14em; text-transform:uppercase; color:var(--accent); margin-bottom:3px; font-family:var(--font); }
-  .strip-text { font-size:13px; line-height:1.6; color:var(--text); font-family:var(--font); }
-  .strip-time { font-size:9px; color:var(--meta); font-family:'IBM Plex Mono',monospace; margin-top:2px; }
 
-  /* Section nav */
-  #section-nav-bar {
-    position:fixed; top:78px; left:0; right:0;
+  /* top bar: .MP5 logo left, GALLERY right */
+  #mp3-topbar {
+    position:absolute; top:0; left:0; right:0;
+    height:40px;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:0 16px;
+    z-index:10;
+    background:#fff;
+  }
+  #mp3-topbar-logo { font-size:13px; font-weight:500; letter-spacing:0.1em; cursor:pointer; }
+  #mp3-topbar-gallery { font-size:10px; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; cursor:pointer; color:#000; }
+
+  /* section nav — horizontal scroll */
+  #mp3-secnav {
+    position:absolute; top:40px; left:0; right:0;
     display:flex; overflow-x:auto; scrollbar-width:none;
-    z-index:255; padding:5px 16px;
-    background:#fff; border-bottom:1px solid var(--rule-light);
+    border-bottom:1px solid var(--rule-light);
+    z-index:10; background:#fff;
   }
-  #section-nav-bar::-webkit-scrollbar { display:none; }
-  .snav-btn { flex-shrink:0; font-size:9px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--dim); font-family:var(--font); background:none; border:none; cursor:pointer; padding:6px 12px 6px 0; white-space:nowrap; transition:color 0.3s; }
-  .snav-btn.active { color:var(--text); }
+  #mp3-secnav::-webkit-scrollbar { display:none; }
+  .mp3-secbtn {
+    flex-shrink:0; font-size:11px; font-weight:400; letter-spacing:0.01em;
+    color:var(--meta); font-family:var(--font);
+    background:none; border:none; cursor:pointer;
+    padding:10px 16px; white-space:nowrap; transition:color 0.3s;
+    border-bottom:2px solid transparent; margin-bottom:-1px;
+  }
+  .mp3-secbtn.active { color:var(--text); border-bottom-color:#000; }
 
-  /* Scrollable area */
-  #gallery-scroll { position:absolute; top:110px; left:0; right:0; bottom:0; overflow-y:auto; overflow-x:hidden; -webkit-overflow-scrolling:touch; }
-  #gallery-scroll.no-sections { top:78px; }
+  /* scroll area: transcript top, then photos */
+  #mp3-scroll {
+    position:absolute;
+    top:74px; /* topbar 40 + secnav ~34 */
+    left:0; right:0; bottom:0;
+    overflow-y:auto; overflow-x:hidden;
+    -webkit-overflow-scrolling:touch;
+  }
 
-  /* Meta block */
-  #gallery-meta-block { padding:24px 20px 32px; border-bottom:1px solid var(--rule-light); display:none; }
-  #gallery-meta-block.visible { display:block; }
-  .gallery-meta-title { font-size:24px; font-weight:300; color:var(--text); margin-bottom:12px; }
-  .gallery-meta-sub { font-size:11px; letter-spacing:0.05em; margin-bottom:32px; font-family:'IBM Plex Mono',monospace; color:var(--meta); }
-  .gallery-meta-desc { font-size:14px; line-height:1.9; margin-bottom:32px; color:var(--text); }
-  .gallery-meta-credits { font-size:11px; line-height:1.8; letter-spacing:0.02em; color:var(--meta); padding-top:16px; border-top:1px solid var(--rule-light); }
+  /* transcript section — original style from base HTML */
+  #mp3-transcript-area {
+    max-width:540px;
+    margin:0 auto;
+    padding:35vh 24px 24px;
+  }
 
-  /* Images */
-  #gallery-imgs-wrap { display:flex; flex-direction:column; gap:0; padding-bottom:calc(var(--player-height) + 60px); }
-  #gallery-imgs-wrap img { width:100%; height:auto; display:block; cursor:pointer; }
+  /* project meta inside transcript area */
+  .project-meta-block { margin-bottom:64px; }
+  .project-meta-title { font-size:24px; font-weight:300; color:var(--text); margin-bottom:12px; }
+  .project-meta-sub { font-size:11px; letter-spacing:0.05em; margin-bottom:32px; font-family:'IBM Plex Mono',monospace; color:var(--meta); }
+  .project-meta-desc { font-size:14px; line-height:1.9; margin-bottom:32px; color:var(--text); }
+  .project-meta-credits { font-size:11px; line-height:1.8; letter-spacing:0.02em; color:var(--meta); padding-top:16px; border-top:1px solid var(--rule-light); }
 
-  /* BACK BUTTON — original style & position */
-  #gallery-back { position:fixed; bottom:calc(var(--player-height) + 16px); left:16px; background:#fff; border:1px solid #000; font-size:10px; padding:8px 16px; font-weight:600; cursor:pointer; z-index:270; letter-spacing:0.1em; font-family:var(--font); color:#000; }
+  /* transcript entries — identical to original */
+  .transcript-entry { margin-bottom:48px; font-size:17px; line-height:1.9; color:var(--meta); transition:color 0.5s ease; }
+  .transcript-entry.active { color:var(--text); }
+  .entry-meta { display:flex; align-items:center; gap:10px; margin-bottom:6px; }
+  .speaker-name { font-size:10px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--dim); }
+  .transcript-entry.active .speaker-name { color:var(--accent); }
+  .time-stamp { font-size:9px; color:var(--dim); font-family:'IBM Plex Mono',monospace; }
 
-  /* PLAYER BAR */
+  /* photos stacked below transcript */
+  #mp3-photos {
+    width:100%;
+  }
+  #mp3-photos img { width:100%; height:auto; display:block; cursor:pointer; }
+
+  /* BACK button — original style */
+  #mp3-back {
+    position:fixed;
+    bottom:calc(var(--player-height) + 16px);
+    left:16px;
+    background:#fff; border:1px solid #000;
+    font-size:10px; padding:8px 16px; font-weight:600;
+    cursor:pointer; z-index:270; letter-spacing:0.1em;
+    font-family:var(--font); color:#000;
+  }
+
+  /* ===================== */
+  /* KUROSAKI (mp5) VIEW   */
+  /* ===================== */
+  #kurosaki-main {
+    position:fixed; inset:0; display:none; flex-direction:column;
+    background:#fff; z-index:150; overflow:hidden;
+  }
+  #kurosaki-scroll {
+    flex:1; overflow-y:auto; overflow-x:hidden; -webkit-overflow-scrolling:touch;
+    padding-bottom: calc(var(--player-height) + 60px);
+  }
+  #kurosaki-scroll img { width:100%; height:auto; display:block; cursor:pointer; }
+  .kurosaki-meta-block { padding:60px 20px 32px; border-bottom:1px solid var(--rule-light); }
+  .kurosaki-meta-title { font-size:24px; font-weight:300; color:var(--text); margin-bottom:12px; }
+  .kurosaki-meta-sub { font-size:11px; letter-spacing:0.05em; margin-bottom:32px; font-family:'IBM Plex Mono',monospace; color:var(--meta); }
+  .kurosaki-meta-desc { font-size:14px; line-height:1.9; margin-bottom:32px; color:var(--text); }
+  .kurosaki-meta-credits { font-size:11px; line-height:1.8; letter-spacing:0.02em; color:var(--meta); padding-top:16px; border-top:1px solid var(--rule-light); }
+  #kurosaki-back {
+    position:fixed; bottom:calc(var(--player-height) + 16px); left:16px;
+    background:#fff; border:1px solid #000; font-size:10px; padding:8px 16px;
+    font-weight:600; cursor:pointer; z-index:270; letter-spacing:0.1em;
+    font-family:var(--font); color:#000;
+  }
+
+  /* PLAYER BAR — original white style */
   #player-bar { position:fixed; bottom:0; left:0; right:0; height:var(--player-height); background:#fff; border-top:1px solid var(--rule-light); display:none; align-items:center; padding:0 20px; padding-bottom:env(safe-area-inset-bottom); z-index:300; }
   .player-inner { display:flex; align-items:center; gap:16px; width:100%; }
   .play-btn { width:44px; height:44px; border-radius:50%; border:1px solid #000; background:transparent; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
@@ -114,7 +178,7 @@
 <!-- PAGE LABEL -->
 <div class="page-label" id="page-label">
   <span id="page-label-left">Voices / Experience</span>
-  <span id="page-label-right">V93</span>
+  <span id="page-label-right">V94</span>
 </div>
 
 <!-- SCREEN 0 -->
@@ -172,20 +236,43 @@
   <div class="loader-bar"><div class="loader-inner"></div></div>
 </div>
 
-<!-- GALLERY MAIN -->
-<div id="gallery-main">
-  <div id="transcript-strip"><div id="strip-entries"></div></div>
-  <div id="section-nav-bar"></div>
-  <div id="gallery-scroll">
-    <div id="gallery-meta-block">
-      <div class="gallery-meta-title"   id="gm-title"></div>
-      <div class="gallery-meta-sub"     id="gm-sub"></div>
-      <div class="gallery-meta-desc"    id="gm-desc"></div>
-      <div class="gallery-meta-credits" id="gm-credits"></div>
-    </div>
-    <div id="gallery-imgs-wrap"></div>
+<!-- MP3 MAIN VIEW -->
+<div id="mp3-main">
+  <div id="mp3-topbar">
+    <div id="mp3-topbar-logo" onclick="goTo(1)">.MP5</div>
+    <div id="mp3-topbar-gallery">GALLERY</div>
   </div>
-  <button id="gallery-back" onclick="goTo(2)">← BACK</button>
+  <div id="mp3-secnav"></div>
+  <div id="mp3-scroll">
+    <!-- transcript (with meta block) comes first -->
+    <div id="mp3-transcript-area">
+      <div id="mp3-meta-block"></div>
+      <div id="mp3-transcript-container"></div>
+    </div>
+    <!-- photos stacked below -->
+    <div id="mp3-photos"></div>
+  </div>
+  <button id="mp3-back" onclick="goTo(2)">← BACK</button>
+</div>
+
+<!-- KUROSAKI (mp5) VIEW -->
+<div id="kurosaki-main">
+  <div id="kurosaki-scroll">
+    <div class="kurosaki-meta-block">
+      <div class="kurosaki-meta-title">野田結太.mp5</div>
+      <div class="kurosaki-meta-sub">loc. 葉山 黒崎海岸 / 2026.12.16</div>
+      <div class="kurosaki-meta-desc">今回の葉山市、黒崎海岸での.mp5では、レコーダーを持ち音の収集を行った。<br>日没ごろ、野田の制作音源を海に正対し演奏。<br>録音音源は撮影後、「Kurosaki ambient」 として発展。</div>
+      <div class="kurosaki-meta-credits">sound: @yutand___<br>Photography: @la_viscuit<br>Production: @___.mp5</div>
+    </div>
+    <img src="./kurosaki/kurosaki_film-01.webp" onclick="openLightbox(this.src)" loading="lazy" />
+    <img src="./kurosaki/kurosaki_film-02.webp" onclick="openLightbox(this.src)" loading="lazy" />
+    <img src="./kurosaki/kurosaki_film-03.webp" onclick="openLightbox(this.src)" loading="lazy" />
+    <img src="./kurosaki/kurosaki_film-04.webp" onclick="openLightbox(this.src)" loading="lazy" />
+    <img src="./kurosaki/kurosaki_film-05.webp" onclick="openLightbox(this.src)" loading="lazy" />
+    <img src="./kurosaki/kurosaki_film-06.webp" onclick="openLightbox(this.src)" loading="lazy" />
+    <img src="./kurosaki/kurosaki_film-07.webp" onclick="openLightbox(this.src)" loading="lazy" />
+  </div>
+  <button id="kurosaki-back" onclick="goTo(2)">← BACK</button>
 </div>
 
 <!-- PLAYER BAR -->
@@ -213,135 +300,132 @@
 
 <script>
 /* DATA */
-const NODA_IMAGES   = ['./nodayuta.jpg','./nodayuta_2.jpg','./nodayuta_3.jpg','./nodayuta_4.jpg'];
-const NODA_META     = { title:'野田結太.mp3', sub:'nodayuta.mp3 / 10:55', desc:'', credits:'sound: @yutand___<br>Production: @___.mp5' };
-
-const KUROSAKI_IMAGES = [
-  './kurosaki/kurosaki_film-01.webp','./kurosaki/kurosaki_film-02.webp','./kurosaki/kurosaki_film-03.webp',
-  './kurosaki/kurosaki_film-04.webp','./kurosaki/kurosaki_film-05.webp','./kurosaki/kurosaki_film-06.webp',
-  './kurosaki/kurosaki_film-07.webp'
-];
-const KUROSAKI_META = {
-  title: '野田結太.mp5', sub: 'loc. 葉山 黒崎海岸 / 2026.12.16',
-  desc: '今回の葉山市、黒崎海岸での.mp5では、レコーダーを持ち音の収集を行った。<br>日没ごろ、野田の制作音源を海に正対し演奏。<br>録音音源は撮影後、「Kurosaki ambient」 として発展。',
-  credits: 'sound: @yutand___<br>Photography: @la_viscuit<br>Production: @___.mp5'
-};
+const NODA_IMAGES = ['./nodayuta.jpg','./nodayuta_2.jpg','./nodayuta_3.jpg','./nodayuta_4.jpg'];
+const NODA_META   = { title:'野田結太.mp3', sub:'nodayuta.mp3 / 10:55', desc:'', credits:'sound: @yutand___<br>Production: @___.mp5' };
+const NODA_LINK   = 'https://www.instagram.com/yutand___';
 
 const KIKUCHI_IMAGES = ['./yukikikuchi.jpg','./yukikikuchi_2.jpg'];
 const KIKUCHI_META   = { title:'菊地佑樹.mp3', sub:'kikuchiyuki_jgoe.mp3 / 53:49', desc:'', credits:'sound: @memo.riesreview<br>Production: @___.mp5' };
+const KIKUCHI_LINK   = 'https://www.instagram.com/memo.riesreview';
 
 /* STATE */
 const audio = new Audio();
-let playing = false, transcript = [], sections = [], currentFile = null, lastActiveIdx = -1;
+let playing = false, transcript = [], sections = [], currentFile = null;
+let lastEl = null, userScrolling = false, uScrollTimer = null;
 
 /* NAV */
 function goTo(n) {
-  ['screen-0','screen-1','screen-2','processing-screen','gallery-main'].forEach(id => {
+  ['screen-0','screen-1','screen-2','processing-screen','mp3-main','kurosaki-main'].forEach(id => {
     const el = document.getElementById(id); if (el) el.style.display = 'none';
   });
-  if (n===0)          document.getElementById('screen-0').style.display='flex';
-  else if (n===1)     document.getElementById('screen-1').style.display='flex';
-  else if (n===2)     document.getElementById('screen-2').style.display='flex';
-  else if (n==='proc')    document.getElementById('processing-screen').style.display='flex';
-  else if (n==='gallery') document.getElementById('gallery-main').style.display='flex';
+  if (n === 0)             document.getElementById('screen-0').style.display = 'flex';
+  else if (n === 1)        document.getElementById('screen-1').style.display = 'flex';
+  else if (n === 2)        document.getElementById('screen-2').style.display = 'flex';
+  else if (n === 'proc')   document.getElementById('processing-screen').style.display = 'flex';
+  else if (n === 'mp3')    document.getElementById('mp3-main').style.display = 'block';
+  else if (n === 'kuro')   document.getElementById('kurosaki-main').style.display = 'flex';
 
-  document.getElementById('player-bar').style.display = (audio.src && audio.src!=='') ? 'flex' : 'none';
+  document.getElementById('player-bar').style.display = (audio.src && audio.src !== '') ? 'flex' : 'none';
 
-  const left=document.getElementById('page-label-left'), right=document.getElementById('page-label-right');
-  const map = { 0:['Voices / Experience','V93'], 1:['Voices / Experience','V93'], 2:['Select File','Step 02'], proc:['Building Audio Map',''], gallery:[currentFile==='kurosaki'?'野田結太.mp5':'.MP5','Gallery'] };
-  const l = map[n]||['Voices / Experience','V93'];
-  if(left) left.innerText=l[0]; if(right) right.innerText=l[1];
+  const left = document.getElementById('page-label-left'), right = document.getElementById('page-label-right');
+  const map = {
+    0: ['Voices / Experience','V94'], 1: ['Voices / Experience','V94'],
+    2: ['Select File','Step 02'], proc: ['Building Audio Map',''],
+    mp3:  [currentFile === 'noda' ? '野田結太.mp3' : '菊地佑樹.mp3', 'Transcribe'],
+    kuro: ['野田結太.mp5', 'Gallery']
+  };
+  const l = map[n] || ['Voices / Experience','V94'];
+  if (left) left.innerText = l[0]; if (right) right.innerText = l[1];
 }
 
 /* ENTRY */
 document.getElementById('entry-permission-btn').addEventListener('click', async () => {
-  if (typeof DeviceOrientationEvent!=='undefined' && typeof DeviceOrientationEvent.requestPermission==='function') {
-    try { const s=await DeviceOrientationEvent.requestPermission(); if(s==='granted') window.addEventListener('deviceorientation',handleGyro,true); } catch(e){}
-  } else { window.addEventListener('deviceorientation',handleGyro,true); }
+  if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
+    try { const s = await DeviceOrientationEvent.requestPermission(); if (s==='granted') window.addEventListener('deviceorientation', handleGyro, true); } catch(e){}
+  } else { window.addEventListener('deviceorientation', handleGyro, true); }
   goTo(1);
 });
 
 /* GYRO */
 function handleGyro(e) {
-  const xAdj=e.gamma||0, yAdj=(e.beta||0)-34;
-  const logo=document.getElementById('gyro-logo'), s1=document.getElementById('screen-1');
-  if (s1&&s1.style.display!=='none'&&logo) {
-    const mx=Math.max(-60,Math.min(60,xAdj/1.1)), my=Math.max(-60,Math.min(60,yAdj/1.1));
-    logo.style.transform=`translate3d(${mx}px,${my}px,0) rotateX(${-my*3.5}deg) rotateY(${mx*3.5}deg)`;
+  const xAdj = e.gamma||0, yAdj = (e.beta||0)-34;
+  const logo = document.getElementById('gyro-logo'), s1 = document.getElementById('screen-1');
+  if (s1 && s1.style.display !== 'none' && logo) {
+    const mx = Math.max(-60,Math.min(60,xAdj/1.1)), my = Math.max(-60,Math.min(60,yAdj/1.1));
+    logo.style.transform = `translate3d(${mx}px,${my}px,0) rotateX(${-my*3.5}deg) rotateY(${mx*3.5}deg)`;
   }
-  const lb=document.getElementById('lightbox'), lbImg=document.getElementById('lightbox-img');
-  if (lb&&lb.style.display==='flex'&&lbImg) {
-    const px=Math.max(-25,Math.min(25,xAdj*0.7)), py=Math.max(-20,Math.min(20,yAdj*-0.5));
-    lbImg.style.transform=`translate(${px}px,${py}px) scale(${1+Math.max(0,Math.min(1,((e.beta||45)-20)/50))*0.5})`;
+  const lb = document.getElementById('lightbox'), lbImg = document.getElementById('lightbox-img');
+  if (lb && lb.style.display === 'flex' && lbImg) {
+    const px = Math.max(-25,Math.min(25,xAdj*0.7)), py = Math.max(-20,Math.min(20,yAdj*-0.5));
+    lbImg.style.transform = `translate(${px}px,${py}px) scale(${1+Math.max(0,Math.min(1,((e.beta||45)-20)/50))*0.5})`;
   }
-}
-
-/* BUILD */
-function buildGallery(images) {
-  document.getElementById('gallery-imgs-wrap').innerHTML = images.map(src=>`<img src="${src}" onclick="openLightbox('${src}')" loading="lazy" />`).join('');
-  document.getElementById('gallery-scroll').scrollTop=0;
-}
-
-function setMeta(meta) {
-  const block=document.getElementById('gallery-meta-block');
-  if (!meta||(!meta.title&&!meta.desc)) { block.classList.remove('visible'); return; }
-  document.getElementById('gm-title').innerText   = meta.title||'';
-  document.getElementById('gm-sub').innerText     = meta.sub||'';
-  document.getElementById('gm-desc').innerHTML    = meta.desc||'';
-  document.getElementById('gm-credits').innerHTML = meta.credits||'';
-  block.classList.add('visible');
-}
-
-function buildStripEntries() {
-  const c=document.getElementById('strip-entries');
-  c.innerHTML = transcript.map((t,i)=>
-    `<div class="strip-entry" id="se-${i}">
-      <div class="strip-speaker">${t.speaker}</div>
-      <div class="strip-text">${t.text}</div>
-      <div class="strip-time">${t.startText||''}</div>
-    </div>`
-  ).join('');
-}
-
-function buildSectionNav() {
-  const nav=document.getElementById('section-nav-bar'), scroll=document.getElementById('gallery-scroll');
-  if (!sections.length) { nav.innerHTML=''; nav.style.display='none'; scroll.classList.add('no-sections'); return; }
-  nav.style.display='flex'; scroll.classList.remove('no-sections');
-  nav.innerHTML = sections.map((s,i)=>
-    `<button class="snav-btn" id="snav-${i}" onclick="jumpTo(${s.start})">
-      <span style="opacity:0.4;font-size:8px;display:block;margin-bottom:1px;">0${i+1}</span>${s.title}
-    </button>`
-  ).join('');
 }
 
 /* START */
 function startExperience(file) {
-  currentFile=file; audio.pause(); audio.src=''; lastActiveIdx=-1;
+  currentFile = file;
+  audio.pause(); audio.src = ''; lastEl = null;
 
-  if (file==='kurosaki') {
-    transcript=[]; sections=[];
-    buildGallery(KUROSAKI_IMAGES); setMeta(KUROSAKI_META); buildStripEntries(); buildSectionNav();
+  if (file === 'kurosaki') {
     goTo('proc');
-    setTimeout(()=>{
-      goTo('gallery'); audio.src='./kurosaki.mp3'; audio.loop=false; audio.load();
+    setTimeout(() => {
+      goTo('kuro');
+      audio.src = './kurosaki.mp3'; audio.loop = false; audio.load();
       audio.play().then(()=>{ playing=true; updateIcons(); document.getElementById('player-bar').style.display='flex'; }).catch(()=>{});
-    },3000);
-  } else if (file==='noda') {
-    transcript=(typeof NODA_TRANSCRIPT!=='undefined')?NODA_TRANSCRIPT.slice():[];
-    sections=(typeof NODA_SECTIONS!=='undefined')?NODA_SECTIONS.slice():[];
-    buildGallery(NODA_IMAGES); setMeta(NODA_META); buildStripEntries(); buildSectionNav();
-    audio.src='./nodayuta.mp3'; loadAndStart();
-  } else if (file==='kikuchi') {
-    transcript=(typeof KIKUCHI_TRANSCRIPT!=='undefined')?KIKUCHI_TRANSCRIPT.slice():[];
-    sections=(typeof KIKUCHI_SECTIONS!=='undefined')?KIKUCHI_SECTIONS.slice():[];
-    buildGallery(KIKUCHI_IMAGES); setMeta(KIKUCHI_META); buildStripEntries(); buildSectionNav();
-    audio.src='./kikuchiyuki_compressed.mp3'; loadAndStart();
-  }
-}
+    }, 3000);
 
-function loadAndStart() {
-  audio.load(); goTo('proc');
-  setTimeout(()=>{ goTo('gallery'); audio.play().then(()=>{ playing=true; updateIcons(); }).catch(()=>{}); },3000);
+  } else {
+    const isNoda = file === 'noda';
+    transcript = isNoda
+      ? (typeof NODA_TRANSCRIPT    !== 'undefined' ? NODA_TRANSCRIPT.slice()    : [])
+      : (typeof KIKUCHI_TRANSCRIPT !== 'undefined' ? KIKUCHI_TRANSCRIPT.slice() : []);
+    sections = isNoda
+      ? (typeof NODA_SECTIONS    !== 'undefined' ? NODA_SECTIONS.slice()    : [])
+      : (typeof KIKUCHI_SECTIONS !== 'undefined' ? KIKUCHI_SECTIONS.slice() : []);
+    const meta   = isNoda ? NODA_META   : KIKUCHI_META;
+    const images = isNoda ? NODA_IMAGES : KIKUCHI_IMAGES;
+    audio.src    = isNoda ? './nodayuta.mp3' : './kikuchiyuki_compressed.mp3';
+
+    // meta block
+    const mb = document.getElementById('mp3-meta-block');
+    mb.innerHTML = `
+      <div class="project-meta-block">
+        <div class="project-meta-title">${meta.title}</div>
+        <div class="project-meta-sub">${meta.sub}</div>
+        ${meta.desc ? `<div class="project-meta-desc">${meta.desc}</div>` : ''}
+        <div class="project-meta-credits">${meta.credits}</div>
+      </div>`;
+
+    // transcript entries
+    document.getElementById('mp3-transcript-container').innerHTML = transcript.map((t,i) =>
+      `<div class="transcript-entry" id="te-${i}" data-start="${t.start}" data-end="${t.end||t.start+30}">
+        <div class="entry-meta">
+          <span class="speaker-name">${t.speaker}</span>
+          <span class="time-stamp">${t.startText||''}</span>
+        </div>
+        <div>${t.text}</div>
+      </div>`
+    ).join('');
+
+    // section nav
+    document.getElementById('mp3-secnav').innerHTML = sections.map((s,i) =>
+      `<button class="mp3-secbtn" id="nsec-${i}" onclick="jumpTo(${s.start})">${s.title}</button>`
+    ).join('');
+
+    // photos
+    document.getElementById('mp3-photos').innerHTML = images.map(src =>
+      `<img src="${src}" onclick="openLightbox('${src}')" loading="lazy" />`
+    ).join('');
+
+    // reset scroll
+    document.getElementById('mp3-scroll').scrollTop = 0;
+
+    audio.load(); goTo('proc');
+    setTimeout(() => {
+      goTo('mp3');
+      audio.play().then(()=>{ playing=true; updateIcons(); }).catch(()=>{});
+    }, 3000);
+  }
 }
 
 /* PLAYBACK */
@@ -356,23 +440,52 @@ audio.onpause = ()=>{ playing=false; updateIcons(); };
 
 /* TIME UPDATE */
 audio.ontimeupdate = () => {
-  const cur=audio.currentTime, dur=audio.duration||0;
-  const fmt=s=>`${String(Math.floor(s/60)).padStart(2,'0')}:${String(Math.floor(s%60)).padStart(2,'0')}`;
-  document.getElementById('timecode').innerText=`${fmt(cur)} / ${fmt(dur)}`;
-  let activeIdx=-1;
-  transcript.forEach((t,i)=>{
-    if (cur>=t.start&&cur<=(t.end||t.start+30)) {
-      activeIdx=i;
-      document.getElementById('mini-speaker').innerText=t.speaker;
-      document.getElementById('mini-text').innerText=t.text;
+  const cur = audio.currentTime, dur = audio.duration||0;
+  const fmt = s => `${String(Math.floor(s/60)).padStart(2,'0')}:${String(Math.floor(s%60)).padStart(2,'0')}`;
+  document.getElementById('timecode').innerText = `${fmt(cur)} / ${fmt(dur)}`;
+
+  let activeEl = null;
+  transcript.forEach((t,i) => {
+    const el = document.getElementById(`te-${i}`);
+    const on = cur >= t.start && cur <= (t.end||t.start+30);
+    if (el) el.classList.toggle('active', on);
+    if (on) {
+      activeEl = el;
+      document.getElementById('mini-speaker').innerText = t.speaker;
+      document.getElementById('mini-text').innerText    = t.text;
     }
   });
-  if (activeIdx!==lastActiveIdx) {
-    document.querySelectorAll('.strip-entry').forEach((el,i)=>el.classList.toggle('active',i===activeIdx));
-    lastActiveIdx=activeIdx;
+
+  // auto-scroll transcript
+  if (activeEl && activeEl !== lastEl && !userScrolling) {
+    lastEl = activeEl;
+    const c = document.getElementById('mp3-scroll');
+    if (c) smoothScroll(c, activeEl.offsetTop - c.clientHeight/2 + activeEl.clientHeight/2, 1200);
   }
-  sections.forEach((s,i)=>{ const el=document.getElementById(`snav-${i}`); if(el) el.classList.toggle('active',cur>=s.start&&(sections[i+1]?cur<sections[i+1].start:true)); });
+
+  // section nav highlight
+  sections.forEach((s,i) => {
+    const el = document.getElementById(`nsec-${i}`);
+    if (el) el.classList.toggle('active', cur>=s.start && (sections[i+1]?cur<sections[i+1].start:true));
+  });
 };
+
+/* SMOOTH SCROLL */
+function smoothScroll(el, to, dur) {
+  const from = el.scrollTop, diff = to - from; let t0 = null;
+  const step = now => {
+    if (!t0) t0 = now;
+    const p = Math.min((now-t0)/dur, 1), e = 1-Math.pow(1-p,3);
+    el.scrollTop = from + diff*e;
+    if (p < 1 && !userScrolling) requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
+}
+
+document.getElementById('mp3-scroll').addEventListener('touchstart', () => {
+  userScrolling = true; clearTimeout(uScrollTimer);
+  uScrollTimer = setTimeout(()=>{ userScrolling=false; }, 3000);
+}, { passive:true });
 
 /* LIGHTBOX */
 function openLightbox(src) { document.getElementById('lightbox-img').src=src; document.getElementById('lightbox').style.display='flex'; }
