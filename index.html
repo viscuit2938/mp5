@@ -46,13 +46,12 @@
   .loader-inner { position:absolute; width:50%; height:100%; background:#000; animation:slide 1.5s ease-in-out infinite; }
   @keyframes slide { from{left:-100%} to{left:100%} }
 
-  /* ============================================
+  /* ============================================================
      MP3 MAIN
-     Layout: side-nav (fixed left 110px) + single
-     scroll column on the right that contains
-     transcript entries AND photos in sequence.
-     Text has no background → photos show through.
-  ============================================ */
+     Layer 1 (z:1): photo — fixed bg, swipeable
+     Layer 2 (z:2): transcript — scrolls over photo, transparent bg
+     Layer 3 (z:10): left nav — fixed, transparent bg
+  ============================================================ */
   #mp3-main {
     position:fixed; inset:0;
     bottom: var(--player-height);
@@ -60,7 +59,79 @@
     overflow:hidden;
   }
 
-  /* Fixed left nav — no background so photos bleed through */
+  /* --- LAYER 1: Photo background --- */
+  #mp3-photo-bg {
+    position:absolute; inset:0;
+    z-index:1;
+    overflow:hidden;
+    /* swipe handled by JS */
+    touch-action:pan-y; /* allow vertical swipe detection */
+  }
+  .photo-slide {
+    position:absolute; inset:0;
+    opacity:0;
+    transition:opacity 0.5s ease;
+  }
+  .photo-slide.active { opacity:1; }
+  .photo-slide img {
+    width:100%; height:100%;
+    object-fit:cover;
+    display:block;
+    user-select:none;
+    -webkit-user-drag:none;
+  }
+  /* photo index dots */
+  #photo-dots {
+    position:absolute;
+    bottom:12px; left:50%;
+    transform:translateX(-50%);
+    display:flex; gap:6px;
+    z-index:3;
+    pointer-events:none;
+  }
+  .dot {
+    width:5px; height:5px; border-radius:50%;
+    background:rgba(255,255,255,0.4);
+    transition:background 0.3s;
+  }
+  .dot.active { background:#fff; }
+
+  /* --- LAYER 2: Transcript — transparent, scrollable --- */
+  #mp3-transcript-layer {
+    position:absolute;
+    top:0;
+    left:var(--nav-width);
+    right:0;
+    bottom:0;
+    z-index:2;
+    overflow:hidden;
+  }
+  #mp3-scroll {
+    width:100%; height:100%;
+    overflow-y:auto; overflow-x:hidden;
+    -webkit-overflow-scrolling:touch;
+    /* NO background */
+    background:transparent;
+    padding:35vh 24px 15vh;
+  }
+  #mp3-content-inner { max-width:540px; }
+
+  /* project meta */
+  .project-meta-block { margin-bottom:80px; }
+  .project-meta-title { font-size:24px; font-weight:300; color:var(--text); margin-bottom:12px; }
+  .project-meta-sub { font-size:11px; letter-spacing:0.05em; margin-bottom:32px; font-family:'IBM Plex Mono',monospace; color:var(--meta); }
+  .project-meta-desc { font-size:14px; line-height:1.9; margin-bottom:32px; color:var(--text); }
+  .project-meta-credits { font-size:11px; line-height:1.8; letter-spacing:0.02em; color:var(--meta); padding-top:16px; border-top:1px solid var(--rule-light); }
+
+  /* transcript entries — original style */
+  .transcript-entry { margin-bottom:48px; font-size:17px; line-height:1.9; color:var(--meta); transition:color 0.5s ease; }
+  .transcript-entry.active { color:var(--text); }
+  .entry-meta { display:flex; align-items:center; gap:10px; margin-bottom:6px; }
+  .speaker-name { font-size:10px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--dim); }
+  .transcript-entry.active .speaker-name { color:var(--accent); }
+  .time-stamp { font-size:9px; color:var(--dim); font-family:'IBM Plex Mono',monospace; }
+
+  /* --- LAYER 3: Left nav --- */
   #mp3-nav {
     position:absolute;
     top:0; left:0; bottom:0;
@@ -74,7 +145,6 @@
   #mp3-logo {
     font-size:14px; font-weight:500; letter-spacing:0.1em;
     cursor:pointer; margin-bottom:20px; flex-shrink:0;
-    /* white text that stays readable over both white and photo */
     color:#fff; mix-blend-mode:difference;
   }
   #mp3-back {
@@ -99,52 +169,9 @@
   .section-item.active { color:var(--accent); font-weight:500; }
   .section-num { display:block; font-size:9px; margin-bottom:3px; opacity:0.4; }
 
-  /* Single scroll container, starts right of nav */
-  #mp3-scroll {
-    position:absolute;
-    top:0; left:var(--nav-width); right:0; bottom:0;
-    overflow-y:auto; overflow-x:hidden;
-    -webkit-overflow-scrolling:touch;
-    z-index:2;
-  }
-
-  /* Transcript section — NO background */
-  #mp3-transcript-area {
-    padding:35vh 24px 0;
-    background:transparent;
-  }
-  #mp3-content-inner { max-width:540px; }
-
-  /* project meta */
-  .project-meta-block { margin-bottom:80px; }
-  .project-meta-title { font-size:24px; font-weight:300; color:var(--text); margin-bottom:12px; }
-  .project-meta-sub { font-size:11px; letter-spacing:0.05em; margin-bottom:32px; font-family:'IBM Plex Mono',monospace; color:var(--meta); }
-  .project-meta-desc { font-size:14px; line-height:1.9; margin-bottom:32px; color:var(--text); }
-  .project-meta-credits { font-size:11px; line-height:1.8; letter-spacing:0.02em; color:var(--meta); padding-top:16px; border-top:1px solid var(--rule-light); }
-
-  /* transcript entries — original style */
-  .transcript-entry { margin-bottom:48px; font-size:17px; line-height:1.9; color:var(--meta); transition:color 0.5s ease; }
-  .transcript-entry.active { color:var(--text); }
-  .entry-meta { display:flex; align-items:center; gap:10px; margin-bottom:6px; }
-  .speaker-name { font-size:10px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--dim); }
-  .transcript-entry.active .speaker-name { color:var(--accent); }
-  .time-stamp { font-size:9px; color:var(--dim); font-family:'IBM Plex Mono',monospace; }
-
-  /* Photos flow directly below transcript — no gap, no background */
-  #mp3-photos {
-    width:100%;
-    /* small top margin so transcript ends don't crash into photos */
-    margin-top:15vh;
-    padding-bottom:15vh;
-    background:transparent;
-  }
-  #mp3-photos img {
-    width:100%; height:auto; display:block; cursor:zoom-in;
-  }
-
-  /* ============================================
+  /* ============================================================
      KUROSAKI — unchanged
-  ============================================ */
+  ============================================================ */
   #kurosaki-main {
     position:fixed; inset:0; display:none; flex-direction:column;
     background:#fff; z-index:150; overflow:hidden;
@@ -182,7 +209,7 @@
 
 <div class="page-label" id="page-label">
   <span id="page-label-left">Voices / Experience</span>
-  <span id="page-label-right">V97</span>
+  <span id="page-label-right">V98</span>
 </div>
 
 <div id="screen-0" class="screen">
@@ -239,22 +266,27 @@
 <!-- MP3 MAIN -->
 <div id="mp3-main">
 
-  <!-- Fixed left nav -->
-  <div id="mp3-nav">
-    <div id="mp3-logo" onclick="goTo(1)">.MP5</div>
-    <button id="mp3-back" onclick="goTo(2)">← BACK</button>
-    <div id="mp3-secnav"></div>
+  <!-- Layer 1: photo background (swipeable) -->
+  <div id="mp3-photo-bg">
+    <!-- slides injected by JS -->
   </div>
+  <div id="photo-dots"></div>
 
-  <!-- Single scroll: transcript → photos -->
-  <div id="mp3-scroll">
-    <div id="mp3-transcript-area">
+  <!-- Layer 2: transcript over photo -->
+  <div id="mp3-transcript-layer">
+    <div id="mp3-scroll">
       <div id="mp3-content-inner">
         <div id="mp3-meta-block"></div>
         <div id="mp3-transcript-container"></div>
       </div>
     </div>
-    <div id="mp3-photos"></div>
+  </div>
+
+  <!-- Layer 3: left nav -->
+  <div id="mp3-nav">
+    <div id="mp3-logo" onclick="goTo(1)">.MP5</div>
+    <button id="mp3-back" onclick="goTo(2)">← BACK</button>
+    <div id="mp3-secnav"></div>
   </div>
 
 </div>
@@ -310,6 +342,49 @@ const audio = new Audio();
 let playing=false, transcript=[], sections=[], currentFile=null;
 let lastEl=null, userScrolling=false, uScrollTimer=null;
 
+/* ── Photo swipe ── */
+let photoIndex=0, photos=[], swipeStartX=0, swipeStartY=0;
+
+function buildPhotos(images) {
+  photos = images;
+  photoIndex = 0;
+  const bg = document.getElementById('mp3-photo-bg');
+  bg.innerHTML = images.map((src,i)=>
+    `<div class="photo-slide${i===0?' active':''}" data-i="${i}">
+       <img src="${src}" draggable="false" />
+     </div>`
+  ).join('');
+  // dots
+  document.getElementById('photo-dots').innerHTML = images.map((_,i)=>
+    `<div class="dot${i===0?' active':''}" data-i="${i}"></div>`
+  ).join('');
+  // swipe listeners
+  bg.addEventListener('touchstart', onPhotoTouchStart, {passive:true});
+  bg.addEventListener('touchend',   onPhotoTouchEnd,   {passive:true});
+}
+
+function showPhoto(idx) {
+  if(idx<0||idx>=photos.length) return;
+  document.querySelectorAll('.photo-slide').forEach((el,i)=>el.classList.toggle('active',i===idx));
+  document.querySelectorAll('.dot').forEach((el,i)=>el.classList.toggle('active',i===idx));
+  photoIndex=idx;
+}
+
+function onPhotoTouchStart(e) {
+  swipeStartX = e.touches[0].clientX;
+  swipeStartY = e.touches[0].clientY;
+}
+function onPhotoTouchEnd(e) {
+  const dx = e.changedTouches[0].clientX - swipeStartX;
+  const dy = e.changedTouches[0].clientY - swipeStartY;
+  // only register if horizontal swipe dominates
+  if(Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 40) {
+    if(dx < 0) showPhoto(photoIndex+1);
+    else        showPhoto(photoIndex-1);
+  }
+}
+
+/* ── NAV ── */
 function goTo(n) {
   ['screen-0','screen-1','screen-2','processing-screen','mp3-main','kurosaki-main'].forEach(id=>{
     const el=document.getElementById(id); if(el) el.style.display='none';
@@ -322,11 +397,17 @@ function goTo(n) {
   else if(n==='kuro') document.getElementById('kurosaki-main').style.display='flex';
   document.getElementById('player-bar').style.display=(audio.src&&audio.src!=='')?'flex':'none';
   const left=document.getElementById('page-label-left'),right=document.getElementById('page-label-right');
-  const map={0:['Voices / Experience','V97'],1:['Voices / Experience','V97'],2:['Select File','Step 02'],proc:['Building Audio Map',''],mp3:[currentFile==='noda'?'野田結太.MP3':'菊地佑樹.MP3','Transcribe'],kuro:['野田結太.mp5','Gallery']};
-  const l=map[n]||['Voices / Experience','V97'];
+  const map={
+    0:['Voices / Experience','V98'],1:['Voices / Experience','V98'],
+    2:['Select File','Step 02'],proc:['Building Audio Map',''],
+    mp3:[currentFile==='noda'?'野田結太.MP3':'菊地佑樹.MP3','Transcribe'],
+    kuro:['野田結太.mp5','Gallery']
+  };
+  const l=map[n]||['Voices / Experience','V98'];
   if(left)left.innerText=l[0]; if(right)right.innerText=l[1];
 }
 
+/* ── ENTRY ── */
 document.getElementById('entry-permission-btn').addEventListener('click',async()=>{
   if(typeof DeviceOrientationEvent!=='undefined'&&typeof DeviceOrientationEvent.requestPermission==='function'){
     try{const s=await DeviceOrientationEvent.requestPermission();if(s==='granted')window.addEventListener('deviceorientation',handleGyro,true);}catch(e){}
@@ -334,6 +415,7 @@ document.getElementById('entry-permission-btn').addEventListener('click',async()
   goTo(1);
 });
 
+/* ── GYRO ── */
 function handleGyro(e){
   const xAdj=e.gamma||0,yAdj=(e.beta||0)-34;
   const logo=document.getElementById('gyro-logo'),s1=document.getElementById('screen-1');
@@ -342,6 +424,7 @@ function handleGyro(e){
   if(lb&&lb.style.display==='flex'&&lbImg){const px=Math.max(-25,Math.min(25,xAdj*0.7)),py=Math.max(-20,Math.min(20,yAdj*-0.5));lbImg.style.transform=`translate(${px}px,${py}px) scale(${1+Math.max(0,Math.min(1,((e.beta||45)-20)/50))*0.5})`;}
 }
 
+/* ── START ── */
 function startExperience(file){
   currentFile=file; audio.pause(); audio.src=''; lastEl=null;
 
@@ -361,6 +444,9 @@ function startExperience(file){
   const meta=isNoda?NODA_META:KIKUCHI_META;
   const images=isNoda?NODA_IMAGES:KIKUCHI_IMAGES;
   audio.src=isNoda?'./nodayuta.mp3':'./kikuchiyuki_compressed.mp3';
+
+  // build photo bg
+  buildPhotos(images);
 
   // meta block
   document.getElementById('mp3-meta-block').innerHTML=meta.title?`<div class="project-meta-block"><div class="project-meta-title">${meta.title}</div><div class="project-meta-sub">${meta.sub}</div>${meta.desc?`<div class="project-meta-desc">${meta.desc}</div>`:''}<div class="project-meta-credits">${meta.credits}</div></div>`:'';
@@ -383,11 +469,6 @@ function startExperience(file){
     </button>`
   ).join('');
 
-  // photos
-  document.getElementById('mp3-photos').innerHTML=images.map(src=>
-    `<img src="${src}" onclick="openLightbox('${src}')" loading="lazy" />`
-  ).join('');
-
   audio.load(); goTo('proc');
   setTimeout(()=>{
     goTo('mp3');
@@ -396,6 +477,7 @@ function startExperience(file){
   },3000);
 }
 
+/* ── PLAYBACK ── */
 function jumpTo(sec){audio.currentTime=sec;audio.play().then(()=>{playing=true;updateIcons();});}
 function togglePlay(){if(playing)audio.pause();else audio.play().then(()=>playing=true);}
 function updateIcons(){
@@ -405,6 +487,7 @@ function updateIcons(){
 audio.onplay=()=>{playing=true;updateIcons();};
 audio.onpause=()=>{playing=false;updateIcons();};
 
+/* ── TIME UPDATE ── */
 audio.ontimeupdate=()=>{
   const cur=audio.currentTime,dur=audio.duration||0;
   const fmt=s=>`${String(Math.floor(s/60)).padStart(2,'0')}:${String(Math.floor(s%60)).padStart(2,'0')}`;
@@ -441,6 +524,7 @@ document.getElementById('mp3-scroll').addEventListener('touchstart',()=>{
   uScrollTimer=setTimeout(()=>{userScrolling=false;},3000);
 },{passive:true});
 
+/* ── LIGHTBOX ── */
 function openLightbox(src){document.getElementById('lightbox-img').src=src;document.getElementById('lightbox').style.display='flex';}
 function closeLightbox(){document.getElementById('lightbox').style.display='none';document.getElementById('lightbox-img').style.transform='none';}
 
