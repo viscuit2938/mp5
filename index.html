@@ -116,12 +116,14 @@
   }
   #mp3-content-inner { max-width:540px; }
 
-  /* project meta */
+  /* project meta — white on photo bg */
   .project-meta-block { margin-bottom:80px; }
-  .project-meta-title { font-size:24px; font-weight:300; color:var(--text); margin-bottom:12px; }
-  .project-meta-sub { font-size:11px; letter-spacing:0.05em; margin-bottom:32px; font-family:'IBM Plex Mono',monospace; color:var(--meta); }
-  .project-meta-desc { font-size:14px; line-height:1.9; margin-bottom:32px; color:var(--text); }
-  .project-meta-credits { font-size:11px; line-height:1.8; letter-spacing:0.02em; color:var(--meta); padding-top:16px; border-top:1px solid var(--rule-light); }
+  .project-meta-title { font-size:24px; font-weight:300; color:#fff; margin-bottom:12px; }
+  .project-meta-sub { font-size:11px; letter-spacing:0.05em; margin-bottom:32px; font-family:'IBM Plex Mono',monospace; color:rgba(255,255,255,0.5); }
+  .project-meta-desc { font-size:14px; line-height:1.9; margin-bottom:32px; color:#fff; }
+  .project-meta-credits { font-size:11px; line-height:1.8; letter-spacing:0.02em; color:rgba(255,255,255,0.5); padding-top:16px; border-top:1px solid rgba(255,255,255,0.15); }
+  .credit-link { color:inherit; text-decoration:none; }
+  .credit-link:hover { opacity:0.7; }
 
   /* transcript entries — original style */
   .transcript-entry { margin-bottom:48px; font-size:17px; line-height:1.9; color:var(--meta); transition:color 0.5s ease; }
@@ -298,7 +300,7 @@
       <div class="kurosaki-meta-title">野田結太.mp5</div>
       <div class="kurosaki-meta-sub">loc. 葉山 黒崎海岸 / 2026.12.16</div>
       <div class="kurosaki-meta-desc">今回の葉山市、黒崎海岸での.mp5では、レコーダーを持ち音の収集を行った。<br>日没ごろ、野田の制作音源を海に正対し演奏。<br>録音音源は撮影後、「Kurosaki ambient」 として発展。</div>
-      <div class="kurosaki-meta-credits">sound: @yutand___<br>Photography: @la_viscuit<br>Production: @___.mp5</div>
+      <div class="kurosaki-meta-credits">sound: <a class="credit-link" href="https://www.instagram.com/yutand___/" target="_blank">@yutand___</a><br>Photography: <a class="credit-link" href="https://www.instagram.com/la_viscuit/" target="_blank">@la_viscuit</a><br>Production: <a class="credit-link" href="https://www.instagram.com/___.mp5/" target="_blank">@___.mp5</a></div>
     </div>
     <img src="./kurosaki/kurosaki_film-01.webp" onclick="openLightbox(this.src)" loading="lazy" />
     <img src="./kurosaki/kurosaki_film-02.webp" onclick="openLightbox(this.src)" loading="lazy" />
@@ -334,9 +336,9 @@
 <script src="./kikuchi_data.js"></script>
 <script>
 const NODA_IMAGES    = ['./nodayuta.jpg','./nodayuta_2.jpg','./nodayuta_3.jpg','./nodayuta_4.jpg'];
-const NODA_META      = { title:'野田結太.mp3', sub:'nodayuta.mp3 / 10:55', desc:'', credits:'sound: @yutand___<br>Production: @___.mp5' };
+const NODA_META      = { title:'野田結太.mp3', sub:'nodayuta.mp3 / 10:55', desc:'', credits:'sound: <a class="credit-link" href="https://www.instagram.com/yutand___/" target="_blank">@yutand___</a><br>Production: <a class="credit-link" href="https://www.instagram.com/___.mp5/" target="_blank">@___.mp5</a>' };
 const KIKUCHI_IMAGES = ['./yukikikuchi.jpg','./yukikikuchi_2.jpg'];
-const KIKUCHI_META   = { title:'菊地佑樹.mp3', sub:'kikuchiyuki_jgoe.mp3 / 53:49', desc:'', credits:'sound: @memo.riesreview<br>Production: @___.mp5' };
+const KIKUCHI_META   = { title:'菊地佑樹.mp3', sub:'kikuchiyuki_jgoe.mp3 / 53:49', desc:'', credits:'sound: <a class="credit-link" href="https://www.instagram.com/memo.riesreview/" target="_blank">@memo.riesreview</a><br>Production: <a class="credit-link" href="https://www.instagram.com/___.mp5/" target="_blank">@___.mp5</a>' };
 
 const audio = new Audio();
 let playing=false, transcript=[], sections=[], currentFile=null;
@@ -403,7 +405,7 @@ function goTo(n) {
     mp3:[currentFile==='noda'?'野田結太.MP3':'菊地佑樹.MP3','Transcribe'],
     kuro:['野田結太.mp5','Gallery']
   };
-  const l=map[n]||['Voices / Experience','V98'];
+  const l=map[n]||['Voices / Experience','V99'];
   if(left)left.innerText=l[0]; if(right)right.innerText=l[1];
 }
 
