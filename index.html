@@ -46,9 +46,13 @@
   .loader-inner { position:absolute; width:50%; height:100%; background:#000; animation:slide 1.5s ease-in-out infinite; }
   @keyframes slide { from{left:-100%} to{left:100%} }
 
-  /* ============================================ */
-  /* MP3 MAIN                                     */
-  /* ============================================ */
+  /* ============================================
+     MP3 MAIN
+     Layout: side-nav (fixed left 110px) + single
+     scroll column on the right that contains
+     transcript entries AND photos in sequence.
+     Text has no background → photos show through.
+  ============================================ */
   #mp3-main {
     position:fixed; inset:0;
     bottom: var(--player-height);
@@ -56,52 +60,7 @@
     overflow:hidden;
   }
 
-  /* --- PHOTO LAYER (z:1) — scrollable, full screen --- */
-  #mp3-photo-scroll {
-    position:absolute; inset:0;
-    overflow-y:auto; overflow-x:hidden;
-    -webkit-overflow-scrolling:touch;
-    z-index:1;
-  }
-  /* spacer pushes photos down below transcript */
-  #mp3-photo-spacer { width:100%; background:transparent; }
-  #mp3-photos-inner img { width:100%; height:auto; display:block; cursor:zoom-in; }
-
-  /* --- TRANSCRIPT LAYER (z:2) — left:nav-width, transparent bg --- */
-  #mp3-transcript-layer {
-    position:absolute;
-    top:0; left:var(--nav-width); right:0; bottom:0;
-    z-index:2;
-    pointer-events:none; /* touches fall through to photo layer */
-    overflow:hidden;
-  }
-  #mp3-content {
-    width:100%; height:100%;
-    overflow-y:auto; overflow-x:hidden;
-    -webkit-overflow-scrolling:touch;
-    pointer-events:auto;
-    /* no background — fully transparent */
-    background:transparent;
-    padding:35vh 24px 15vh;
-  }
-  #mp3-content-inner { width:100%; max-width:540px; }
-
-  /* project meta */
-  .project-meta-block { margin-bottom:80px; }
-  .project-meta-title { font-size:24px; font-weight:300; color:var(--text); margin-bottom:12px; }
-  .project-meta-sub { font-size:11px; letter-spacing:0.05em; margin-bottom:32px; font-family:'IBM Plex Mono',monospace; color:var(--meta); }
-  .project-meta-desc { font-size:14px; line-height:1.9; margin-bottom:32px; color:var(--text); }
-  .project-meta-credits { font-size:11px; line-height:1.8; letter-spacing:0.02em; color:var(--meta); padding-top:16px; border-top:1px solid var(--rule-light); }
-
-  /* transcript entries — original */
-  .transcript-entry { margin-bottom:48px; font-size:17px; line-height:1.9; color:var(--meta); transition:color 0.5s ease; }
-  .transcript-entry.active { color:var(--text); }
-  .entry-meta { display:flex; align-items:center; gap:10px; margin-bottom:6px; }
-  .speaker-name { font-size:10px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--dim); }
-  .transcript-entry.active .speaker-name { color:var(--accent); }
-  .time-stamp { font-size:9px; color:var(--dim); font-family:'IBM Plex Mono',monospace; }
-
-  /* --- LEFT NAV (z:10) — no background --- */
+  /* Fixed left nav — no background so photos bleed through */
   #mp3-nav {
     position:absolute;
     top:0; left:0; bottom:0;
@@ -110,17 +69,14 @@
     display:flex; flex-direction:column;
     padding:24px 12px 12px;
     pointer-events:auto;
-    /* no background */
     background:transparent;
   }
-  /* logo */
   #mp3-logo {
     font-size:14px; font-weight:500; letter-spacing:0.1em;
-    cursor:pointer; margin-bottom:20px;
-    color:#000; mix-blend-mode:difference; filter:invert(1);
-    flex-shrink:0;
+    cursor:pointer; margin-bottom:20px; flex-shrink:0;
+    /* white text that stays readable over both white and photo */
+    color:#fff; mix-blend-mode:difference;
   }
-  /* BACK */
   #mp3-back {
     background:#fff; border:1px solid #000;
     font-size:10px; padding:8px 10px; font-weight:600;
@@ -129,7 +85,6 @@
     margin-bottom:16px; flex-shrink:0;
     width:100%; text-align:left;
   }
-  /* section list */
   #mp3-secnav {
     flex:1; display:flex; flex-direction:column; gap:16px;
     overflow-y:auto; scrollbar-width:none;
@@ -139,15 +94,57 @@
     font-size:11px; line-height:1.4; cursor:pointer;
     border:none; background:none; text-align:left;
     font-family:var(--font); padding:0;
-    /* blend over photos */
-    color:#000; mix-blend-mode:difference; filter:invert(1);
+    color:#fff; mix-blend-mode:difference;
   }
   .section-item.active { color:var(--accent); font-weight:500; }
   .section-num { display:block; font-size:9px; margin-bottom:3px; opacity:0.4; }
 
-  /* ============================================ */
-  /* KUROSAKI — unchanged                         */
-  /* ============================================ */
+  /* Single scroll container, starts right of nav */
+  #mp3-scroll {
+    position:absolute;
+    top:0; left:var(--nav-width); right:0; bottom:0;
+    overflow-y:auto; overflow-x:hidden;
+    -webkit-overflow-scrolling:touch;
+    z-index:2;
+  }
+
+  /* Transcript section — NO background */
+  #mp3-transcript-area {
+    padding:35vh 24px 0;
+    background:transparent;
+  }
+  #mp3-content-inner { max-width:540px; }
+
+  /* project meta */
+  .project-meta-block { margin-bottom:80px; }
+  .project-meta-title { font-size:24px; font-weight:300; color:var(--text); margin-bottom:12px; }
+  .project-meta-sub { font-size:11px; letter-spacing:0.05em; margin-bottom:32px; font-family:'IBM Plex Mono',monospace; color:var(--meta); }
+  .project-meta-desc { font-size:14px; line-height:1.9; margin-bottom:32px; color:var(--text); }
+  .project-meta-credits { font-size:11px; line-height:1.8; letter-spacing:0.02em; color:var(--meta); padding-top:16px; border-top:1px solid var(--rule-light); }
+
+  /* transcript entries — original style */
+  .transcript-entry { margin-bottom:48px; font-size:17px; line-height:1.9; color:var(--meta); transition:color 0.5s ease; }
+  .transcript-entry.active { color:var(--text); }
+  .entry-meta { display:flex; align-items:center; gap:10px; margin-bottom:6px; }
+  .speaker-name { font-size:10px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--dim); }
+  .transcript-entry.active .speaker-name { color:var(--accent); }
+  .time-stamp { font-size:9px; color:var(--dim); font-family:'IBM Plex Mono',monospace; }
+
+  /* Photos flow directly below transcript — no gap, no background */
+  #mp3-photos {
+    width:100%;
+    /* small top margin so transcript ends don't crash into photos */
+    margin-top:15vh;
+    padding-bottom:15vh;
+    background:transparent;
+  }
+  #mp3-photos img {
+    width:100%; height:auto; display:block; cursor:zoom-in;
+  }
+
+  /* ============================================
+     KUROSAKI — unchanged
+  ============================================ */
   #kurosaki-main {
     position:fixed; inset:0; display:none; flex-direction:column;
     background:#fff; z-index:150; overflow:hidden;
@@ -185,7 +182,7 @@
 
 <div class="page-label" id="page-label">
   <span id="page-label-left">Voices / Experience</span>
-  <span id="page-label-right">V96</span>
+  <span id="page-label-right">V97</span>
 </div>
 
 <div id="screen-0" class="screen">
@@ -242,27 +239,22 @@
 <!-- MP3 MAIN -->
 <div id="mp3-main">
 
-  <!-- Layer 1: photos -->
-  <div id="mp3-photo-scroll">
-    <div id="mp3-photo-spacer"></div>
-    <div id="mp3-photos-inner"></div>
+  <!-- Fixed left nav -->
+  <div id="mp3-nav">
+    <div id="mp3-logo" onclick="goTo(1)">.MP5</div>
+    <button id="mp3-back" onclick="goTo(2)">← BACK</button>
+    <div id="mp3-secnav"></div>
   </div>
 
-  <!-- Layer 2: transcript (right of nav, transparent) -->
-  <div id="mp3-transcript-layer">
-    <div id="mp3-content">
+  <!-- Single scroll: transcript → photos -->
+  <div id="mp3-scroll">
+    <div id="mp3-transcript-area">
       <div id="mp3-content-inner">
         <div id="mp3-meta-block"></div>
         <div id="mp3-transcript-container"></div>
       </div>
     </div>
-  </div>
-
-  <!-- Layer 3: left nav -->
-  <div id="mp3-nav">
-    <div id="mp3-logo" onclick="goTo(1)">.MP5</div>
-    <button id="mp3-back" onclick="goTo(2)">← BACK</button>
-    <div id="mp3-secnav"></div>
+    <div id="mp3-photos"></div>
   </div>
 
 </div>
@@ -330,15 +322,15 @@ function goTo(n) {
   else if(n==='kuro') document.getElementById('kurosaki-main').style.display='flex';
   document.getElementById('player-bar').style.display=(audio.src&&audio.src!=='')?'flex':'none';
   const left=document.getElementById('page-label-left'),right=document.getElementById('page-label-right');
-  const map={0:['Voices / Experience','V96'],1:['Voices / Experience','V96'],2:['Select File','Step 02'],proc:['Building Audio Map',''],mp3:[currentFile==='noda'?'野田結太.MP3':'菊地佑樹.MP3','Transcribe'],kuro:['野田結太.mp5','Gallery']};
-  const l=map[n]||['Voices / Experience','V96'];
+  const map={0:['Voices / Experience','V97'],1:['Voices / Experience','V97'],2:['Select File','Step 02'],proc:['Building Audio Map',''],mp3:[currentFile==='noda'?'野田結太.MP3':'菊地佑樹.MP3','Transcribe'],kuro:['野田結太.mp5','Gallery']};
+  const l=map[n]||['Voices / Experience','V97'];
   if(left)left.innerText=l[0]; if(right)right.innerText=l[1];
 }
 
 document.getElementById('entry-permission-btn').addEventListener('click',async()=>{
   if(typeof DeviceOrientationEvent!=='undefined'&&typeof DeviceOrientationEvent.requestPermission==='function'){
     try{const s=await DeviceOrientationEvent.requestPermission();if(s==='granted')window.addEventListener('deviceorientation',handleGyro,true);}catch(e){}
-  } else { window.addEventListener('deviceorientation',handleGyro,true); }
+  } else window.addEventListener('deviceorientation',handleGyro,true);
   goTo(1);
 });
 
@@ -352,11 +344,17 @@ function handleGyro(e){
 
 function startExperience(file){
   currentFile=file; audio.pause(); audio.src=''; lastEl=null;
+
   if(file==='kurosaki'){
     goTo('proc');
-    setTimeout(()=>{goTo('kuro');audio.src='./kurosaki.mp3';audio.loop=false;audio.load();audio.play().then(()=>{playing=true;updateIcons();document.getElementById('player-bar').style.display='flex';}).catch(()=>{});},3000);
+    setTimeout(()=>{
+      goTo('kuro');
+      audio.src='./kurosaki.mp3'; audio.loop=false; audio.load();
+      audio.play().then(()=>{playing=true;updateIcons();document.getElementById('player-bar').style.display='flex';}).catch(()=>{});
+    },3000);
     return;
   }
+
   const isNoda=file==='noda';
   transcript=isNoda?(typeof NODA_TRANSCRIPT!=='undefined'?NODA_TRANSCRIPT.slice():[]):(typeof KIKUCHI_TRANSCRIPT!=='undefined'?KIKUCHI_TRANSCRIPT.slice():[]);
   sections=isNoda?(typeof NODA_SECTIONS!=='undefined'?NODA_SECTIONS.slice():[]):(typeof KIKUCHI_SECTIONS!=='undefined'?KIKUCHI_SECTIONS.slice():[]);
@@ -364,31 +362,46 @@ function startExperience(file){
   const images=isNoda?NODA_IMAGES:KIKUCHI_IMAGES;
   audio.src=isNoda?'./nodayuta.mp3':'./kikuchiyuki_compressed.mp3';
 
-  document.getElementById('mp3-meta-block').innerHTML=`<div class="project-meta-block"><div class="project-meta-title">${meta.title}</div><div class="project-meta-sub">${meta.sub}</div>${meta.desc?`<div class="project-meta-desc">${meta.desc}</div>`:''}<div class="project-meta-credits">${meta.credits}</div></div>`;
+  // meta block
+  document.getElementById('mp3-meta-block').innerHTML=meta.title?`<div class="project-meta-block"><div class="project-meta-title">${meta.title}</div><div class="project-meta-sub">${meta.sub}</div>${meta.desc?`<div class="project-meta-desc">${meta.desc}</div>`:''}<div class="project-meta-credits">${meta.credits}</div></div>`:'';
 
-  document.getElementById('mp3-transcript-container').innerHTML=transcript.map((t,i)=>`<div class="transcript-entry" id="te-${i}"><div class="entry-meta"><span class="speaker-name">${t.speaker}</span><span class="time-stamp">${t.startText||''}</span></div><div>${t.text}</div></div>`).join('');
+  // transcript
+  document.getElementById('mp3-transcript-container').innerHTML=transcript.map((t,i)=>
+    `<div class="transcript-entry" id="te-${i}">
+      <div class="entry-meta">
+        <span class="speaker-name">${t.speaker}</span>
+        <span class="time-stamp">${t.startText||''}</span>
+      </div>
+      <div>${t.text}</div>
+    </div>`
+  ).join('');
 
-  document.getElementById('mp3-secnav').innerHTML=sections.map((s,i)=>`<button class="section-item" id="nsec-${i}" onclick="jumpTo(${s.start})"><span class="section-num">0${i+1}</span>${s.title}</button>`).join('');
+  // section nav
+  document.getElementById('mp3-secnav').innerHTML=sections.map((s,i)=>
+    `<button class="section-item" id="nsec-${i}" onclick="jumpTo(${s.start})">
+      <span class="section-num">0${i+1}</span>${s.title}
+    </button>`
+  ).join('');
 
-  document.getElementById('mp3-photos-inner').innerHTML=images.map(src=>`<img src="${src}" onclick="openLightbox('${src}')" loading="lazy" />`).join('');
+  // photos
+  document.getElementById('mp3-photos').innerHTML=images.map(src=>
+    `<img src="${src}" onclick="openLightbox('${src}')" loading="lazy" />`
+  ).join('');
 
   audio.load(); goTo('proc');
   setTimeout(()=>{
     goTo('mp3');
-    // Set photo spacer = full scrollHeight of transcript content
-    requestAnimationFrame(()=>{
-      const c=document.getElementById('mp3-content');
-      document.getElementById('mp3-photo-spacer').style.height=c.scrollHeight+'px';
-    });
-    document.getElementById('mp3-content').scrollTop=0;
-    document.getElementById('mp3-photo-scroll').scrollTop=0;
+    document.getElementById('mp3-scroll').scrollTop=0;
     audio.play().then(()=>{playing=true;updateIcons();}).catch(()=>{});
   },3000);
 }
 
 function jumpTo(sec){audio.currentTime=sec;audio.play().then(()=>{playing=true;updateIcons();});}
 function togglePlay(){if(playing)audio.pause();else audio.play().then(()=>playing=true);}
-function updateIcons(){document.getElementById('icon-play').style.display=playing?'none':'block';document.getElementById('icon-pause').style.display=playing?'block':'none';}
+function updateIcons(){
+  document.getElementById('icon-play').style.display=playing?'none':'block';
+  document.getElementById('icon-pause').style.display=playing?'block':'none';
+}
 audio.onplay=()=>{playing=true;updateIcons();};
 audio.onpause=()=>{playing=false;updateIcons();};
 
@@ -396,6 +409,7 @@ audio.ontimeupdate=()=>{
   const cur=audio.currentTime,dur=audio.duration||0;
   const fmt=s=>`${String(Math.floor(s/60)).padStart(2,'0')}:${String(Math.floor(s%60)).padStart(2,'0')}`;
   document.getElementById('timecode').innerText=`${fmt(cur)} / ${fmt(dur)}`;
+
   let activeEl=null;
   transcript.forEach((t,i)=>{
     const el=document.getElementById(`te-${i}`);
@@ -403,12 +417,17 @@ audio.ontimeupdate=()=>{
     if(el)el.classList.toggle('active',on);
     if(on){activeEl=el;document.getElementById('mini-speaker').innerText=t.speaker;document.getElementById('mini-text').innerText=t.text;}
   });
+
   if(activeEl&&activeEl!==lastEl&&!userScrolling){
     lastEl=activeEl;
-    const c=document.getElementById('mp3-content');
-    if(c)smoothScroll(c,activeEl.offsetTop-c.clientHeight/2+activeEl.clientHeight/2,1200);
+    const c=document.getElementById('mp3-scroll');
+    if(c) smoothScroll(c, activeEl.offsetTop - c.clientHeight/2 + activeEl.clientHeight/2, 1200);
   }
-  sections.forEach((s,i)=>{const el=document.getElementById(`nsec-${i}`);if(el)el.classList.toggle('active',cur>=s.start&&(sections[i+1]?cur<sections[i+1].start:true));});
+
+  sections.forEach((s,i)=>{
+    const el=document.getElementById(`nsec-${i}`);
+    if(el)el.classList.toggle('active',cur>=s.start&&(sections[i+1]?cur<sections[i+1].start:true));
+  });
 };
 
 function smoothScroll(el,to,dur){
@@ -417,8 +436,8 @@ function smoothScroll(el,to,dur){
   requestAnimationFrame(step);
 }
 
-document.getElementById('mp3-content').addEventListener('touchstart',()=>{
-  userScrolling=true;clearTimeout(uScrollTimer);
+document.getElementById('mp3-scroll').addEventListener('touchstart',()=>{
+  userScrolling=true; clearTimeout(uScrollTimer);
   uScrollTimer=setTimeout(()=>{userScrolling=false;},3000);
 },{passive:true});
 
