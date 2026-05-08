@@ -101,7 +101,7 @@
 
 <div id="screen-1" class="screen">
   <div class="frame-fixed">
-    <div class="top-rule"><span>Voices / Experience</span><span>V86</span></div>
+    <div class="top-rule"><span>Voices / Experience</span><span>V87</span></div>
     <div class="wordmark" id="gyro-logo">.mp5</div>
     <div class="tagline">Audio &amp; Transcription</div>
     <button class="start-btn" onclick="goTo(2)">Start Experience</button>
@@ -256,7 +256,7 @@ function handleGyro(event) {
     const panY = Math.max(-20, Math.min(20, yAdj * -0.5));
     const rawBeta = (event.beta || 45);
     const zoomT = Math.max(0, Math.min(1, (rawBeta - 20) / 50));
-    const scale = 1.5 - (zoomT * 0.5);
+    const scale = 1.0 + (zoomT * 0.5);
     lbImg.style.transform = `translate(${panX}px, ${panY}px) scale(${scale})`;
   }
 }
