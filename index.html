@@ -86,25 +86,8 @@
 .mini-text { font-size:12px; color:var(–text); line-height:1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; height: 2.6em; }
 
 #gallery-screen { position:fixed; inset:0; background:#fff; display:none; flex-direction:column; z-index:150; overflow-y:auto; }
-#lightbox {
-position:fixed; inset:0; background:#000;
-display:none; align-items:center; justify-content:center;
-z-index:400; overflow:hidden;
-}
-#lightbox img {
-/* 画面の1.6倍のサイズで配置 -- ジャイロで視野を移動 */
-width: 160vw;
-height: 160vh;
-object-fit: cover;
-display: block;
-flex-shrink: 0;
-transform-origin: center center;
-will-change: transform;
-transition: transform 0.12s ease-out;
-position: absolute;
-top: 50%; left: 50%;
-transform: translate(-50%, -50%);
-}
+#lightbox { position:fixed; inset:0; background:rgba(0,0,0,0.95); display:none; align-items:center; justify-content:center; z-index:400; padding:16px; }
+#lightbox img { max-width:100%; max-height:90vh; object-fit:contain; }
 </style>
 
 </head>
@@ -265,22 +248,13 @@ function handleGyro(event) {
     logo.style.transform = `translate3d(${moveX}px, ${moveY}px, 0) rotateX(${-moveY * 3.5}deg) rotateY(${moveX * 3.5}deg)`;
   }
 
-  // ライトボックス -- ビューファインダー体験
+  // ライトボックスの画像
   const lb = document.getElementById('lightbox');
   const lbImg = document.getElementById('lightbox-img');
   if (lb && lb.style.display === 'flex' && lbImg) {
-    // gamma: 左右傾き (-90〜90) → 画像を左右にシフト
-    // beta:  前後傾き (0〜180) → 画像を上下にシフト & 拡大
-    const panX = Math.max(-30, Math.min(30, xAdj * 0.8)); // 左右パン (vw換算)
-    const panY = Math.max(-25, Math.min(25, (yAdj) * 0.6)); // 上下パン
-
-    // 前に傾けると拡大（betaが0に近いほど水平 = 拡大）
-    // betaの範囲: 約15(水平) 〜 60(自然な持ち方) 〜 90(立てる)
-    const rawBeta = (event.beta || 45);
-    const zoomT = Math.max(0, Math.min(1, (rawBeta - 20) / 50)); // 0=水平(最大拡大) 1=立てる(等倍)
-    const scale = 1.6 - (zoomT * 0.6); // 1.0〜1.6の範囲でズーム
-
-    lbImg.style.transform = `translate(calc(-50% + ${panX}vw), calc(-50% + ${panY}vh)) scale(${scale})`;
+    const moveX = Math.max(-30, Math.min(30, xAdj / 2));
+    const moveY = Math.max(-30, Math.min(30, yAdj / 2));
+    lbImg.style.transform = `translate3d(${moveX}px, ${moveY}px, 0) rotateX(${-moveY * 2}deg) rotateY(${moveX * 2}deg)`;
   }
 }
 
@@ -361,7 +335,7 @@ function smoothScroll(el, to, dur) {
 
 document.getElementById('content').addEventListener('touchstart',()=>{ userScrolling=true; clearTimeout(uScrollTimer); uScrollTimer=setTimeout(()=>{ userScrolling=false; },3000); },{passive:true});
 function openLightbox(src) { document.getElementById('lightbox-img').src=src; document.getElementById('lightbox').style.display='flex'; }
-function closeLightbox() { document.getElementById('lightbox').style.display='none'; document.getElementById('lightbox-img').style.transform='translate(-50%,-50%)'; }
+function closeLightbox() { document.getElementById('lightbox').style.display='none'; document.getElementById('lightbox-img').style.transform=''; }
 goTo(0);
 </script>
 
