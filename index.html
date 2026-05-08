@@ -197,6 +197,21 @@
   .mini-speaker { font-size:9px; font-weight:600; color:var(--accent); text-transform:uppercase; letter-spacing:0.1em; flex-shrink:0; }
   .mini-text { font-size:12px; color:#fff; line-height:1.3; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; height:2.6em; }
 
+  /* DEBUG VOLUME BAR */
+  #vol-debug {
+    position:fixed; bottom:calc(var(--player-height) + 16px); right:16px;
+    width:4px; height:80px;
+    background:rgba(255,255,255,0.2);
+    border:1px solid rgba(255,255,255,0.4);
+    z-index:500; display:none;
+    border-radius:2px; overflow:hidden;
+  }
+  #vol-debug-fill {
+    position:absolute; bottom:0; left:0; right:0;
+    background:#fff;
+    transition:height 0.1s;
+  }
+
   /* LIGHTBOX */
   #lightbox { position:fixed; inset:0; background:#000; display:none; align-items:center; justify-content:center; z-index:9999; padding:16px; }
   #lightbox img { max-width:100%; max-height:88vh; object-fit:contain; display:block; transform-origin:center center; transition:transform 0.1s ease-out; }
@@ -206,7 +221,7 @@
 
 <div class="page-label" id="page-label">
   <span id="page-label-left">Voices / Experience</span>
-  <span id="page-label-right">V122</span>
+  <span id="page-label-right">V123</span>
 </div>
 
 <div id="screen-0" class="screen">
@@ -313,6 +328,7 @@ sound: <a class="credit-link" href="https://www.instagram.com/yutand___/" target
 
   </div>
   <button id="kurosaki-back" onclick="goTo(2)">← BACK</button>
+  <div id="vol-debug"><div id="vol-debug-fill"></div></div>
 </div>
 
 <!-- PLAYER BAR -->
@@ -417,12 +433,12 @@ function goTo(n) {
   pb.classList.toggle('on-white', whiteScreens.includes(String(n)) || n===2 || n==='proc' || n===1 || n===0);
   const left=document.getElementById('page-label-left'),right=document.getElementById('page-label-right');
   const map={
-    0:['Voices / Experience','V122'],1:['Voices / Experience','V122'],
+    0:['Voices / Experience','V123'],1:['Voices / Experience','V123'],
     2:['Select File','Step 02'],proc:['Building Audio Map',''],
     mp3:[currentFile==='noda'?'野田結太.MP3':'菊地佑樹.MP3','Transcribe'],
     kuro:['野田結太.mp5','Gallery']
   };
-  const l=map[n]||['Voices / Experience','V122'];
+  const l=map[n]||['Voices / Experience','V123'];
   if(left)left.innerText=l[0]; if(right)right.innerText=l[1];
 }
 
@@ -477,9 +493,13 @@ function startExperience(file){
       audio.play().then(()=>{
         playing=true; updateIcons(); document.getElementById('player-bar').style.display='flex';
         let vol=0.001;
+        const dbg=document.getElementById('vol-debug');
+        const fill=document.getElementById('vol-debug-fill');
+        if(dbg) dbg.style.display='block';
         const fadeStep=setInterval(()=>{
           vol=Math.min(1, vol+0.00462);
           audio.volume=vol;
+          if(fill) fill.style.height=(vol*100)+'%';
           if(vol>=1) clearInterval(fadeStep);
         },60);
       }).catch(()=>{});
@@ -553,6 +573,10 @@ audio.ontimeupdate=()=>{
     if(remaining <= 13 && remaining > 0){
       audio.volume = Math.max(0.001, remaining / 13);
     }
+    // debug bar
+    const dbg=document.getElementById('vol-debug');
+    const fill=document.getElementById('vol-debug-fill');
+    if(dbg&&fill){ dbg.style.display='block'; fill.style.height=(audio.volume*100)+'%'; }
   }
   const cur=audio.currentTime,dur=audio.duration||0;
   const fmt=s=>`${String(Math.floor(s/60)).padStart(2,'0')}:${String(Math.floor(s%60)).padStart(2,'0')}`;
