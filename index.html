@@ -54,47 +54,31 @@
   ============================================================ */
   #mp3-main {
     position:fixed; inset:0;
-    bottom: var(--player-height);
     display:none;
     overflow:hidden;
   }
 
-  /* --- LAYER 1: Photo background --- */
+  /* --- LAYER 1: Photo background — vertical scroll stack --- */
   #mp3-photo-bg {
     position:absolute; inset:0;
     z-index:1;
-    overflow:hidden;
-    /* swipe handled by JS */
-    touch-action:pan-y; /* allow vertical swipe detection */
+    overflow-y:auto;
+    overflow-x:hidden;
+    -webkit-overflow-scrolling:touch;
   }
   .photo-slide {
-    position:absolute; inset:0;
-    opacity:0;
-    transition:opacity 0.5s ease;
+    width:100%;
+    display:block;
+    flex-shrink:0;
   }
-  .photo-slide.active { opacity:1; }
   .photo-slide img {
-    width:100%; height:100%;
-    object-fit:cover;
+    width:100%; height:auto;
     display:block;
     user-select:none;
     -webkit-user-drag:none;
   }
-  /* photo index dots */
-  #photo-dots {
-    position:absolute;
-    bottom:12px; left:50%;
-    transform:translateX(-50%);
-    display:flex; gap:6px;
-    z-index:3;
-    pointer-events:none;
-  }
-  .dot {
-    width:5px; height:5px; border-radius:50%;
-    background:rgba(255,255,255,0.4);
-    transition:background 0.3s;
-  }
-  .dot.active { background:#fff; }
+  /* dots hidden — no longer needed */
+  #photo-dots { display:none; }
 
   /* --- LAYER 2: Transcript — transparent, scrollable --- */
   #mp3-transcript-layer {
@@ -177,7 +161,6 @@
   #kurosaki-main {
     position:fixed; inset:0; display:none; flex-direction:column;
     background:#fff; z-index:150; overflow:hidden;
-    padding-bottom:var(--player-height);
   }
   #kurosaki-scroll { flex:1; overflow-y:auto; overflow-x:hidden; -webkit-overflow-scrolling:touch; }
   #kurosaki-scroll img { width:100%; height:auto; display:block; cursor:pointer; }
@@ -214,7 +197,7 @@
 
 <div class="page-label" id="page-label">
   <span id="page-label-left">Voices / Experience</span>
-  <span id="page-label-right">V104</span>
+  <span id="page-label-right">V106</span>
 </div>
 
 <div id="screen-0" class="screen">
@@ -353,7 +336,7 @@ let playing=false, transcript=[], sections=[], currentFile=null;
 let lastEl=null, userScrolling=false, uScrollTimer=null;
 
 /* ── Photo swipe ── */
-let photoIndex=0, photos=[], swipeStartX=0, swipeStartY=0;
+let photoIndex=0, photos=[];
 
 // Noda section → photo index mapping (0-based)
 const NODA_SECTION_PHOTO = [0, 1, 2, 3, 0, 1]; // sec 1-6 → photo index
@@ -363,39 +346,27 @@ function buildPhotos(images) {
   photoIndex = 0;
   const bg = document.getElementById('mp3-photo-bg');
   bg.innerHTML = images.map((src,i)=>
-    `<div class="photo-slide${i===0?' active':''}" data-i="${i}">
+    `<div class="photo-slide" id="photo-slide-${i}" data-i="${i}">
        <img src="${src}" draggable="false" />
      </div>`
   ).join('');
-  // dots
-  document.getElementById('photo-dots').innerHTML = images.map((_,i)=>
-    `<div class="dot${i===0?' active':''}" data-i="${i}"></div>`
-  ).join('');
-  // swipe listeners
-  bg.addEventListener('touchstart', onPhotoTouchStart, {passive:true});
-  bg.addEventListener('touchend',   onPhotoTouchEnd,   {passive:true});
 }
 
 function showPhoto(idx) {
   if(idx<0||idx>=photos.length) return;
-  document.querySelectorAll('.photo-slide').forEach((el,i)=>el.classList.toggle('active',i===idx));
-  document.querySelectorAll('.dot').forEach((el,i)=>el.classList.toggle('active',i===idx));
   photoIndex=idx;
+  const slide = document.getElementById('photo-slide-'+idx);
+  const bg = document.getElementById('mp3-photo-bg');
+  if(slide&&bg) smoothScrollEl(bg, slide.offsetTop, 700);
 }
 
-function onPhotoTouchStart(e) {
-  swipeStartX = e.touches[0].clientX;
-  swipeStartY = e.touches[0].clientY;
+function smoothScrollEl(el, to, dur) {
+  const from=el.scrollTop, diff=to-from; let t0=null;
+  const step=now=>{ if(!t0)t0=now; const p=Math.min((now-t0)/dur,1),e=1-Math.pow(1-p,3); el.scrollTop=from+diff*e; if(p<1)requestAnimationFrame(step); };
+  requestAnimationFrame(step);
 }
-function onPhotoTouchEnd(e) {
-  const dx = e.changedTouches[0].clientX - swipeStartX;
-  const dy = e.changedTouches[0].clientY - swipeStartY;
-  // only register if horizontal swipe dominates
-  if(Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 40) {
-    if(dx < 0) showPhoto(photoIndex+1);
-    else        showPhoto(photoIndex-1);
-  }
-}
+
+
 
 /* ── Go to transcribe page from player bar ── */
 function goToTranscribe() {
@@ -420,12 +391,12 @@ function goTo(n) {
   document.getElementById('player-bar').style.display=(audio.src&&audio.src!=='')?'flex':'none';
   const left=document.getElementById('page-label-left'),right=document.getElementById('page-label-right');
   const map={
-    0:['Voices / Experience','V104'],1:['Voices / Experience','V104'],
+    0:['Voices / Experience','V106'],1:['Voices / Experience','V106'],
     2:['Select File','Step 02'],proc:['Building Audio Map',''],
     mp3:[currentFile==='noda'?'野田結太.MP3':'菊地佑樹.MP3','Transcribe'],
     kuro:['野田結太.mp5','Gallery']
   };
-  const l=map[n]||['Voices / Experience','V104'];
+  const l=map[n]||['Voices / Experience','V106'];
   if(left)left.innerText=l[0]; if(right)right.innerText=l[1];
 }
 
