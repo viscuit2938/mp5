@@ -62,7 +62,7 @@
 #processing-screen { position:fixed; inset:0; background:#fff; display:none; flex-direction:column; align-items:center; justify-content:center; gap:24px; z-index:200; }
 .proc-label { font-size:10px; letter-spacing:0.3em; text-transform:uppercase; color: var(--text); }
 .loader-bar { width:160px; height:1px; background:#eee; position:relative; overflow:hidden; }
-.loader-inner {  width:50%; height:100%; background:#000; animation:slide 1.5s ease-in-out infinite; }
+.loader-inner { position:absolute; width:50%; height:100%; background:#000; animation:slide 1.5s ease-in-out infinite; }
 @keyframes slide { from{left:-100%} to{left:100%} }
 
 /* SIDE NAV (110px) */
@@ -114,7 +114,7 @@
 <!-- GLOBAL PAGE LABEL -->
 <div class="page-label" id="page-label">
   <span id="page-label-left">Voices / Experience</span>
-  <span id="page-label-right">V88</span>
+  <span id="page-label-right">V91</span>
 </div>
 
 <div id="screen-0" class="screen">
@@ -253,14 +253,20 @@ function goTo(n) {
   const left  = document.getElementById('page-label-left');
   const right = document.getElementById('page-label-right');
   const labels = {
-    0:         ['Voices / Experience', 'V88'],
-    1:         ['Voices / Experience', 'V88'],
+    0:         ['Voices / Experience', 'V91'],
+    1:         ['Voices / Experience', 'V91'],
     2:         ['Select File',         'Step 02'],
     'proc':    ['Building Audio Map',  ''],
-    'main':    ['.MP5',                'Transcribe'],
-    'gallery': ['.MP5',                'Gallery'],
+    'main':    ['main', 'main'],
+    'gallery': ['gallery',             'gallery'],
   };
-  const l = labels[n] || ['Voices / Experience', 'V88'];
+  let l = labels[n] || ['Voices / Experience', 'V91'];
+  if (n === 'main') {
+    l = [typeof currentFile !== 'undefined' && currentFile === 'kurosaki' ? '野田結太.mp5' : '', 'Transcribe'];
+  }
+  if (n === 'gallery') {
+    l = [typeof currentFile !== 'undefined' && currentFile === 'kurosaki' ? '野田結太.mp5' : '.MP5', 'Gallery'];
+  }
   if (left)  left.innerText  = l[0];
   if (right) right.innerText = l[1];
 }
