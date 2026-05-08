@@ -214,7 +214,7 @@
 
 <div class="page-label" id="page-label">
   <span id="page-label-left">Voices / Experience</span>
-  <span id="page-label-right">V101</span>
+  <span id="page-label-right">V102</span>
 </div>
 
 <div id="screen-0" class="screen">
@@ -346,7 +346,7 @@
 const NODA_IMAGES    = ['./nodayuta.jpg','./nodayuta_2.jpg','./nodayuta_3.jpg','./nodayuta_4.jpg'];
 const NODA_META      = { title:'野田結太.mp3', sub:'nodayuta.mp3 / 10:55', desc:'', credits:'sound: <a class="credit-link" href="https://www.instagram.com/yutand___/" target="_blank">@yutand___</a><br>Production: <a class="credit-link" href="https://www.instagram.com/___.mp5/" target="_blank">@___.mp5</a>' };
 const KIKUCHI_IMAGES = ['./yukikikuchi.jpg','./yukikikuchi_2.jpg'];
-const KIKUCHI_META   = { title:'菊地佑樹.mp3', sub:'kikuchiyuki_jgoe.mp3 / 53:49', desc:'', credits:'Talk: 菊池佑樹 (yuki_not_rinko)<br>Host: <a class="credit-link" href="https://www.instagram.com/la_viscuit/" target="_blank">@la_viscuit</a><br>Production: <a class="credit-link" href="https://www.instagram.com/___.mp5/" target="_blank">@___.mp5</a>' };
+const KIKUCHI_META   = { title:'菊地佑樹.mp3', sub:'kikuchiyuki_jgoe.mp3 / 53:49', desc:'', credits:'Talk: <a class="credit-link" href="https://www.instagram.com/yuki_not_rinko/" target="_blank">菊池佑樹 (yuki_not_rinko)</a><br>Host: <a class="credit-link" href="https://www.instagram.com/la_viscuit/" target="_blank">@la_viscuit</a><br>Production: <a class="credit-link" href="https://www.instagram.com/___.mp5/" target="_blank">@___.mp5</a>' };
 
 const audio = new Audio();
 let playing=false, transcript=[], sections=[], currentFile=null;
@@ -417,12 +417,12 @@ function goTo(n) {
   document.getElementById('player-bar').style.display=(audio.src&&audio.src!=='')?'flex':'none';
   const left=document.getElementById('page-label-left'),right=document.getElementById('page-label-right');
   const map={
-    0:['Voices / Experience','V101'],1:['Voices / Experience','V101'],
+    0:['Voices / Experience','V102'],1:['Voices / Experience','V102'],
     2:['Select File','Step 02'],proc:['Building Audio Map',''],
     mp3:[currentFile==='noda'?'野田結太.MP3':'菊地佑樹.MP3','Transcribe'],
     kuro:['野田結太.mp5','Gallery']
   };
-  const l=map[n]||['Voices / Experience','V101'];
+  const l=map[n]||['Voices / Experience','V102'];
   if(left)left.innerText=l[0]; if(right)right.innerText=l[1];
 }
 
@@ -500,14 +500,12 @@ function startExperience(file){
 function jumpTo(sec){
   audio.currentTime=sec;
   audio.play().then(()=>{playing=true;updateIcons();});
-  // scroll active entry to vertical center
   const idx = transcript.findIndex(t=>sec>=t.start&&sec<=(t.end||t.start+30));
   if(idx<0) return;
-  // small delay to let active class apply
   setTimeout(()=>{
     const el=document.getElementById('te-'+idx);
     const c=document.getElementById('mp3-scroll');
-    if(el&&c) c.scrollTop=el.offsetTop - c.clientHeight/2 + el.clientHeight/2;
+    if(el&&c) smoothScroll(c, el.offsetTop - c.clientHeight/2 + el.clientHeight/2, 600);
   },50);
 }
 function togglePlay(){if(playing)audio.pause();else audio.play().then(()=>playing=true);}
