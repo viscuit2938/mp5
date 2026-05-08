@@ -135,11 +135,11 @@
   }
   #mp3-back {
     position:fixed; bottom:calc(var(--player-height) + 16px); left:16px;
-    background:#fff; border:1px solid #000;
+    background:transparent; border:1px solid rgba(255,255,255,0.7);
     font-size:10px; padding:8px 16px; font-weight:600;
     cursor:pointer; letter-spacing:0.1em;
-    font-family:var(--font); color:#000;
-    z-index:20;
+    font-family:var(--font); color:#fff;
+    z-index:20; mix-blend-mode:difference;
   }
   #mp3-secnav {
     flex:1; display:flex; flex-direction:column; gap:16px;
@@ -174,7 +174,7 @@
   .kurosaki-mini-player { flex-shrink:0; width:140px; height:90px; border:none; display:block; background:#000; }
   #kurosaki-back {
     position:fixed; bottom:calc(var(--player-height) + 16px); left:16px;
-    background:#fff; border:1px solid #000; font-size:10px; padding:8px 16px;
+    background:transparent; border:1px solid rgba(0,0,0,0.5); font-size:10px; padding:8px 16px;
     font-weight:600; cursor:pointer; z-index:270; letter-spacing:0.1em;
     font-family:var(--font); color:#000;
   }
@@ -203,7 +203,7 @@
 
 <div class="page-label" id="page-label">
   <span id="page-label-left">Voices / Experience</span>
-  <span id="page-label-right">V108</span>
+  <span id="page-label-right">V109</span>
 </div>
 
 <div id="screen-0" class="screen">
@@ -249,7 +249,17 @@
         </div>
       </div>
     </div>
+    <div class="preset-card" onclick="startExperience('kurosaki_digital')">
+      <div class="preset-card-inner">
+        <img src="./kurosaki/kurosaki_digital1.webp" class="preset-thumb-sq" alt="icon" />
+        <div class="preset-info">
+          <div class="preset-filename">kurosaki.mp5</div>
+          <div class="preset-details">野田結太 / 葉山 黒崎海岸 -- 10:55</div>
+        </div>
+      </div>
+    </div>
   </div>
+  <button style="position:fixed;bottom:calc(var(--player-height) + 16px);left:16px;background:transparent;border:1px solid rgba(0,0,0,0.5);font-size:10px;padding:8px 16px;font-weight:600;cursor:pointer;letter-spacing:0.1em;font-family:var(--font);color:#000;z-index:270;" onclick="goTo(1)">← BACK</button>
 </div>
 
 <div id="processing-screen">
@@ -345,6 +355,11 @@ let lastEl=null, userScrolling=false, uScrollTimer=null;
 let photoIndex=0, photos=[];
 
 // Noda section → photo index mapping (0-based)
+const KUROSAKI_DIGITAL_IMAGES = [
+  './kurosaki/kurosaki_digital1.webp','./kurosaki/kurosaki_digital2.webp','./kurosaki/kurosaki_digital3.webp',
+  './kurosaki/kurosaki_digital4.webp','./kurosaki/kurosaki_digital5.webp','./kurosaki/kurosaki_digital6.webp',
+  './kurosaki/kurosaki_digital7.webp','./kurosaki/kurosaki_digital8.webp','./kurosaki/kurosaki_digital9.webp'
+];
 const NODA_SECTION_PHOTO    = [0, 1, 2, 3, 0, 1]; // sec 1-6 → photo index
 const KIKUCHI_SECTION_PHOTO = [0, 1, 0, 1, 0, 1, 0, 1]; // sec 1-8 → photo index (alternating)
 
@@ -402,12 +417,12 @@ function goTo(n) {
   pb.classList.toggle('on-white', whiteScreens.includes(String(n)) || n===2 || n==='proc' || n===1 || n===0);
   const left=document.getElementById('page-label-left'),right=document.getElementById('page-label-right');
   const map={
-    0:['Voices / Experience','V108'],1:['Voices / Experience','V108'],
+    0:['Voices / Experience','V109'],1:['Voices / Experience','V109'],
     2:['Select File','Step 02'],proc:['Building Audio Map',''],
     mp3:[currentFile==='noda'?'野田結太.MP3':'菊地佑樹.MP3','Transcribe'],
     kuro:['野田結太.mp5','Gallery']
   };
-  const l=map[n]||['Voices / Experience','V108'];
+  const l=map[n]||['Voices / Experience','V109'];
   if(left)left.innerText=l[0]; if(right)right.innerText=l[1];
 }
 
@@ -432,15 +447,21 @@ function handleGyro(e){
 function startExperience(file){
   currentFile=file; audio.pause(); audio.src=''; lastEl=null;
 
-  if(file==='kurosaki'){
+  if(file==='kurosaki'||file==='kurosaki_digital'){
+    const imgs = file==='kurosaki_digital' ? KUROSAKI_DIGITAL_IMAGES : null;
     goTo('proc');
     setTimeout(()=>{
       goTo('kuro');
+      // swap gallery images if digital
+      if(imgs){
+        document.getElementById('kurosaki-scroll').querySelectorAll('img.kuro-img').forEach(el=>el.remove());
+        const scroll=document.getElementById('kurosaki-scroll');
+        imgs.forEach(src=>{ const im=document.createElement('img'); im.src=src; im.className='kuro-img'; im.onclick=()=>openLightbox(src); im.loading='lazy'; scroll.appendChild(im); });
+      }
       audio.src='./kurosaki.mp3'; audio.loop=false; audio.load();
       audio.volume=0;
       audio.play().then(()=>{
         playing=true; updateIcons(); document.getElementById('player-bar').style.display='flex';
-        // fade in over 3 seconds
         let vol=0; const fadeStep=setInterval(()=>{ vol=Math.min(1,vol+0.02); audio.volume=vol; if(vol>=1)clearInterval(fadeStep); },60);
       }).catch(()=>{});
     },3000);
