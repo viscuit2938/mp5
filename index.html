@@ -120,13 +120,15 @@
   /* --- LAYER 3: Left nav --- */
   #mp3-nav {
     position:absolute;
-    top:0; left:0; bottom:0;
+    top:0; left:0;
+    bottom:calc(var(--player-height) + 80px); /* stop above back button */
     width:var(--nav-width);
     z-index:10;
     display:flex; flex-direction:column;
     padding:24px 12px 12px;
     pointer-events:auto;
     background:transparent;
+    overflow:hidden;
   }
   #mp3-logo {
     font-size:14px; font-weight:500; letter-spacing:0.1em;
@@ -144,6 +146,7 @@
   #mp3-secnav {
     flex:1; display:flex; flex-direction:column; gap:16px;
     overflow-y:auto; scrollbar-width:none;
+    -webkit-overflow-scrolling:touch;
   }
   #mp3-secnav::-webkit-scrollbar { display:none; }
   .section-item {
@@ -203,7 +206,7 @@
 
 <div class="page-label" id="page-label">
   <span id="page-label-left">Voices / Experience</span>
-  <span id="page-label-right">V109</span>
+  <span id="page-label-right">V110</span>
 </div>
 
 <div id="screen-0" class="screen">
@@ -253,7 +256,7 @@
       <div class="preset-card-inner">
         <img src="./kurosaki/kurosaki_digital1.webp" class="preset-thumb-sq" alt="icon" />
         <div class="preset-info">
-          <div class="preset-filename">kurosaki.mp5</div>
+          <div class="preset-filename">野田結太.mp5</div>
           <div class="preset-details">野田結太 / 葉山 黒崎海岸 -- 10:55</div>
         </div>
       </div>
@@ -286,12 +289,13 @@
     </div>
   </div>
 
-  <!-- Layer 3: left nav -->
+  <!-- Layer 3: left nav (sections only) -->
   <div id="mp3-nav">
     <div id="mp3-logo" onclick="goTo(1)">.MP5</div>
-    <button id="mp3-back" onclick="goTo(2)">← BACK</button>
     <div id="mp3-secnav"></div>
   </div>
+  <!-- BACK button: fixed, independent of nav -->
+  <button id="mp3-back" onclick="goTo(2)">← BACK</button>
 
 </div>
 
@@ -303,19 +307,10 @@
       <div class="kurosaki-meta-sub">loc. 葉山 黒崎海岸 / 2026.12.16</div>
       <div class="kurosaki-meta-desc">今回の葉山市、黒崎海岸での.mp5では、レコーダーを持ち音の収集を行った。<br>日没ごろ、野田の制作音源を海に正対し演奏。<br>録音音源は撮影後、「Kurosaki ambient」 として発展。</div>
       <div class="kurosaki-meta-credits">
-        <div class="kurosaki-credits-row">
-          <div class="kurosaki-credits-text">sound: <a class="credit-link" href="https://www.instagram.com/yutand___/" target="_blank">@yutand___</a><br>Photography: <a class="credit-link" href="https://www.instagram.com/la_viscuit/" target="_blank">@la_viscuit</a><br>Production: <a class="credit-link" href="https://www.instagram.com/___.mp5/" target="_blank">@___.mp5</a></div>
-          <iframe class="kurosaki-mini-player" src="https://www.youtube.com/embed/ebGPpMet_l8?rel=0&modestbranding=1" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
-        </div>
+sound: <a class="credit-link" href="https://www.instagram.com/yutand___/" target="_blank">@yutand___</a><br>Photography: <a class="credit-link" href="https://www.instagram.com/la_viscuit/" target="_blank">@la_viscuit</a><br>Production: <a class="credit-link" href="https://www.instagram.com/___.mp5/" target="_blank">@___.mp5</a>
       </div>
     </div>
-    <img src="./kurosaki/kurosaki_film-01.webp" onclick="openLightbox(this.src)" loading="lazy" />
-    <img src="./kurosaki/kurosaki_film-02.webp" onclick="openLightbox(this.src)" loading="lazy" />
-    <img src="./kurosaki/kurosaki_film-03.webp" onclick="openLightbox(this.src)" loading="lazy" />
-    <img src="./kurosaki/kurosaki_film-04.webp" onclick="openLightbox(this.src)" loading="lazy" />
-    <img src="./kurosaki/kurosaki_film-05.webp" onclick="openLightbox(this.src)" loading="lazy" />
-    <img src="./kurosaki/kurosaki_film-06.webp" onclick="openLightbox(this.src)" loading="lazy" />
-    <img src="./kurosaki/kurosaki_film-07.webp" onclick="openLightbox(this.src)" loading="lazy" />
+
   </div>
   <button id="kurosaki-back" onclick="goTo(2)">← BACK</button>
 </div>
@@ -417,12 +412,12 @@ function goTo(n) {
   pb.classList.toggle('on-white', whiteScreens.includes(String(n)) || n===2 || n==='proc' || n===1 || n===0);
   const left=document.getElementById('page-label-left'),right=document.getElementById('page-label-right');
   const map={
-    0:['Voices / Experience','V109'],1:['Voices / Experience','V109'],
+    0:['Voices / Experience','V110'],1:['Voices / Experience','V110'],
     2:['Select File','Step 02'],proc:['Building Audio Map',''],
     mp3:[currentFile==='noda'?'野田結太.MP3':'菊地佑樹.MP3','Transcribe'],
     kuro:['野田結太.mp5','Gallery']
   };
-  const l=map[n]||['Voices / Experience','V109'];
+  const l=map[n]||['Voices / Experience','V110'];
   if(left)left.innerText=l[0]; if(right)right.innerText=l[1];
 }
 
