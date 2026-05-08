@@ -209,7 +209,7 @@
 
 <div class="page-label" id="page-label">
   <span id="page-label-left">Voices / Experience</span>
-  <span id="page-label-right">V111</span>
+  <span id="page-label-right">V115</span>
 </div>
 
 <div id="screen-0" class="screen">
@@ -415,12 +415,12 @@ function goTo(n) {
   pb.classList.toggle('on-white', whiteScreens.includes(String(n)) || n===2 || n==='proc' || n===1 || n===0);
   const left=document.getElementById('page-label-left'),right=document.getElementById('page-label-right');
   const map={
-    0:['Voices / Experience','V111'],1:['Voices / Experience','V111'],
+    0:['Voices / Experience','V115'],1:['Voices / Experience','V115'],
     2:['Select File','Step 02'],proc:['Building Audio Map',''],
     mp3:[currentFile==='noda'?'野田結太.MP3':'菊地佑樹.MP3','Transcribe'],
     kuro:['野田結太.mp5','Gallery']
   };
-  const l=map[n]||['Voices / Experience','V111'];
+  const l=map[n]||['Voices / Experience','V115'];
   if(left)left.innerText=l[0]; if(right)right.innerText=l[1];
 }
 
@@ -449,27 +449,27 @@ function handleGyro(e){
   if(lb&&lb.style.display==='flex'&&lbImg){
     const px=Math.max(-25,Math.min(25,xAdj*0.7)), py=Math.max(-20,Math.min(20,yAdj*-0.5));
     const zoomT=Math.max(0,Math.min(1,(rawBeta-20)/50));
-    lbImg.style.transform=`translate(${px}px,${py}px) scale(${1+zoomT*0.5})`;
+    lbImg.style.transform=`translate(${px}px,${py}px) scale(${1.5-zoomT*0.5})`;
   }
 
-  // mp3 photo bg: subtle pan on active slide
+  // mp3 photo bg: same params as lightbox
   const mp3main=document.getElementById('mp3-main');
-  if(mp3main&&mp3main.style.display!=='none'){
-    const activeSlide=document.querySelector('.photo-slide.active img') || document.querySelector('.photo-slide img');
+  if(mp3main&&mp3main.style.display==='block'){
+    const activeSlide=document.querySelector('.photo-slide img');
     if(activeSlide){
-      const px=Math.max(-15,Math.min(15,xAdj*0.4)), py=Math.max(-10,Math.min(10,yAdj*-0.3));
+      const px=Math.max(-25,Math.min(25,xAdj*0.7)), py=Math.max(-20,Math.min(20,yAdj*-0.5));
       const zoomT=Math.max(0,Math.min(1,(rawBeta-20)/50));
-      activeSlide.style.transform=`translate(${px}px,${py}px) scale(${1+zoomT*0.08})`;
+      activeSlide.style.transform=`translate(${px}px,${py}px) scale(${1+zoomT*0.5})`;
     }
   }
 
-  // Kurosaki scroll: subtle pan on visible images
+  // Kurosaki scroll: same params as lightbox
   const kMain=document.getElementById('kurosaki-main');
-  if(kMain&&kMain.style.display!=='none'){
-    const px=Math.max(-15,Math.min(15,xAdj*0.4)), py=Math.max(-10,Math.min(10,yAdj*-0.3));
+  if(kMain&&kMain.style.display==='flex'){
+    const px=Math.max(-25,Math.min(25,xAdj*0.7)), py=Math.max(-20,Math.min(20,yAdj*-0.5));
     const zoomT=Math.max(0,Math.min(1,(rawBeta-20)/50));
     document.querySelectorAll('#kurosaki-scroll img').forEach(img=>{
-      img.style.transform=`translate(${px}px,${py}px) scale(${1+zoomT*0.08})`;
+      img.style.transform=`translate(${px}px,${py}px) scale(${1+zoomT*0.5})`;
     });
   }
 }
