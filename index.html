@@ -206,7 +206,7 @@
 
 <div class="page-label" id="page-label">
   <span id="page-label-left">Voices / Experience</span>
-  <span id="page-label-right">V117</span>
+  <span id="page-label-right">V118</span>
 </div>
 
 <div id="screen-0" class="screen">
@@ -350,6 +350,11 @@ let lastEl=null, userScrolling=false, uScrollTimer=null;
 let photoIndex=0, photos=[];
 
 // Noda section → photo index mapping (0-based)
+const KUROSAKI_FILM_IMAGES = [
+  './kurosaki/kurosaki_film-01.webp','./kurosaki/kurosaki_film-02.webp','./kurosaki/kurosaki_film-03.webp',
+  './kurosaki/kurosaki_film-04.webp','./kurosaki/kurosaki_film-05.webp','./kurosaki/kurosaki_film-06.webp',
+  './kurosaki/kurosaki_film-07.webp'
+];
 const KUROSAKI_DIGITAL_IMAGES = [
   './kurosaki/kurosaki_digital1.webp','./kurosaki/kurosaki_digital2.webp','./kurosaki/kurosaki_digital3.webp',
   './kurosaki/kurosaki_digital4.webp','./kurosaki/kurosaki_digital5.webp','./kurosaki/kurosaki_digital6.webp',
@@ -412,12 +417,12 @@ function goTo(n) {
   pb.classList.toggle('on-white', whiteScreens.includes(String(n)) || n===2 || n==='proc' || n===1 || n===0);
   const left=document.getElementById('page-label-left'),right=document.getElementById('page-label-right');
   const map={
-    0:['Voices / Experience','V117'],1:['Voices / Experience','V117'],
+    0:['Voices / Experience','V118'],1:['Voices / Experience','V118'],
     2:['Select File','Step 02'],proc:['Building Audio Map',''],
     mp3:[currentFile==='noda'?'野田結太.MP3':'菊地佑樹.MP3','Transcribe'],
     kuro:['野田結太.mp5','Gallery']
   };
-  const l=map[n]||['Voices / Experience','V117'];
+  const l=map[n]||['Voices / Experience','V118'];
   if(left)left.innerText=l[0]; if(right)right.innerText=l[1];
 }
 
@@ -459,16 +464,14 @@ function startExperience(file){
   currentFile=file; audio.pause(); audio.src=''; lastEl=null;
 
   if(file==='kurosaki'||file==='kurosaki_digital'){
-    const imgs = file==='kurosaki_digital' ? KUROSAKI_DIGITAL_IMAGES : null;
+    const imgs = file==='kurosaki_digital' ? KUROSAKI_DIGITAL_IMAGES : KUROSAKI_FILM_IMAGES;
     goTo('proc');
     setTimeout(()=>{
       goTo('kuro');
-      // swap gallery images if digital
-      if(imgs){
-        document.getElementById('kurosaki-scroll').querySelectorAll('img.kuro-img').forEach(el=>el.remove());
-        const scroll=document.getElementById('kurosaki-scroll');
-        imgs.forEach(src=>{ const im=document.createElement('img'); im.src=src; im.className='kuro-img'; im.onclick=()=>openLightbox(src); im.loading='lazy'; scroll.appendChild(im); });
-      }
+      // load gallery images for this entry
+      document.getElementById('kurosaki-scroll').querySelectorAll('img.kuro-img').forEach(el=>el.remove());
+      const scroll=document.getElementById('kurosaki-scroll');
+      imgs.forEach(src=>{ const im=document.createElement('img'); im.src=src; im.className='kuro-img'; im.onclick=()=>openLightbox(src); im.loading='lazy'; scroll.appendChild(im); });
       audio.src='./kurosaki.mp3'; audio.loop=false; audio.load();
       audio.volume=0;
       audio.play().then(()=>{
