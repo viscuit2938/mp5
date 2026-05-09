@@ -206,7 +206,7 @@
 
 <div class="page-label" id="page-label">
   <span id="page-label-left">Voices / Experience</span>
-  <span id="page-label-right">V126</span>
+  <span id="page-label-right">V128</span>
 </div>
 
 <div id="screen-0" class="screen">
@@ -417,12 +417,12 @@ function goTo(n) {
   pb.classList.toggle('on-white', whiteScreens.includes(String(n)) || n===2 || n==='proc' || n===1 || n===0);
   const left=document.getElementById('page-label-left'),right=document.getElementById('page-label-right');
   const map={
-    0:['Voices / Experience','V126'],1:['Voices / Experience','V126'],
+    0:['Voices / Experience','V128'],1:['Voices / Experience','V128'],
     2:['Select File','Step 02'],proc:['Building Audio Map',''],
     mp3:[currentFile==='noda'?'野田結太.MP3':'菊地佑樹.MP3','Transcribe'],
     kuro:['野田結太.mp5','Gallery']
   };
-  const l=map[n]||['Voices / Experience','V126'];
+  const l=map[n]||['Voices / Experience','V128'];
   if(left)left.innerText=l[0]; if(right)right.innerText=l[1];
 }
 
@@ -465,6 +465,19 @@ function startExperience(file){
 
   if(file==='kurosaki'||file==='kurosaki_digital'){
     const imgs = file==='kurosaki_digital' ? KUROSAKI_DIGITAL_IMAGES : KUROSAKI_FILM_IMAGES;
+    // Start audio immediately on tap (during loading screen)
+    audio.src='./kurosaki.mp3'; audio.loop=false; audio.load();
+    audio.volume=0.001;
+    audio.play().then(()=>{
+      playing=true; updateIcons(); document.getElementById('player-bar').style.display='flex';
+      let t=0;
+      const fadeStep=setInterval(()=>{
+        t=Math.min(1, t+0.00462);
+        const vol=Math.pow(t, 5);
+        audio.volume=Math.max(0.001, vol);
+        if(t>=1){ audio.volume=1; clearInterval(fadeStep); }
+      },60);
+    }).catch(()=>{});
     goTo('proc');
     setTimeout(()=>{
       goTo('kuro');
@@ -472,10 +485,6 @@ function startExperience(file){
       document.getElementById('kurosaki-scroll').querySelectorAll('img.kuro-img').forEach(el=>el.remove());
       const scroll=document.getElementById('kurosaki-scroll');
       imgs.forEach(src=>{ const im=document.createElement('img'); im.src=src; im.className='kuro-img'; im.onclick=()=>openLightbox(src); im.loading='lazy'; scroll.appendChild(im); });
-      audio.src='./kurosaki.mp3'; audio.loop=false; audio.load();
-      audio.play().then(()=>{
-        playing=true; updateIcons(); document.getElementById('player-bar').style.display='flex';
-      }).catch(()=>{});
     },3000);
     return;
   }
@@ -544,15 +553,11 @@ audio.ontimeupdate=()=>{
   if((currentFile==='kurosaki'||currentFile==='kurosaki_digital') && audio.duration){
     const remaining = audio.duration - audio.currentTime;
     if(remaining <= 13 && remaining > 0){
-      const t = remaining / 13; // t: 1→0
-      const vol = Math.pow(t, 5); // easeOut: fast start of fade, slow end
-      audio.volume = Math.max(0.001, vol);
+      const t = remaining / 13;
+      audio.volume = Math.max(0.001, Math.pow(t, 5));
     }
-    // debug bar
-    const dbg=document.getElementById('vol-debug');
-    const fill=document.getElementById('vol-debug-fill');
-    if(dbg&&fill){ dbg.style.display='block'; fill.style.height=(audio.volume*100)+'%'; }
   }
+
   const cur=audio.currentTime,dur=audio.duration||0;
   const fmt=s=>`${String(Math.floor(s/60)).padStart(2,'0')}:${String(Math.floor(s%60)).padStart(2,'0')}`;
   document.getElementById('timecode').innerText=`${fmt(cur)} / ${fmt(dur)}`;
