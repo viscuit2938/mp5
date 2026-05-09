@@ -15,9 +15,9 @@
     --nav-width: 110px;
     --font: "Inter","Helvetica Neue","Hiragino Sans",sans-serif;
   }
-  body { background:#fff; color:#000; font-family:var(--font); height:100dvh; overflow:hidden; -webkit-font-smoothing:antialiased; }
+  body { background:#fff; color:#000; font-family:var(--font); height:100dvh; overflow:hidden; display:flex; flex-direction:column; -webkit-font-smoothing:antialiased; }
 
-  /* SCREENS */
+  /* SCREEN SYSTEM */
   .screen { position:fixed; inset:0; background:#fff; display:none; flex-direction:column; align-items:center; justify-content:center; padding:20px; z-index:100; overflow-y:auto; }
   #screen-0 { display:flex; z-index:110; }
   #screen-1 { perspective:1200px; }
@@ -26,6 +26,8 @@
   .wordmark { font-size:clamp(56px,15vw,88px); font-weight:300; letter-spacing:-0.04em; line-height:0.9; margin-bottom:12px; transition:transform 0.08s ease-out; will-change:transform; display:inline-block; }
   .tagline { font-size:10px; letter-spacing:0.2em; color:var(--meta); text-transform:uppercase; margin-bottom:48px; }
   .start-btn { background:#000; color:#fff; padding:18px; font-size:11px; letter-spacing:0.3em; text-transform:uppercase; cursor:pointer; width:100%; border:none; outline:none; font-family:var(--font); }
+
+  /* STEP 02 CARD */
   .preset-card { border-top:1px solid #000; padding:24px 0; cursor:pointer; -webkit-tap-highlight-color:transparent; width:100%; }
   .preset-card:last-child { border-bottom:1px solid var(--rule-light); }
   .preset-card-inner { display:flex; align-items:center; gap:20px; }
@@ -37,199 +39,178 @@
   .preset-thumb-sq { width:48px; height:48px; object-fit:cover; flex-shrink:0; border:1px solid #000; display:block; }
 
   /* PAGE LABEL */
-  .page-label { position:fixed; top:16px; left:20px; right:20px; display:flex; justify-content:space-between; font-size:10px; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; z-index:500; pointer-events:none; mix-blend-mode:difference; color:#fff; }
+  .page-label { position:fixed; top:16px; left:20px; right:20px; display:flex; justify-content:space-between; font-size:10px; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; color:#000; z-index:500; pointer-events:none; }
+  .page-label span { color:#fff; mix-blend-mode:difference; filter:invert(0); }
 
   /* PROCESSING */
   #processing-screen { position:fixed; inset:0; background:#fff; display:none; flex-direction:column; align-items:center; justify-content:center; gap:24px; z-index:200; }
-  .proc-label { font-size:10px; letter-spacing:0.3em; text-transform:uppercase; }
+  .proc-label { font-size:10px; letter-spacing:0.3em; text-transform:uppercase; color:var(--text); }
   .loader-bar { width:160px; height:1px; background:#eee; position:relative; overflow:hidden; }
   .loader-inner { position:absolute; width:50%; height:100%; background:#000; animation:slide 1.5s ease-in-out infinite; }
   @keyframes slide { from{left:-100%} to{left:100%} }
 
-  /* ============================================================
-     MP3 MAIN
-     Layer 1 (z:1): photo — fixed bg, swipeable
-     Layer 2 (z:2): transcript — scrolls over photo, transparent bg
-     Layer 3 (z:10): left nav — fixed, transparent bg
-  ============================================================ */
-  #mp3-main {
-    position:fixed; inset:0;
-    display:none;
-    overflow:hidden;
-  }
+  /* ===== GALLERY + TRANSCRIPT MAIN VIEW ===== */
+  #gallery-main { position:fixed; inset:0; display:none; flex-direction:column; background:#000; z-index:150; overflow:hidden; }
 
-  /* --- LAYER 1: Photo background — vertical scroll stack --- */
-  #mp3-photo-bg {
-    position:absolute; inset:0;
-    z-index:1;
-    overflow-y:auto;
-    overflow-x:hidden;
-    -webkit-overflow-scrolling:touch;
-  }
-  .photo-slide {
-    width:100%;
-    display:block;
-    flex-shrink:0;
-  }
-  .photo-slide img {
-    width:100%; height:auto;
-    display:block;
-    user-select:none;
-    -webkit-user-drag:none;
-  }
-  /* dots hidden — no longer needed */
-  #photo-dots { display:none; }
+  /* Scrollable gallery */
+  #gallery-scroll { flex:1; overflow-y:auto; overflow-x:hidden; -webkit-overflow-scrolling:touch; scroll-snap-type:y mandatory; }
+  #gallery-scroll img { width:100%; display:block; scroll-snap-align:start; }
 
-  /* --- LAYER 2: Transcript — transparent, scrollable --- */
-  #mp3-transcript-layer {
+  /* Transcript overlay — sits at top, over gallery */
+  #transcript-overlay {
+    position:fixed;
+    top:0; left:0; right:0;
+    height:40vh;
+    pointer-events:none;
+    z-index:260;
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-end;
+    padding-bottom:16px;
+  }
+  /* gradient mask so text fades into photos */
+  #transcript-overlay::before {
+    content:'';
     position:absolute;
-    top:0;
-    left:var(--nav-width);
-    right:0;
-    bottom:0;
-    z-index:2;
-    overflow:hidden;
+    inset:0;
+    background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.55) 60%, rgba(0,0,0,0.72) 100%);
+    pointer-events:none;
   }
-  #mp3-scroll {
-    width:100%; height:100%;
-    overflow-y:auto; overflow-x:hidden;
-    -webkit-overflow-scrolling:touch;
-    /* NO background */
-    background:transparent;
-    padding:35vh 24px 15vh;
-  }
-  #mp3-content-inner { max-width:540px; }
 
-  /* project meta — white on photo bg */
-  .project-meta-block { margin-bottom:80px; }
-  .project-meta-title { font-size:24px; font-weight:300; color:#fff; margin-bottom:12px; }
-  .project-meta-sub { font-size:11px; letter-spacing:0.05em; margin-bottom:32px; font-family:'IBM Plex Mono',monospace; color:#fff; }
-  .project-meta-desc { font-size:14px; line-height:1.9; margin-bottom:32px; color:#fff; }
-  .project-meta-credits { font-size:11px; line-height:1.8; letter-spacing:0.02em; color:#fff; padding-top:16px; border-top:1px solid rgba(255,255,255,0.3); }
-  .credit-link { color:var(--accent); text-decoration:underline; text-decoration-color:rgba(255,255,255,0.4); text-underline-offset:3px; }
-  .credit-link:hover { opacity:0.7; }
+  .overlay-entry {
+    padding: 0 20px;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    position: relative;
+    z-index: 1;
+  }
+  .overlay-entry.active {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .overlay-speaker {
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 4px;
+    font-family: var(--font);
+  }
+  .overlay-text {
+    font-size: 15px;
+    line-height: 1.65;
+    color: #fff;
+    font-family: var(--font);
+    font-weight: 300;
+    letter-spacing: 0.01em;
+    text-shadow: 0 1px 8px rgba(0,0,0,0.5);
+  }
+  .overlay-time {
+    font-size: 9px;
+    color: rgba(255,255,255,0.45);
+    font-family: 'IBM Plex Mono', monospace;
+    margin-top: 3px;
+  }
 
-  /* transcript entries — original style */
-  .transcript-entry { margin-bottom:48px; font-size:17px; line-height:1.9; color:var(--meta); transition:color 0.5s ease; }
-  .transcript-entry.active { color:#fff; }
-  .entry-meta { display:flex; align-items:center; gap:10px; margin-bottom:6px; }
-  .speaker-name { font-size:10px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--dim); }
-  .transcript-entry.active .speaker-name { color:var(--accent); }
-  .time-stamp { font-size:9px; color:var(--dim); font-family:'IBM Plex Mono',monospace; }
+  /* Section nav overlay — bottom strip */
+  #section-nav-overlay {
+    position:fixed;
+    bottom: calc(var(--player-height) + 8px);
+    left: 0; right: 0;
+    display:flex;
+    gap: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+    z-index: 260;
+    pointer-events: auto;
+    padding: 0 16px;
+  }
+  #section-nav-overlay::-webkit-scrollbar { display:none; }
+  .snav-btn {
+    flex-shrink: 0;
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.45);
+    font-family: var(--font);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px 12px 8px 0;
+    white-space: nowrap;
+    transition: color 0.3s;
+  }
+  .snav-btn.active { color: #fff; }
 
-  /* --- LAYER 3: Left nav --- */
-  #mp3-nav {
-    position:absolute;
-    top:0; left:0;
-    bottom:calc(var(--player-height) + 80px); /* stop above back button */
-    width:var(--nav-width);
-    z-index:10;
-    display:flex; flex-direction:column;
-    padding:24px 12px 12px;
-    pointer-events:auto;
-    background:transparent;
-    overflow:hidden;
+  /* Meta block overlay (kurosaki etc.) */
+  #meta-overlay {
+    position:fixed;
+    top: 48px; left: 0; right: 0;
+    padding: 0 20px;
+    z-index: 260;
+    pointer-events: none;
+    opacity: 1;
+    transition: opacity 0.4s;
   }
-  #mp3-logo {
-    font-size:14px; font-weight:500; letter-spacing:0.1em;
-    cursor:pointer; margin-bottom:20px; flex-shrink:0;
-    color:#fff; mix-blend-mode:difference;
-  }
-  #mp3-back {
-    position:fixed; bottom:calc(var(--player-height) + 16px); left:16px;
-    background:transparent; border:1px solid rgba(255,255,255,0.7);
-    font-size:10px; padding:8px 16px; font-weight:600;
-    cursor:pointer; letter-spacing:0.1em;
-    font-family:var(--font); color:#fff;
-    z-index:20; mix-blend-mode:difference;
-  }
-  #mp3-secnav {
-    flex:1; display:flex; flex-direction:column; gap:16px;
-    overflow-y:auto; scrollbar-width:none;
-    -webkit-overflow-scrolling:touch;
-  }
-  #mp3-secnav::-webkit-scrollbar { display:none; }
-  .section-item {
-    font-size:11px; line-height:1.4; cursor:pointer;
-    border:none; background:none; text-align:left;
-    font-family:var(--font); padding:0;
-    color:#fff; mix-blend-mode:difference;
-  }
-  .section-item.active { color:var(--accent); font-weight:500; }
-  .section-num { display:block; font-size:9px; margin-bottom:3px; opacity:0.4; }
+  .meta-title { font-size:18px; font-weight:300; color:#fff; letter-spacing:-0.02em; }
+  .meta-sub { font-size:10px; color:rgba(255,255,255,0.5); letter-spacing:0.08em; font-family:'IBM Plex Mono',monospace; margin-top:4px; }
 
-  /* ============================================================
-     KUROSAKI — unchanged
-  ============================================================ */
-  #kurosaki-main {
-    position:fixed; inset:0; display:none; flex-direction:column;
-    background:#fff; z-index:150; overflow:hidden;
-  }
-  #kurosaki-scroll { flex:1; overflow-y:auto; overflow-x:hidden; -webkit-overflow-scrolling:touch; }
-  #kurosaki-scroll img { width:100%; height:auto; display:block; cursor:pointer; }
-  .kurosaki-meta-block { padding:60px 20px 32px; border-bottom:1px solid var(--rule-light); }
-  .kurosaki-meta-title { font-size:24px; font-weight:300; color:var(--text); margin-bottom:12px; }
-  .kurosaki-meta-sub { font-size:11px; letter-spacing:0.05em; margin-bottom:32px; font-family:'IBM Plex Mono',monospace; color:var(--meta); }
-  .kurosaki-meta-desc { font-size:14px; line-height:1.9; margin-bottom:32px; color:var(--text); }
-  .kurosaki-meta-credits { font-size:11px; line-height:1.8; letter-spacing:0.02em; color:var(--meta); padding-top:16px; border-top:1px solid var(--rule-light); }
-  .kurosaki-credits-row { display:flex; align-items:flex-start; gap:16px; }
-  .kurosaki-credits-text { flex:1; }
-  .kurosaki-mini-player { flex-shrink:0; width:140px; height:90px; border:none; display:block; background:#000; }
-  #kurosaki-back {
-    position:fixed; bottom:calc(var(--player-height) + 16px); left:16px;
-    background:transparent; border:1px solid rgba(0,0,0,0.5); font-size:10px; padding:8px 16px;
-    font-weight:600; cursor:pointer; z-index:270; letter-spacing:0.1em;
-    font-family:var(--font); color:#000;
+  /* Back button */
+  #gallery-back {
+    position:fixed;
+    bottom: calc(var(--player-height) + 16px);
+    right: 16px;
+    background:rgba(255,255,255,0.12);
+    border:1px solid rgba(255,255,255,0.3);
+    color:#fff;
+    font-size:9px;
+    font-weight:600;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    padding:8px 14px;
+    cursor:pointer;
+    font-family:var(--font);
+    z-index:270;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
   }
 
   /* PLAYER BAR */
-  #player-bar { position:fixed; bottom:0; left:0; right:0; height:var(--player-height); background:transparent; border-top:none; display:none; align-items:center; padding:0 20px; padding-bottom:env(safe-area-inset-bottom); z-index:300; }
-  #player-bar.on-white .play-btn { border-color:rgba(0,0,0,0.4); }
-  #player-bar.on-white .timecode { color:#000; }
-  #player-bar.on-white .mini-area { border-left-color:var(--rule-light); }
-  #player-bar.on-white .mini-text { color:#000; }
-  #player-bar.on-white #icon-play { fill:#000; }
-  #player-bar.on-white #icon-pause { fill:#000; }
+  #player-bar { position:fixed; bottom:0; left:0; right:0; height:var(--player-height); background:rgba(0,0,0,0.88); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); border-top:1px solid rgba(255,255,255,0.08); display:none; align-items:center; padding:0 20px; padding-bottom:env(safe-area-inset-bottom); z-index:300; }
   .player-inner { display:flex; align-items:center; gap:16px; width:100%; }
-  .play-btn { width:44px; height:44px; border-radius:50%; border:1px solid rgba(255,255,255,0.6); background:transparent; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
-  .timecode { font-size:10px; letter-spacing:0.02em; min-width:72px; font-family:var(--font); white-space:nowrap; color:#fff; }
-  .mini-area { flex:1; border-left:1px solid rgba(255,255,255,0.2); padding-left:16px; overflow:hidden; height:56px; display:flex; flex-direction:column; gap:2px; justify-content:flex-start; padding-top:4px; }
+  .play-btn { width:44px; height:44px; border-radius:50%; border:1px solid rgba(255,255,255,0.3); background:transparent; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .timecode { font-size:10px; letter-spacing:0.02em; min-width:72px; font-family:'IBM Plex Mono',monospace; white-space:nowrap; color:#fff; }
+  .mini-area { flex:1; border-left:1px solid rgba(255,255,255,0.1); padding-left:16px; overflow:hidden; height:56px; display:flex; flex-direction:column; gap:2px; justify-content:flex-start; padding-top:4px; }
   .mini-speaker { font-size:9px; font-weight:600; color:var(--accent); text-transform:uppercase; letter-spacing:0.1em; flex-shrink:0; }
   .mini-text { font-size:12px; color:#fff; line-height:1.3; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; height:2.6em; }
-
-  /* DEBUG VOLUME BAR */
-  #vol-debug {
-    position:fixed; bottom:calc(var(--player-height) + 16px); right:16px;
-    width:4px; height:80px;
-    background:rgba(255,255,255,0.2);
-    border:1px solid rgba(255,255,255,0.4);
-    z-index:500; display:none;
-    border-radius:2px; overflow:hidden;
-  }
-  #vol-debug-fill {
-    position:absolute; bottom:0; left:0; right:0;
-    background:#fff;
-    transition:height 0.1s;
-  }
 
   /* LIGHTBOX */
   #lightbox { position:fixed; inset:0; background:#000; display:none; align-items:center; justify-content:center; z-index:9999; padding:16px; }
   #lightbox img { max-width:100%; max-height:88vh; object-fit:contain; display:block; transform-origin:center center; transition:transform 0.1s ease-out; }
+
+  /* Legacy screens kept for nav */
+  #main { display:none; }
 </style>
 </head>
 <body>
 
+<!-- GLOBAL PAGE LABEL -->
 <div class="page-label" id="page-label">
   <span id="page-label-left">Voices / Experience</span>
-  <span id="page-label-right">V125</span>
+  <span id="page-label-right">V91</span>
 </div>
 
+<!-- SCREEN 0: Entry -->
 <div id="screen-0" class="screen">
   <div class="frame-fixed" style="text-align:center;">
     <button class="start-btn" id="entry-permission-btn">EXPERIENCE?</button>
   </div>
 </div>
 
+<!-- SCREEN 1: Wordmark -->
 <div id="screen-1" class="screen">
   <div class="frame-fixed">
     <div class="wordmark" id="gyro-logo">.mp5</div>
@@ -238,6 +219,7 @@
   </div>
 </div>
 
+<!-- SCREEN 2: File select -->
 <div id="screen-2" class="screen">
   <div class="frame-fixed">
     <div class="preset-card" onclick="startExperience('noda')">
@@ -267,68 +249,36 @@
         </div>
       </div>
     </div>
-    <div class="preset-card" onclick="startExperience('kurosaki_digital')">
-      <div class="preset-card-inner">
-        <img src="./kurosaki/kurosaki_digital1.webp" class="preset-thumb-sq" alt="icon" />
-        <div class="preset-info">
-          <div class="preset-filename">野田結太.mp5</div>
-          <div class="preset-details">野田結太 / 葉山 黒崎海岸 -- 10:55</div>
-        </div>
-      </div>
-    </div>
   </div>
-  <button style="position:fixed;bottom:calc(var(--player-height) + 16px);left:16px;background:transparent;border:1px solid rgba(0,0,0,0.5);font-size:10px;padding:8px 16px;font-weight:600;cursor:pointer;letter-spacing:0.1em;font-family:var(--font);color:#000;z-index:270;" onclick="goTo(1)">← BACK</button>
 </div>
 
+<!-- PROCESSING -->
 <div id="processing-screen">
   <div class="proc-label">Building Audio Map</div>
   <div class="loader-bar"><div class="loader-inner"></div></div>
 </div>
 
-<!-- MP3 MAIN -->
-<div id="mp3-main">
+<!-- GALLERY MAIN (replaces old gallery-screen + main) -->
+<div id="gallery-main">
+  <!-- scrollable photos -->
+  <div id="gallery-scroll"></div>
 
-  <!-- Layer 1: photo background (swipeable) -->
-  <div id="mp3-photo-bg">
-    <!-- slides injected by JS -->
-  </div>
-  <div id="photo-dots"></div>
-
-  <!-- Layer 2: transcript over photo -->
-  <div id="mp3-transcript-layer">
-    <div id="mp3-scroll">
-      <div id="mp3-content-inner">
-        <div id="mp3-meta-block"></div>
-        <div id="mp3-transcript-container"></div>
-      </div>
-    </div>
+  <!-- transcript overlay at top -->
+  <div id="transcript-overlay">
+    <div id="overlay-entries"></div>
   </div>
 
-  <!-- Layer 3: left nav (sections only) -->
-  <div id="mp3-nav">
-    <div id="mp3-logo" onclick="goTo(1)">.MP5</div>
-    <div id="mp3-secnav"></div>
+  <!-- kurosaki meta (shown when no transcript) -->
+  <div id="meta-overlay" style="display:none;">
+    <div class="meta-title" id="meta-title-text"></div>
+    <div class="meta-sub" id="meta-sub-text"></div>
   </div>
-  <!-- BACK button: fixed, independent of nav -->
-  <button id="mp3-back" onclick="goTo(2)">← BACK</button>
 
-</div>
+  <!-- section nav at bottom -->
+  <div id="section-nav-overlay"></div>
 
-<!-- KUROSAKI -->
-<div id="kurosaki-main">
-  <div id="kurosaki-scroll">
-    <div class="kurosaki-meta-block">
-      <div class="kurosaki-meta-title">野田結太.mp5</div>
-      <div class="kurosaki-meta-sub">loc. 葉山 黒崎海岸 / 2026.12.16</div>
-      <div class="kurosaki-meta-desc">今回の葉山市、黒崎海岸での.mp5では、レコーダーを持ち音の収集を行った。<br>日没ごろ、野田の制作音源を海に正対し演奏。<br>録音音源は撮影後、「Kurosaki ambient」 として発展。</div>
-      <div class="kurosaki-meta-credits">
-sound: <a class="credit-link" href="https://www.instagram.com/yutand___/" target="_blank">@yutand___</a><br>Photography: <a class="credit-link" href="https://www.instagram.com/la_viscuit/" target="_blank">@la_viscuit</a><br>Production: <a class="credit-link" href="https://www.instagram.com/___.mp5/" target="_blank">@___.mp5</a>
-      </div>
-    </div>
-
-  </div>
-  <button id="kurosaki-back" onclick="goTo(2)">← BACK</button>
-  <div id="vol-debug"><div id="vol-debug-fill"></div></div>
+  <!-- back button -->
+  <button id="gallery-back" onclick="goTo(2)">← FILES</button>
 </div>
 
 <!-- PLAYER BAR -->
@@ -339,293 +289,241 @@ sound: <a class="credit-link" href="https://www.instagram.com/yutand___/" target
       <svg id="icon-pause" width="18" height="18" viewBox="0 0 24 24" fill="#fff" style="display:none"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
     </button>
     <div class="timecode" id="timecode">00:00 / 00:00</div>
-    <div class="mini-area" id="mini-area-btn" onclick="goToTranscribe()" style="cursor:pointer;">
+    <div class="mini-area">
       <div class="mini-speaker" id="mini-speaker"></div>
-      <div class="mini-text"    id="mini-text"></div>
+      <div class="mini-text" id="mini-text"></div>
     </div>
   </div>
 </div>
 
+<!-- LIGHTBOX -->
 <div id="lightbox" onclick="closeLightbox()">
   <img id="lightbox-img" src="" />
 </div>
 
+<!-- legacy hidden div so old JS refs don't break -->
+<div id="main" style="display:none;"></div>
+
 <script src="./noda_data.js"></script>
 <script src="./kikuchi_data.js"></script>
+
 <script>
-const NODA_IMAGES    = ['./nodayuta.jpg','./nodayuta_2.jpg','./nodayuta_3.jpg','./nodayuta_4.jpg'];
-const NODA_META      = { title:'野田結太.mp3', sub:'nodayuta.mp3 / 10:55', desc:'', credits:'sound: <a class="credit-link" href="https://www.instagram.com/yutand___/" target="_blank">@yutand___</a><br>Production: <a class="credit-link" href="https://www.instagram.com/___.mp5/" target="_blank">@___.mp5</a>' };
-const KIKUCHI_IMAGES = ['./yukikikuchi.jpg','./yukikikuchi_2.jpg'];
-const KIKUCHI_META   = { title:'菊地佑樹.mp3', sub:'kikuchiyuki_jgoe.mp3 / 53:49', desc:'', credits:'Talk: <a class="credit-link" href="https://www.instagram.com/yuki_not_rinko/" target="_blank">菊池佑樹 (yuki_not_rinko)</a><br>Host: <a class="credit-link" href="https://www.instagram.com/la_viscuit/" target="_blank">@la_viscuit</a><br>Production: <a class="credit-link" href="https://www.instagram.com/___.mp5/" target="_blank">@___.mp5</a>' };
+/* ── DATA ── */
+const NODA_IMAGES   = ['./nodayuta.jpg','./nodayuta_2.jpg','./nodayuta_3.jpg','./nodayuta_4.jpg'];
+const NODA_THUMB    = './nodayuta.jpg';
+const NODA_LINK     = 'https://www.instagram.com/yutand___';
 
-const audio = new Audio();
-let playing=false, transcript=[], sections=[], currentFile=null;
-let lastEl=null, userScrolling=false, uScrollTimer=null;
-
-/* ── Photo swipe ── */
-let photoIndex=0, photos=[];
-
-// Noda section → photo index mapping (0-based)
-const KUROSAKI_FILM_IMAGES = [
+const KUROSAKI_IMAGES = [
   './kurosaki/kurosaki_film-01.webp','./kurosaki/kurosaki_film-02.webp','./kurosaki/kurosaki_film-03.webp',
   './kurosaki/kurosaki_film-04.webp','./kurosaki/kurosaki_film-05.webp','./kurosaki/kurosaki_film-06.webp',
   './kurosaki/kurosaki_film-07.webp'
 ];
-const KUROSAKI_DIGITAL_IMAGES = [
-  './kurosaki/kurosaki_digital1.webp','./kurosaki/kurosaki_digital2.webp','./kurosaki/kurosaki_digital3.webp',
-  './kurosaki/kurosaki_digital4.webp','./kurosaki/kurosaki_digital5.webp','./kurosaki/kurosaki_digital6.webp',
-  './kurosaki/kurosaki_digital7.webp','./kurosaki/kurosaki_digital8.webp','./kurosaki/kurosaki_digital9.webp'
-];
-const NODA_SECTION_PHOTO    = [0, 1, 2, 3, 0, 1]; // sec 1-6 → photo index
-const KIKUCHI_SECTION_PHOTO = [0, 1, 0, 1, 0, 1, 0, 1]; // sec 1-8 → photo index (alternating)
+const KUROSAKI_META = {
+  title: "野田結太.mp5", loc: "loc. 葉山 黒崎海岸", date: "2026.12.16"
+};
 
-function buildPhotos(images) {
-  photos = images;
-  photoIndex = 0;
-  const bg = document.getElementById('mp3-photo-bg');
-  bg.innerHTML = images.map((src,i)=>
-    `<div class="photo-slide" id="photo-slide-${i}" data-i="${i}">
-       <img src="${src}" draggable="false" />
-     </div>`
-  ).join('');
-}
+const KIKUCHI_IMAGES = ['./yukikikuchi.jpg','./yukikikuchi_2.jpg'];
+const KIKUCHI_THUMB  = './yukikikuchi.jpg';
+const KIKUCHI_LINK   = 'https://www.instagram.com/memo.riesreview';
 
-function showPhoto(idx) {
-  if(idx<0||idx>=photos.length) return;
-  photoIndex=idx;
-  const slide = document.getElementById('photo-slide-'+idx);
-  const bg = document.getElementById('mp3-photo-bg');
-  if(slide&&bg) smoothScrollEl(bg, slide.offsetTop, 2000);
-}
+/* ── STATE ── */
+const audio = new Audio();
+let playing = false, transcript = [], sections = [], currentFile = null;
 
-function smoothScrollEl(el, to, dur) {
-  const from=el.scrollTop, diff=to-from; let t0=null;
-  const step=now=>{ if(!t0)t0=now; const p=Math.min((now-t0)/dur,1),e=1-Math.pow(1-p,3); el.scrollTop=from+diff*e; if(p<1)requestAnimationFrame(step); };
-  requestAnimationFrame(step);
-}
-
-
-
-/* ── Go to transcribe page from player bar ── */
-function goToTranscribe() {
-  if (currentFile === 'noda' || currentFile === 'kikuchi') {
-    goTo('mp3');
-  } else if (currentFile === 'kurosaki') {
-    goTo('kuro');
-  }
-}
-
-/* ── NAV ── */
+/* ── NAVIGATION ── */
 function goTo(n) {
-  ['screen-0','screen-1','screen-2','processing-screen','mp3-main','kurosaki-main'].forEach(id=>{
-    const el=document.getElementById(id); if(el) el.style.display='none';
-  });
-  if(n===0)           document.getElementById('screen-0').style.display='flex';
-  else if(n===1)      document.getElementById('screen-1').style.display='flex';
-  else if(n===2)      document.getElementById('screen-2').style.display='flex';
-  else if(n==='proc') document.getElementById('processing-screen').style.display='flex';
-  else if(n==='mp3')  document.getElementById('mp3-main').style.display='block';
-  else if(n==='kuro') document.getElementById('kurosaki-main').style.display='flex';
-  document.getElementById('player-bar').style.display=(audio.src&&audio.src!=='')?'flex':'none';
-  // player bar color: white bg screens use black icons
-  const pb=document.getElementById('player-bar');
-  const whiteScreens=['screen-2','processing-screen'];
-  pb.classList.toggle('on-white', whiteScreens.includes(String(n)) || n===2 || n==='proc' || n===1 || n===0);
-  const left=document.getElementById('page-label-left'),right=document.getElementById('page-label-right');
-  const map={
-    0:['Voices / Experience','V125'],1:['Voices / Experience','V125'],
-    2:['Select File','Step 02'],proc:['Building Audio Map',''],
-    mp3:[currentFile==='noda'?'野田結太.MP3':'菊地佑樹.MP3','Transcribe'],
-    kuro:['野田結太.mp5','Gallery']
+  const ids = ['screen-0','screen-1','screen-2','processing-screen','gallery-main','main'];
+  ids.forEach(id => { const el=document.getElementById(id); if(el) el.style.display='none'; });
+
+  if (n===0)        document.getElementById('screen-0').style.display='flex';
+  else if (n===1)   document.getElementById('screen-1').style.display='flex';
+  else if (n===2)   document.getElementById('screen-2').style.display='flex';
+  else if (n==='proc') document.getElementById('processing-screen').style.display='flex';
+  else if (n==='gallery') {
+    document.getElementById('gallery-main').style.display='flex';
+  }
+
+  // player bar visible whenever audio is loaded
+  document.getElementById('player-bar').style.display = (audio.src && audio.src !== '') ? 'flex' : 'none';
+
+  // page label
+  const left = document.getElementById('page-label-left');
+  const right = document.getElementById('page-label-right');
+  const labels = {
+    0: ['Voices / Experience','V91'], 1: ['Voices / Experience','V91'],
+    2: ['Select File','Step 02'], proc: ['Building Audio Map',''],
+    gallery: [currentFile==='kurosaki'?'野田結太.mp5':'.MP5','Gallery']
   };
-  const l=map[n]||['Voices / Experience','V125'];
-  if(left)left.innerText=l[0]; if(right)right.innerText=l[1];
+  const l = labels[n] || ['Voices / Experience','V91'];
+  if(left)  left.innerText  = l[0];
+  if(right) right.innerText = l[1];
 }
 
-/* ── ENTRY ── */
-document.getElementById('entry-permission-btn').addEventListener('click',async()=>{
-  if(typeof DeviceOrientationEvent!=='undefined'&&typeof DeviceOrientationEvent.requestPermission==='function'){
-    try{const s=await DeviceOrientationEvent.requestPermission();if(s==='granted')window.addEventListener('deviceorientation',handleGyro,true);}catch(e){}
-  } else window.addEventListener('deviceorientation',handleGyro,true);
+/* ── ENTRY BUTTON ── */
+document.getElementById('entry-permission-btn').addEventListener('click', async () => {
+  if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
+    try { const s = await DeviceOrientationEvent.requestPermission(); if(s==='granted') window.addEventListener('deviceorientation', handleGyro, true); } catch(e){}
+  } else { window.addEventListener('deviceorientation', handleGyro, true); }
   goTo(1);
 });
 
 /* ── GYRO ── */
-function handleGyro(e){
-  const xAdj=e.gamma||0, yAdj=(e.beta||0)-34;
-  const rawBeta=e.beta||45;
-
-  // Screen 1: logo 3D tilt
-  const logo=document.getElementById('gyro-logo'), s1=document.getElementById('screen-1');
-  if(s1&&s1.style.display!=='none'&&logo){
-    const mx=Math.max(-60,Math.min(60,xAdj/1.1)), my=Math.max(-60,Math.min(60,yAdj/1.1));
-    logo.style.transform=`translate3d(${mx}px,${my}px,0) rotateX(${-my*3.5}deg) rotateY(${mx*3.5}deg)`;
+function handleGyro(event) {
+  const xAdj = (event.gamma||0), yAdj = (event.beta||0)-34;
+  const logo = document.getElementById('gyro-logo');
+  const s1 = document.getElementById('screen-1');
+  if (s1 && s1.style.display !== 'none' && logo) {
+    const mx = Math.max(-60,Math.min(60,xAdj/1.1)), my = Math.max(-60,Math.min(60,yAdj/1.1));
+    logo.style.transform = `translate3d(${mx}px,${my}px,0) rotateX(${-my*3.5}deg) rotateY(${mx*3.5}deg)`;
   }
-
-  // Lightbox: viewfinder pan + zoom
-  const lb=document.getElementById('lightbox'), lbImg=document.getElementById('lightbox-img');
-  if(lb&&lb.style.display==='flex'&&lbImg){
+  const lb = document.getElementById('lightbox'), lbImg = document.getElementById('lightbox-img');
+  if (lb && lb.style.display==='flex' && lbImg) {
     const px=Math.max(-25,Math.min(25,xAdj*0.7)), py=Math.max(-20,Math.min(20,yAdj*-0.5));
-    const zoomT=Math.max(0,Math.min(1,(rawBeta-20)/50));
-    lbImg.style.transform=`translate(${px}px,${py}px) scale(${1.5-zoomT*0.5})`;
+    const rawBeta=(event.beta||45), zoomT=Math.max(0,Math.min(1,(rawBeta-20)/50)), scale=1+(zoomT*0.5);
+    lbImg.style.transform=`translate(${px}px,${py}px) scale(${scale})`;
   }
-
-  // mp3 photo bg: no gyro — gyro only active in lightbox
-
-  // Kurosaki scroll images: no gyro — gyro only active in lightbox
 }
 
-/* ── START ── */
-function startExperience(file){
-  currentFile=file; audio.pause(); audio.src=''; lastEl=null;
+/* ── GALLERY BUILD ── */
+function buildGallery(images) {
+  const scroll = document.getElementById('gallery-scroll');
+  scroll.innerHTML = images.map(src =>
+    `<img src="${src}" onclick="openLightbox('${src}')" style="cursor:zoom-in;" loading="lazy" />`
+  ).join('');
+  scroll.scrollTop = 0;
+}
 
-  if(file==='kurosaki'||file==='kurosaki_digital'){
-    const imgs = file==='kurosaki_digital' ? KUROSAKI_DIGITAL_IMAGES : KUROSAKI_FILM_IMAGES;
-    goTo('proc');
-    setTimeout(()=>{
-      goTo('kuro');
-      // load gallery images for this entry
-      document.getElementById('kurosaki-scroll').querySelectorAll('img.kuro-img').forEach(el=>el.remove());
-      const scroll=document.getElementById('kurosaki-scroll');
-      imgs.forEach(src=>{ const im=document.createElement('img'); im.src=src; im.className='kuro-img'; im.onclick=()=>openLightbox(src); im.loading='lazy'; scroll.appendChild(im); });
-      audio.src='./kurosaki.mp3'; audio.loop=false; audio.load();
-      audio.volume=0.001;
-      audio.play().then(()=>{
-        playing=true; updateIcons(); document.getElementById('player-bar').style.display='flex';
-        let t=0;
-        const dbg=document.getElementById('vol-debug');
-        const fill=document.getElementById('vol-debug-fill');
-        if(dbg) dbg.style.display='block';
-        const fadeStep=setInterval(()=>{
-          t=Math.min(1, t+0.00462); // t: 0→1 over ~13sec
-          const vol=Math.pow(t, 5); // easeIn curve: slow start, fast end
-          audio.volume=Math.max(0.001, vol);
-          if(fill) fill.style.height=(vol*100)+'%';
-          if(t>=1){ audio.volume=1; clearInterval(fadeStep); }
-        },60);
-      }).catch(()=>{});
-    },3000);
-    return;
-  }
-
-  const isNoda=file==='noda';
-  transcript=isNoda?(typeof NODA_TRANSCRIPT!=='undefined'?NODA_TRANSCRIPT.slice():[]):(typeof KIKUCHI_TRANSCRIPT!=='undefined'?KIKUCHI_TRANSCRIPT.slice():[]);
-  sections=isNoda?(typeof NODA_SECTIONS!=='undefined'?NODA_SECTIONS.slice():[]):(typeof KIKUCHI_SECTIONS!=='undefined'?KIKUCHI_SECTIONS.slice():[]);
-  const meta=isNoda?NODA_META:KIKUCHI_META;
-  const images=isNoda?NODA_IMAGES:KIKUCHI_IMAGES;
-  audio.src=isNoda?'./nodayuta.mp3':'./kikuchiyuki_compressed.mp3';
-
-  // build photo bg
-  buildPhotos(images);
-
-  // meta block
-  document.getElementById('mp3-meta-block').innerHTML=meta.title?`<div class="project-meta-block"><div class="project-meta-title">${meta.title}</div><div class="project-meta-sub">${meta.sub}</div>${meta.desc?`<div class="project-meta-desc">${meta.desc}</div>`:''}<div class="project-meta-credits">${meta.credits}</div></div>`:'';
-
-  // transcript
-  document.getElementById('mp3-transcript-container').innerHTML=transcript.map((t,i)=>
-    `<div class="transcript-entry" id="te-${i}" onclick="jumpTo(${t.start})" style="cursor:pointer;">
-      <div class="entry-meta">
-        <span class="speaker-name">${t.speaker}</span>
-        <span class="time-stamp">${t.startText||''}</span>
-      </div>
-      <div>${t.text}</div>
+/* ── TRANSCRIPT OVERLAY ── */
+function buildOverlayEntries() {
+  const container = document.getElementById('overlay-entries');
+  if (!transcript.length) { container.innerHTML = ''; return; }
+  container.innerHTML = transcript.map((t,i) =>
+    `<div class="overlay-entry" id="oe-${i}" data-start="${t.start}" data-end="${t.end||t.start+30}">
+      <div class="overlay-speaker">${t.speaker}</div>
+      <div class="overlay-text">${t.text}</div>
+      <div class="overlay-time">${t.startText||''}</div>
     </div>`
   ).join('');
+}
 
-  // section nav
-  document.getElementById('mp3-secnav').innerHTML=sections.map((s,i)=>
-    `<button class="section-item" id="nsec-${i}" onclick="jumpTo(${s.start})">
-      <span class="section-num">0${i+1}</span>${s.title}
+function buildSectionNav() {
+  const nav = document.getElementById('section-nav-overlay');
+  nav.innerHTML = sections.map((s,i) =>
+    `<button class="snav-btn" id="snav-${i}" onclick="jumpTo(${s.start})">
+      <span style="opacity:0.4;font-size:8px;display:block;margin-bottom:2px;">0${i+1}</span>${s.title}
     </button>`
   ).join('');
+}
 
-  audio.load(); goTo('proc');
-  setTimeout(()=>{
-    goTo('mp3');
-    document.getElementById('mp3-scroll').scrollTop=0;
-    audio.play().then(()=>{playing=true;updateIcons();}).catch(()=>{});
-  },3000);
+/* ── START EXPERIENCE ── */
+function startExperience(file) {
+  currentFile = file;
+  audio.pause(); audio.src = '';
+
+  // hide meta overlay by default
+  document.getElementById('meta-overlay').style.display = 'none';
+  document.getElementById('transcript-overlay').style.display = 'flex';
+
+  if (file === 'kurosaki') {
+    buildGallery(KUROSAKI_IMAGES);
+    transcript = []; sections = [];
+    buildOverlayEntries();
+    buildSectionNav();
+
+    // show meta instead of transcript overlay
+    document.getElementById('transcript-overlay').style.display = 'none';
+    document.getElementById('meta-overlay').style.display = 'block';
+    document.getElementById('meta-title-text').innerText = KUROSAKI_META.title;
+    document.getElementById('meta-sub-text').innerText = `${KUROSAKI_META.loc} / ${KUROSAKI_META.date}`;
+
+    goTo('proc');
+    setTimeout(() => {
+      goTo('gallery');
+      audio.src = './kurosaki.mp3';
+      audio.loop = false;
+      audio.load();
+      audio.play().then(()=>{ playing=true; updateIcons(); document.getElementById('player-bar').style.display='flex'; }).catch(()=>{});
+      document.getElementById('player-bar').style.display = 'flex';
+    }, 3000);
+
+  } else if (file === 'noda') {
+    transcript = (typeof NODA_TRANSCRIPT !== 'undefined') ? NODA_TRANSCRIPT.slice() : [];
+    sections   = (typeof NODA_SECTIONS  !== 'undefined') ? NODA_SECTIONS.slice()  : [];
+    buildGallery(NODA_IMAGES);
+    buildOverlayEntries();
+    buildSectionNav();
+    audio.src = './nodayuta.mp3';
+    loadAndStart();
+
+  } else if (file === 'kikuchi') {
+    transcript = (typeof KIKUCHI_TRANSCRIPT !== 'undefined') ? KIKUCHI_TRANSCRIPT.slice() : [];
+    sections   = (typeof KIKUCHI_SECTIONS   !== 'undefined') ? KIKUCHI_SECTIONS.slice()   : [];
+    buildGallery(KIKUCHI_IMAGES);
+    buildOverlayEntries();
+    buildSectionNav();
+    audio.src = './kikuchiyuki_compressed.mp3';
+    loadAndStart();
+  }
+}
+
+function loadAndStart() {
+  audio.load();
+  goTo('proc');
+  setTimeout(() => {
+    goTo('gallery');
+    audio.play().then(()=>{ playing=true; updateIcons(); }).catch(()=>{});
+  }, 3000);
 }
 
 /* ── PLAYBACK ── */
-function jumpTo(sec){
-  audio.currentTime=sec;
-  audio.play().then(()=>{playing=true;updateIcons();});
-  const idx = transcript.findIndex(t=>sec>=t.start&&sec<=(t.end||t.start+30));
-  if(idx<0) return;
-  const el=document.getElementById('te-'+idx);
-  const c=document.getElementById('mp3-scroll');
-  if(el&&c) smoothScroll(c, el.offsetTop - c.clientHeight/2 + el.clientHeight/2, 600);
+function jumpTo(sec) { audio.currentTime=sec; audio.play().then(()=>{ playing=true; updateIcons(); }); }
+function togglePlay() { if(playing) audio.pause(); else audio.play().then(()=>playing=true); }
+function updateIcons() {
+  document.getElementById('icon-play').style.display  = playing?'none':'block';
+  document.getElementById('icon-pause').style.display = playing?'block':'none';
 }
-function togglePlay(){if(playing)audio.pause();else audio.play().then(()=>playing=true);}
-function updateIcons(){
-  document.getElementById('icon-play').style.display=playing?'none':'block';
-  document.getElementById('icon-pause').style.display=playing?'block':'none';
-}
-audio.onplay=()=>{playing=true;updateIcons();};
-audio.onpause=()=>{playing=false;updateIcons();};
-audio.onended=()=>{ playing=false; updateIcons(); audio.volume=1; };
+audio.onplay  = ()=>{ playing=true;  updateIcons(); };
+audio.onpause = ()=>{ playing=false; updateIcons(); };
 
-/* ── TIME UPDATE ── */
-audio.ontimeupdate=()=>{
-  // Fade-out: last 13 seconds of kurosaki audio
-  if((currentFile==='kurosaki'||currentFile==='kurosaki_digital') && audio.duration){
-    const remaining = audio.duration - audio.currentTime;
-    if(remaining <= 13 && remaining > 0){
-      const t = remaining / 13; // t: 1→0
-      const vol = Math.pow(t, 5); // easeOut: fast start of fade, slow end
-      audio.volume = Math.max(0.001, vol);
-    }
-    // debug bar
-    const dbg=document.getElementById('vol-debug');
-    const fill=document.getElementById('vol-debug-fill');
-    if(dbg&&fill){ dbg.style.display='block'; fill.style.height=(audio.volume*100)+'%'; }
-  }
-  const cur=audio.currentTime,dur=audio.duration||0;
+/* ── TIME UPDATE → sync overlay entries ── */
+let lastActiveIdx = -1;
+
+audio.ontimeupdate = () => {
+  const cur=audio.currentTime, dur=audio.duration||0;
   const fmt=s=>`${String(Math.floor(s/60)).padStart(2,'0')}:${String(Math.floor(s%60)).padStart(2,'0')}`;
-  document.getElementById('timecode').innerText=`${fmt(cur)} / ${fmt(dur)}`;
+  document.getElementById('timecode').innerText = `${fmt(cur)} / ${fmt(dur)}`;
 
-  let activeEl=null;
-  transcript.forEach((t,i)=>{
-    const el=document.getElementById(`te-${i}`);
-    const on=cur>=t.start&&cur<=(t.end||t.start+30);
-    if(el)el.classList.toggle('active',on);
-    if(on){activeEl=el;document.getElementById('mini-speaker').innerText=t.speaker;document.getElementById('mini-text').innerText=t.text;}
+  // find active transcript entry
+  let activeIdx = -1;
+  transcript.forEach((t,i) => {
+    const on = cur >= t.start && cur <= (t.end||t.start+30);
+    if (on) { activeIdx = i; document.getElementById('mini-speaker').innerText=t.speaker; document.getElementById('mini-text').innerText=t.text; }
   });
 
-  if(activeEl&&activeEl!==lastEl&&!userScrolling){
-    lastEl=activeEl;
-    const c=document.getElementById('mp3-scroll');
-    if(c) smoothScroll(c, activeEl.offsetTop - c.clientHeight/2 + activeEl.clientHeight/2, 1200);
+  // update overlay: show only active entry
+  if (activeIdx !== lastActiveIdx) {
+    document.querySelectorAll('.overlay-entry').forEach((el,i) => {
+      el.classList.toggle('active', i === activeIdx);
+    });
+    lastActiveIdx = activeIdx;
   }
 
-  sections.forEach((s,i)=>{
-    const el=document.getElementById(`nsec-${i}`);
-    const isActive=cur>=s.start&&(sections[i+1]?cur<sections[i+1].start:true);
-    if(el)el.classList.toggle('active',isActive);
-    // auto-switch photo based on section
-    const sectionPhotoMap = currentFile==='noda' ? NODA_SECTION_PHOTO : currentFile==='kikuchi' ? KIKUCHI_SECTION_PHOTO : null;
-    if(isActive && sectionPhotoMap && sectionPhotoMap[i]!==undefined){
-      const targetPhoto=sectionPhotoMap[i];
-      if(targetPhoto!==photoIndex) showPhoto(targetPhoto);
-    }
+  // section nav highlight
+  sections.forEach((s,i) => {
+    const el = document.getElementById(`snav-${i}`);
+    if (el) el.classList.toggle('active', cur>=s.start && (sections[i+1]?cur<sections[i+1].start:true));
   });
 };
 
-function smoothScroll(el,to,dur){
-  const from=el.scrollTop,diff=to-from;let t0=null;
-  const step=now=>{if(!t0)t0=now;const p=Math.min((now-t0)/dur,1),e=1-Math.pow(1-p,3);el.scrollTop=from+diff*e;if(p<1&&!userScrolling)requestAnimationFrame(step);};
-  requestAnimationFrame(step);
-}
-
-document.getElementById('mp3-scroll').addEventListener('touchstart',()=>{
-  userScrolling=true; clearTimeout(uScrollTimer);
-  uScrollTimer=setTimeout(()=>{userScrolling=false;},3000);
-},{passive:true});
-
 /* ── LIGHTBOX ── */
-function openLightbox(src){document.getElementById('lightbox-img').src=src;document.getElementById('lightbox').style.display='flex';}
-function closeLightbox(){document.getElementById('lightbox').style.display='none';document.getElementById('lightbox-img').style.transform='none';}
+function openLightbox(src) {
+  document.getElementById('lightbox-img').src = src;
+  document.getElementById('lightbox').style.display = 'flex';
+}
+function closeLightbox() {
+  document.getElementById('lightbox').style.display = 'none';
+  document.getElementById('lightbox-img').style.transform = 'none';
+}
 
 goTo(0);
 </script>
