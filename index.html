@@ -206,7 +206,7 @@
 
 <div class="page-label" id="page-label">
   <span id="page-label-left">Voices / Experience</span>
-  <span id="page-label-right">V128</span>
+  <span id="page-label-right">V129</span>
 </div>
 
 <div id="screen-0" class="screen">
@@ -305,7 +305,7 @@
     <div class="kurosaki-meta-block">
       <div class="kurosaki-meta-title">野田結太.mp5</div>
       <div class="kurosaki-meta-sub">loc. 葉山 黒崎海岸 / 2026.12.16</div>
-      <div class="kurosaki-meta-desc">今回の葉山市、黒崎海岸での.mp5では、レコーダーを持ち音の収集を行った。<br>日没ごろ、野田の制作音源を海に正対し演奏。<br>録音音源は撮影後、「Kurosaki ambient」 として発展。</div>
+      <div class="kurosaki-meta-desc">今回の葉山市、黒崎海岸での.mp5では、レコーダーを持ち音の収集を行った。<br>日没ごろ、野田の制作音源を海に正対し演奏。<br>録音音源は撮影後、「<a class="credit-link" href="https://youtu.be/ebGPpMet_l8?si=thax59cnzuXijbw3" target="_blank">Kurosaki ambient</a>」 として発展。</div>
       <div class="kurosaki-meta-credits">
 sound: <a class="credit-link" href="https://www.instagram.com/yutand___/" target="_blank">@yutand___</a><br>Photography: <a class="credit-link" href="https://www.instagram.com/la_viscuit/" target="_blank">@la_viscuit</a><br>Production: <a class="credit-link" href="https://www.instagram.com/___.mp5/" target="_blank">@___.mp5</a>
       </div>
@@ -417,12 +417,12 @@ function goTo(n) {
   pb.classList.toggle('on-white', whiteScreens.includes(String(n)) || n===2 || n==='proc' || n===1 || n===0);
   const left=document.getElementById('page-label-left'),right=document.getElementById('page-label-right');
   const map={
-    0:['Voices / Experience','V128'],1:['Voices / Experience','V128'],
+    0:['Voices / Experience','V129'],1:['Voices / Experience','V129'],
     2:['Select File','Step 02'],proc:['Building Audio Map',''],
     mp3:[currentFile==='noda'?'野田結太.MP3':'菊地佑樹.MP3','Transcribe'],
     kuro:['野田結太.mp5','Gallery']
   };
-  const l=map[n]||['Voices / Experience','V128'];
+  const l=map[n]||['Voices / Experience','V129'];
   if(left)left.innerText=l[0]; if(right)right.innerText=l[1];
 }
 
