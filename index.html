@@ -48,59 +48,18 @@
 
   /* ============================================================
      MP3 MAIN
-     Layer 1 (z:1): photo — fixed bg, swipeable
-     Layer 2 (z:2): transcript — scrolls over photo, transparent bg
-     Layer 3 (z:10): left nav — fixed, transparent bg
   ============================================================ */
-  #mp3-main {
-    position:fixed; inset:0;
-    display:none;
-    overflow:hidden;
-  }
+  #mp3-main { position:fixed; inset:0; display:none; overflow:hidden; }
 
-  /* --- LAYER 1: Photo background — vertical scroll stack --- */
-  #mp3-photo-bg {
-    position:absolute; inset:0;
-    z-index:1;
-    overflow-y:auto;
-    overflow-x:hidden;
-    -webkit-overflow-scrolling:touch;
-  }
-  .photo-slide {
-    width:100%;
-    display:block;
-    flex-shrink:0;
-  }
-  .photo-slide img {
-    width:100%; height:auto;
-    display:block;
-    user-select:none;
-    -webkit-user-drag:none;
-  }
-  /* dots hidden — no longer needed */
+  #mp3-photo-bg { position:absolute; inset:0; z-index:1; overflow-y:auto; overflow-x:hidden; -webkit-overflow-scrolling:touch; }
+  .photo-slide { width:100%; display:block; flex-shrink:0; }
+  .photo-slide img { width:100%; height:auto; display:block; user-select:none; -webkit-user-drag:none; }
   #photo-dots { display:none; }
 
-  /* --- LAYER 2: Transcript — transparent, scrollable --- */
-  #mp3-transcript-layer {
-    position:absolute;
-    top:0;
-    left:var(--nav-width);
-    right:0;
-    bottom:0;
-    z-index:2;
-    overflow:hidden;
-  }
-  #mp3-scroll {
-    width:100%; height:100%;
-    overflow-y:auto; overflow-x:hidden;
-    -webkit-overflow-scrolling:touch;
-    /* NO background */
-    background:transparent;
-    padding:35vh 24px 15vh;
-  }
+  #mp3-transcript-layer { position:absolute; top:0; left:var(--nav-width); right:0; bottom:0; z-index:2; overflow:hidden; }
+  #mp3-scroll { width:100%; height:100%; overflow-y:auto; overflow-x:hidden; -webkit-overflow-scrolling:touch; background:transparent; padding:35vh 24px 15vh; }
   #mp3-content-inner { max-width:540px; }
 
-  /* project meta — white on photo bg */
   .project-meta-block { margin-bottom:80px; }
   .project-meta-title { font-size:24px; font-weight:300; color:#fff; margin-bottom:12px; }
   .project-meta-sub { font-size:11px; letter-spacing:0.05em; margin-bottom:32px; font-family:'IBM Plex Mono',monospace; color:#fff; }
@@ -109,7 +68,6 @@
   .credit-link { color:var(--accent); text-decoration:underline; text-decoration-color:rgba(255,255,255,0.4); text-underline-offset:3px; }
   .credit-link:hover { opacity:0.7; }
 
-  /* transcript entries — original style */
   .transcript-entry { margin-bottom:48px; font-size:17px; line-height:1.9; color:var(--meta); transition:color 0.5s ease; }
   .transcript-entry.active { color:#fff; }
   .entry-meta { display:flex; align-items:center; gap:10px; margin-bottom:6px; }
@@ -117,54 +75,19 @@
   .transcript-entry.active .speaker-name { color:var(--accent); }
   .time-stamp { font-size:9px; color:var(--dim); font-family:'IBM Plex Mono',monospace; }
 
-  /* --- LAYER 3: Left nav --- */
-  #mp3-nav {
-    position:absolute;
-    top:0; left:0;
-    bottom:calc(var(--player-height) + 80px); /* stop above back button */
-    width:var(--nav-width);
-    z-index:10;
-    display:flex; flex-direction:column;
-    padding:24px 12px 12px;
-    pointer-events:auto;
-    background:transparent;
-    overflow:hidden;
-  }
-  #mp3-logo {
-    font-size:14px; font-weight:500; letter-spacing:0.1em;
-    cursor:pointer; margin-bottom:20px; flex-shrink:0;
-    color:#fff; mix-blend-mode:difference;
-  }
-  #mp3-back {
-    position:fixed; bottom:calc(var(--player-height) + 16px); left:16px;
-    background:transparent; border:1px solid rgba(255,255,255,0.7);
-    font-size:10px; padding:8px 16px; font-weight:600;
-    cursor:pointer; letter-spacing:0.1em;
-    font-family:var(--font); color:#fff;
-    z-index:20; mix-blend-mode:difference;
-  }
-  #mp3-secnav {
-    flex:1; display:flex; flex-direction:column; gap:16px;
-    overflow-y:auto; scrollbar-width:none;
-    -webkit-overflow-scrolling:touch;
-  }
+  #mp3-nav { position:absolute; top:0; left:0; bottom:calc(var(--player-height) + 80px); width:var(--nav-width); z-index:10; display:flex; flex-direction:column; padding:24px 12px 12px; pointer-events:auto; background:transparent; overflow:hidden; }
+  #mp3-logo { font-size:14px; font-weight:500; letter-spacing:0.1em; cursor:pointer; margin-bottom:20px; flex-shrink:0; color:#fff; mix-blend-mode:difference; }
+  #mp3-back { position:fixed; bottom:calc(var(--player-height) + 16px); left:16px; background:transparent; border:1px solid rgba(255,255,255,0.7); font-size:10px; padding:8px 16px; font-weight:600; cursor:pointer; letter-spacing:0.1em; font-family:var(--font); color:#fff; z-index:20; mix-blend-mode:difference; }
+  #mp3-secnav { flex:1; display:flex; flex-direction:column; gap:16px; overflow-y:auto; scrollbar-width:none; -webkit-overflow-scrolling:touch; }
   #mp3-secnav::-webkit-scrollbar { display:none; }
-  .section-item {
-    font-size:11px; line-height:1.4; cursor:pointer;
-    border:none; background:none; text-align:left;
-    font-family:var(--font); padding:0;
-    color:#fff; mix-blend-mode:difference;
-  }
+  .section-item { font-size:11px; line-height:1.4; cursor:pointer; border:none; background:none; text-align:left; font-family:var(--font); padding:0; color:#fff; mix-blend-mode:difference; }
   .section-item.active { color:var(--accent); font-weight:500; }
   .section-num { display:block; font-size:9px; margin-bottom:3px; opacity:0.4; }
 
   /* ============================================================
-     KUROSAKI — unchanged
+     KUROSAKI
   ============================================================ */
-  #kurosaki-main {
-    position:fixed; inset:0; display:none; flex-direction:column;
-    background:#fff; z-index:150; overflow:hidden;
-  }
+  #kurosaki-main { position:fixed; inset:0; display:none; flex-direction:column; background:#fff; z-index:150; overflow:hidden; }
   #kurosaki-scroll { flex:1; overflow-y:auto; overflow-x:hidden; -webkit-overflow-scrolling:touch; }
   #kurosaki-scroll img { width:100%; height:auto; display:block; cursor:pointer; }
   .kurosaki-meta-block { padding:60px 20px 32px; border-bottom:1px solid var(--rule-light); }
@@ -175,12 +98,7 @@
   .kurosaki-credits-row { display:flex; align-items:flex-start; gap:16px; }
   .kurosaki-credits-text { flex:1; }
   .kurosaki-mini-player { flex-shrink:0; width:140px; height:90px; border:none; display:block; background:#000; }
-  #kurosaki-back {
-    position:fixed; bottom:calc(var(--player-height) + 16px); left:16px;
-    background:transparent; border:1px solid rgba(0,0,0,0.5); font-size:10px; padding:8px 16px;
-    font-weight:600; cursor:pointer; z-index:270; letter-spacing:0.1em;
-    font-family:var(--font); color:#000;
-  }
+  #kurosaki-back { position:fixed; bottom:calc(var(--player-height) + 16px); left:16px; background:transparent; border:1px solid rgba(0,0,0,0.5); font-size:10px; padding:8px 16px; font-weight:600; cursor:pointer; z-index:270; letter-spacing:0.1em; font-family:var(--font); color:#000; }
 
   /* PLAYER BAR */
   #player-bar { position:fixed; bottom:0; left:0; right:0; height:var(--player-height); background:transparent; border-top:none; display:none; align-items:center; padding:0 20px; padding-bottom:env(safe-area-inset-bottom); z-index:300; }
@@ -206,12 +124,17 @@
 
 <div class="page-label" id="page-label">
   <span id="page-label-left">Voices / Experience</span>
-  <span id="page-label-right">V129</span>
+  <span id="page-label-right">V135</span>
 </div>
 
 <div id="screen-0" class="screen">
   <div class="frame-fixed" style="text-align:center;">
     <button class="start-btn" id="entry-permission-btn">EXPERIENCE?</button>
+    <div style="margin-top:12px;">
+      <input id="link-input" type="url" placeholder="leave a link you love..." style="width:100%;padding:18px;font-size:11px;letter-spacing:0.1em;border:1px solid #e8e8e8;outline:none;font-family:var(--font);color:#000;background:#fff;box-sizing:border-box;" />
+      <button id="link-submit-btn" style="width:100%;margin-top:6px;padding:12px;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;border:1px solid #000;background:#fff;color:#000;cursor:pointer;font-family:var(--font);">SHARE →</button>
+      <div id="link-status" style="font-size:10px;color:#999;margin-top:8px;letter-spacing:0.1em;min-height:16px;"></div>
+    </div>
   </div>
 </div>
 
@@ -225,6 +148,7 @@
 
 <div id="screen-2" class="screen">
   <div class="frame-fixed">
+    
     <div class="preset-card" onclick="startExperience('noda')">
       <div class="preset-card-inner">
         <div class="play-circle"><div class="play-triangle"></div></div>
@@ -234,6 +158,7 @@
         </div>
       </div>
     </div>
+    
     <div class="preset-card" onclick="startExperience('kikuchi')">
       <div class="preset-card-inner">
         <div class="play-circle"><div class="play-triangle"></div></div>
@@ -243,6 +168,17 @@
         </div>
       </div>
     </div>
+
+    <div class="preset-card" onclick="startExperience('isezaki')">
+      <div class="preset-card-inner">
+        <div class="play-circle"><div class="play-triangle"></div></div>
+        <div class="preset-info">
+          <div class="preset-filename">isezakiasahi.mp3</div>
+          <div class="preset-details">伊勢崎あさひ -- Audio Transcript</div>
+        </div>
+      </div>
+    </div>
+
     <div class="preset-card" onclick="startExperience('kurosaki')">
       <div class="preset-card-inner">
         <img src="./kurosaki/kurosaki_film-02.webp" class="preset-thumb-sq" alt="icon" />
@@ -262,6 +198,24 @@
       </div>
     </div>
   </div>
+  <div class="preset-card" onclick="openLWY()">
+      <div class="preset-card-inner">
+        <div class="play-circle" style="border-style:dashed;"><div class="play-triangle"></div></div>
+        <div class="preset-info">
+          <div class="preset-filename">link with you</div>
+          <div class="preset-details">shared links — everyone</div>
+        </div>
+      </div>
+    </div>
+  <div class="preset-card" onclick="startExperience('sankō')">
+      <div class="preset-card-inner">
+        <div class="play-circle"><div class="play-triangle"></div></div>
+        <div class="preset-info">
+          <div class="preset-filename">参考.mp5</div>
+          <div class="preset-details">.mp5 / 参考</div>
+        </div>
+      </div>
+    </div>
   <button style="position:fixed;bottom:calc(var(--player-height) + 16px);left:16px;background:transparent;border:1px solid rgba(0,0,0,0.5);font-size:10px;padding:8px 16px;font-weight:600;cursor:pointer;letter-spacing:0.1em;font-family:var(--font);color:#000;z-index:270;" onclick="goTo(1)">← BACK</button>
 </div>
 
@@ -270,16 +224,10 @@
   <div class="loader-bar"><div class="loader-inner"></div></div>
 </div>
 
-<!-- MP3 MAIN -->
 <div id="mp3-main">
-
-  <!-- Layer 1: photo background (swipeable) -->
-  <div id="mp3-photo-bg">
-    <!-- slides injected by JS -->
-  </div>
+  <div id="mp3-photo-bg"></div>
   <div id="photo-dots"></div>
 
-  <!-- Layer 2: transcript over photo -->
   <div id="mp3-transcript-layer">
     <div id="mp3-scroll">
       <div id="mp3-content-inner">
@@ -289,17 +237,13 @@
     </div>
   </div>
 
-  <!-- Layer 3: left nav (sections only) -->
   <div id="mp3-nav">
     <div id="mp3-logo" onclick="goTo(1)">.MP5</div>
     <div id="mp3-secnav"></div>
   </div>
-  <!-- BACK button: fixed, independent of nav -->
   <button id="mp3-back" onclick="goTo(2)">← BACK</button>
-
 </div>
 
-<!-- KUROSAKI -->
 <div id="kurosaki-main">
   <div id="kurosaki-scroll">
     <div class="kurosaki-meta-block">
@@ -310,12 +254,39 @@
 sound: <a class="credit-link" href="https://www.instagram.com/yutand___/" target="_blank">@yutand___</a><br>Photography: <a class="credit-link" href="https://www.instagram.com/la_viscuit/" target="_blank">@la_viscuit</a><br>Production: <a class="credit-link" href="https://www.instagram.com/___.mp5/" target="_blank">@___.mp5</a>
       </div>
     </div>
-
   </div>
   <button id="kurosaki-back" onclick="goTo(2)">← BACK</button>
 </div>
 
-<!-- PLAYER BAR -->
+<!-- LINK WITH YOU SCREEN -->
+<div id="lwy-main" style="position:fixed;inset:0;display:none;flex-direction:column;background:#fff;z-index:150;overflow:hidden;padding-bottom:var(--player-height);">
+  <div style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:60px 20px 40px;">
+    <div style="max-width:540px;margin:0 auto;">
+      <div style="font-size:24px;font-weight:300;color:#000;margin-bottom:12px;">link with you</div>
+      <div style="font-size:11px;letter-spacing:0.05em;margin-bottom:32px;font-family:'IBM Plex Mono',monospace;color:#999;">shared links / all</div>
+      <div id="lwy-list" style="display:flex;flex-direction:column;gap:24px;">
+        <div style="color:#ccc;font-size:12px;letter-spacing:0.1em;">loading...</div>
+      </div>
+    </div>
+  </div>
+  <button style="position:fixed;bottom:calc(var(--player-height) + 16px);left:16px;background:transparent;border:1px solid rgba(0,0,0,0.5);font-size:10px;padding:8px 16px;font-weight:600;cursor:pointer;letter-spacing:0.1em;font-family:var(--font);color:#000;z-index:270;" onclick="goTo(2)">← BACK</button>
+</div>
+
+<!-- 参考 SCREEN -->
+<div id="sankō-main" style="position:fixed;inset:0;display:none;flex-direction:column;background:#fff;z-index:150;overflow:hidden;padding-bottom:var(--player-height);">
+  <div style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:60px 20px 40px;">
+    <div style="max-width:540px;margin:0 auto;">
+      <div style="font-size:24px;font-weight:300;color:#000;margin-bottom:12px;">参考.mp5</div>
+      <div style="font-size:11px;letter-spacing:0.05em;margin-bottom:32px;font-family:'IBM Plex Mono',monospace;color:#999;">.mp5 / 参考</div>
+      <div style="font-size:14px;line-height:1.9;margin-bottom:32px;color:#000;">メディアプレイヤー５は、インターネットによって断絶された、「環境と人の感覚」再び取り戻すためのプロジェクトです。<br><br>以下は.mp5を実践していると福澤が定義している作家と、その作品群です。</div>
+      <div style="margin-top:24px;">
+        <iframe width="100%" height="200" src="https://www.youtube.com/embed/rZXBia5kuqY?rel=0&modestbranding=1" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" style="border:none;display:block;"></iframe>
+      </div>
+    </div>
+  </div>
+  <button style="position:fixed;bottom:calc(var(--player-height) + 16px);left:16px;background:transparent;border:1px solid rgba(0,0,0,0.5);font-size:10px;padding:8px 16px;font-weight:600;cursor:pointer;letter-spacing:0.1em;font-family:var(--font);color:#000;z-index:270;" onclick="goTo(2)">← BACK</button>
+</div>
+
 <div id="player-bar">
   <div class="player-inner">
     <button class="play-btn" onclick="togglePlay()">
@@ -336,20 +307,25 @@ sound: <a class="credit-link" href="https://www.instagram.com/yutand___/" target
 
 <script src="./noda_data.js"></script>
 <script src="./kikuchi_data.js"></script>
+<script src="./isezakiasahi_data.js"></script>
+
 <script>
 const NODA_IMAGES    = ['./nodayuta.jpg','./nodayuta_2.jpg','./nodayuta_3.jpg','./nodayuta_4.jpg'];
 const NODA_META      = { title:'野田結太.mp3', sub:'nodayuta.mp3 / 10:55', desc:'', credits:'sound: <a class="credit-link" href="https://www.instagram.com/yutand___/" target="_blank">@yutand___</a><br>Production: <a class="credit-link" href="https://www.instagram.com/___.mp5/" target="_blank">@___.mp5</a>' };
+
 const KIKUCHI_IMAGES = ['./yukikikuchi.jpg','./yukikikuchi_2.jpg'];
 const KIKUCHI_META   = { title:'菊地佑樹.mp3', sub:'kikuchiyuki_jgoe.mp3 / 53:49', desc:'', credits:'Talk: <a class="credit-link" href="https://www.instagram.com/yuki_not_rinko/" target="_blank">菊池佑樹 (yuki_not_rinko)</a><br>Host: <a class="credit-link" href="https://www.instagram.com/la_viscuit/" target="_blank">@la_viscuit</a><br>Production: <a class="credit-link" href="https://www.instagram.com/___.mp5/" target="_blank">@___.mp5</a>' };
+
+// 新規追加：伊勢崎あさひ 画像とメタデータ
+const ISEZAKI_IMAGES = ['./kasuya/kasuya1.jpg','./kasuya/kasuya2.jpg','./kasuya/kasuya3.jpg','./kasuya/kasuya4.jpg','./kasuya/kasuya5.jpg'];
+const ISEZAKI_META   = { title:'伊勢崎あさひ.mp3', sub:'isezakiasahi.mp3', desc:'', credits:'Production: <a class="credit-link" href="https://www.instagram.com/___.mp5/" target="_blank">@___.mp5</a>' };
 
 const audio = new Audio();
 let playing=false, transcript=[], sections=[], currentFile=null;
 let lastEl=null, userScrolling=false, uScrollTimer=null;
 
-/* ── Photo swipe ── */
 let photoIndex=0, photos=[];
 
-// Noda section → photo index mapping (0-based)
 const KUROSAKI_FILM_IMAGES = [
   './kurosaki/kurosaki_film-01.webp','./kurosaki/kurosaki_film-02.webp','./kurosaki/kurosaki_film-03.webp',
   './kurosaki/kurosaki_film-04.webp','./kurosaki/kurosaki_film-05.webp','./kurosaki/kurosaki_film-06.webp',
@@ -360,12 +336,14 @@ const KUROSAKI_DIGITAL_IMAGES = [
   './kurosaki/kurosaki_digital4.webp','./kurosaki/kurosaki_digital5.webp','./kurosaki/kurosaki_digital6.webp',
   './kurosaki/kurosaki_digital7.webp','./kurosaki/kurosaki_digital8.webp','./kurosaki/kurosaki_digital9.webp'
 ];
-const NODA_SECTION_PHOTO    = [0, 1, 2, 3, 0, 1]; // sec 1-6 → photo index
-const KIKUCHI_SECTION_PHOTO = [0, 1, 0, 1, 0, 1, 0, 1]; // sec 1-8 → photo index (alternating)
+
+const NODA_SECTION_PHOTO    = [0, 1, 2, 3, 0, 1];
+const KIKUCHI_SECTION_PHOTO = [0, 1, 0, 1, 0, 1, 0, 1];
+// 新規追加：伊勢崎のセクションごとの写真インデックス
+const ISEZAKI_SECTION_PHOTO = [0, 1, 2, 3, 4, 0, 1, 2];
 
 function buildPhotos(images) {
-  photos = images;
-  photoIndex = 0;
+  photos = images; photoIndex = 0;
   const bg = document.getElementById('mp3-photo-bg');
   bg.innerHTML = images.map((src,i)=>
     `<div class="photo-slide" id="photo-slide-${i}" data-i="${i}">
@@ -388,20 +366,16 @@ function smoothScrollEl(el, to, dur) {
   requestAnimationFrame(step);
 }
 
-
-
-/* ── Go to transcribe page from player bar ── */
 function goToTranscribe() {
-  if (currentFile === 'noda' || currentFile === 'kikuchi') {
+  if (currentFile === 'noda' || currentFile === 'kikuchi' || currentFile === 'isezaki') {
     goTo('mp3');
-  } else if (currentFile === 'kurosaki') {
+  } else if (currentFile === 'kurosaki' || currentFile === 'kurosaki_digital') {
     goTo('kuro');
   }
 }
 
-/* ── NAV ── */
 function goTo(n) {
-  ['screen-0','screen-1','screen-2','processing-screen','mp3-main','kurosaki-main'].forEach(id=>{
+  ['screen-0','screen-1','screen-2','processing-screen','mp3-main','kurosaki-main','sankō-main','lwy-main'].forEach(id=>{
     const el=document.getElementById(id); if(el) el.style.display='none';
   });
   if(n===0)           document.getElementById('screen-0').style.display='flex';
@@ -410,23 +384,29 @@ function goTo(n) {
   else if(n==='proc') document.getElementById('processing-screen').style.display='flex';
   else if(n==='mp3')  document.getElementById('mp3-main').style.display='block';
   else if(n==='kuro') document.getElementById('kurosaki-main').style.display='flex';
+  else if(n==='sankō') document.getElementById('sankō-main').style.display='flex';
+  else if(n==='lwy') document.getElementById('lwy-main').style.display='flex';
+  
   document.getElementById('player-bar').style.display=(audio.src&&audio.src!=='')?'flex':'none';
-  // player bar color: white bg screens use black icons
+  
   const pb=document.getElementById('player-bar');
   const whiteScreens=['screen-2','processing-screen'];
   pb.classList.toggle('on-white', whiteScreens.includes(String(n)) || n===2 || n==='proc' || n===1 || n===0);
+  
   const left=document.getElementById('page-label-left'),right=document.getElementById('page-label-right');
+  
+  const titleMap = { 'noda': '野田結太.MP3', 'kikuchi': '菊地佑樹.MP3', 'isezaki': '伊勢崎あさひ.MP3' };
   const map={
-    0:['Voices / Experience','V129'],1:['Voices / Experience','V129'],
+    0:['Voices / Experience','V135'],1:['Voices / Experience','V135'],
     2:['Select File','Step 02'],proc:['Building Audio Map',''],
-    mp3:[currentFile==='noda'?'野田結太.MP3':'菊地佑樹.MP3','Transcribe'],
-    kuro:['野田結太.mp5','Gallery']
+    mp3:[titleMap[currentFile] || 'MP3','Transcribe'],
+    kuro:['野田結太.mp5','Gallery'],
+    'sankō':['参考.mp5','']
   };
-  const l=map[n]||['Voices / Experience','V129'];
+  const l=map[n]||['Voices / Experience','V135'];
   if(left)left.innerText=l[0]; if(right)right.innerText=l[1];
 }
 
-/* ── ENTRY ── */
 document.getElementById('entry-permission-btn').addEventListener('click',async()=>{
   if(typeof DeviceOrientationEvent!=='undefined'&&typeof DeviceOrientationEvent.requestPermission==='function'){
     try{const s=await DeviceOrientationEvent.requestPermission();if(s==='granted')window.addEventListener('deviceorientation',handleGyro,true);}catch(e){}
@@ -434,38 +414,32 @@ document.getElementById('entry-permission-btn').addEventListener('click',async()
   goTo(1);
 });
 
-/* ── GYRO ── */
 function handleGyro(e){
   const xAdj=e.gamma||0, yAdj=(e.beta||0)-34;
   const rawBeta=e.beta||45;
-
-  // Screen 1: logo 3D tilt
   const logo=document.getElementById('gyro-logo'), s1=document.getElementById('screen-1');
   if(s1&&s1.style.display!=='none'&&logo){
     const mx=Math.max(-60,Math.min(60,xAdj/1.1)), my=Math.max(-60,Math.min(60,yAdj/1.1));
     logo.style.transform=`translate3d(${mx}px,${my}px,0) rotateX(${-my*3.5}deg) rotateY(${mx*3.5}deg)`;
   }
-
-  // Lightbox: viewfinder pan + zoom
   const lb=document.getElementById('lightbox'), lbImg=document.getElementById('lightbox-img');
   if(lb&&lb.style.display==='flex'&&lbImg){
     const px=Math.max(-25,Math.min(25,xAdj*0.7)), py=Math.max(-20,Math.min(20,yAdj*-0.5));
     const zoomT=Math.max(0,Math.min(1,(rawBeta-20)/50));
     lbImg.style.transform=`translate(${px}px,${py}px) scale(${1.5-zoomT*0.5})`;
   }
-
-  // mp3 photo bg: no gyro — gyro only active in lightbox
-
-  // Kurosaki scroll images: no gyro — gyro only active in lightbox
 }
 
-/* ── START ── */
 function startExperience(file){
   currentFile=file; audio.pause(); audio.src=''; lastEl=null;
 
+  if(file==='sankō'){
+    goTo('sankō');
+    return;
+  }
+
   if(file==='kurosaki'||file==='kurosaki_digital'){
     const imgs = file==='kurosaki_digital' ? KUROSAKI_DIGITAL_IMAGES : KUROSAKI_FILM_IMAGES;
-    // Start audio immediately on tap (during loading screen)
     audio.src='./kurosaki.mp3'; audio.loop=false; audio.load();
     audio.volume=0.001;
     audio.play().then(()=>{
@@ -473,15 +447,13 @@ function startExperience(file){
       let t=0;
       const fadeStep=setInterval(()=>{
         t=Math.min(1, t+0.00462);
-        const vol=Math.pow(t, 5);
-        audio.volume=Math.max(0.001, vol);
+        audio.volume=Math.max(0.001, Math.pow(t, 5));
         if(t>=1){ audio.volume=1; clearInterval(fadeStep); }
       },60);
     }).catch(()=>{});
     goTo('proc');
     setTimeout(()=>{
       goTo('kuro');
-      // load gallery images for this entry
       document.getElementById('kurosaki-scroll').querySelectorAll('img.kuro-img').forEach(el=>el.remove());
       const scroll=document.getElementById('kurosaki-scroll');
       imgs.forEach(src=>{ const im=document.createElement('img'); im.src=src; im.className='kuro-img'; im.onclick=()=>openLightbox(src); im.loading='lazy'; scroll.appendChild(im); });
@@ -489,20 +461,27 @@ function startExperience(file){
     return;
   }
 
-  const isNoda=file==='noda';
-  transcript=isNoda?(typeof NODA_TRANSCRIPT!=='undefined'?NODA_TRANSCRIPT.slice():[]):(typeof KIKUCHI_TRANSCRIPT!=='undefined'?KIKUCHI_TRANSCRIPT.slice():[]);
-  sections=isNoda?(typeof NODA_SECTIONS!=='undefined'?NODA_SECTIONS.slice():[]):(typeof KIKUCHI_SECTIONS!=='undefined'?KIKUCHI_SECTIONS.slice():[]);
-  const meta=isNoda?NODA_META:KIKUCHI_META;
-  const images=isNoda?NODA_IMAGES:KIKUCHI_IMAGES;
-  audio.src=isNoda?'./nodayuta.mp3':'./kikuchiyuki_compressed.mp3';
+  let meta, images;
 
-  // build photo bg
+  if (file === 'noda') {
+    transcript = typeof NODA_TRANSCRIPT !== 'undefined' ? NODA_TRANSCRIPT.slice() : [];
+    sections = typeof NODA_SECTIONS !== 'undefined' ? NODA_SECTIONS.slice() : [];
+    meta = NODA_META; images = NODA_IMAGES; audio.src = './nodayuta.mp3';
+  } else if (file === 'kikuchi') {
+    transcript = typeof KIKUCHI_TRANSCRIPT !== 'undefined' ? KIKUCHI_TRANSCRIPT.slice() : [];
+    sections = typeof KIKUCHI_SECTIONS !== 'undefined' ? KIKUCHI_SECTIONS.slice() : [];
+    meta = KIKUCHI_META; images = KIKUCHI_IMAGES; audio.src = './kikuchiyuki_compressed.mp3';
+  } else if (file === 'isezaki') {
+    // 新規追加：伊勢崎ファイルのロード
+    transcript = typeof ISEZAKI_TRANSCRIPT !== 'undefined' ? ISEZAKI_TRANSCRIPT.slice() : [];
+    sections = typeof ISEZAKI_SECTIONS !== 'undefined' ? ISEZAKI_SECTIONS.slice() : [];
+    meta = ISEZAKI_META; images = ISEZAKI_IMAGES; audio.src = './isezakiasahi.mp3';
+  }
+
   buildPhotos(images);
 
-  // meta block
   document.getElementById('mp3-meta-block').innerHTML=meta.title?`<div class="project-meta-block"><div class="project-meta-title">${meta.title}</div><div class="project-meta-sub">${meta.sub}</div>${meta.desc?`<div class="project-meta-desc">${meta.desc}</div>`:''}<div class="project-meta-credits">${meta.credits}</div></div>`:'';
 
-  // transcript
   document.getElementById('mp3-transcript-container').innerHTML=transcript.map((t,i)=>
     `<div class="transcript-entry" id="te-${i}" onclick="jumpTo(${t.start})" style="cursor:pointer;">
       <div class="entry-meta">
@@ -513,7 +492,6 @@ function startExperience(file){
     </div>`
   ).join('');
 
-  // section nav
   document.getElementById('mp3-secnav').innerHTML=sections.map((s,i)=>
     `<button class="section-item" id="nsec-${i}" onclick="jumpTo(${s.start})">
       <span class="section-num">0${i+1}</span>${s.title}
@@ -528,7 +506,6 @@ function startExperience(file){
   },3000);
 }
 
-/* ── PLAYBACK ── */
 function jumpTo(sec){
   audio.currentTime=sec;
   audio.play().then(()=>{playing=true;updateIcons();});
@@ -547,9 +524,7 @@ audio.onplay=()=>{playing=true;updateIcons();};
 audio.onpause=()=>{playing=false;updateIcons();};
 audio.onended=()=>{ playing=false; updateIcons(); };
 
-/* ── TIME UPDATE ── */
 audio.ontimeupdate=()=>{
-  // Fade-out: last 13 seconds of kurosaki audio
   if((currentFile==='kurosaki'||currentFile==='kurosaki_digital') && audio.duration){
     const remaining = audio.duration - audio.currentTime;
     if(remaining <= 13 && remaining > 0){
@@ -580,8 +555,9 @@ audio.ontimeupdate=()=>{
     const el=document.getElementById(`nsec-${i}`);
     const isActive=cur>=s.start&&(sections[i+1]?cur<sections[i+1].start:true);
     if(el)el.classList.toggle('active',isActive);
-    // auto-switch photo based on section
-    const sectionPhotoMap = currentFile==='noda' ? NODA_SECTION_PHOTO : currentFile==='kikuchi' ? KIKUCHI_SECTION_PHOTO : null;
+    
+    // 写真の自動切り替え
+    const sectionPhotoMap = currentFile==='noda' ? NODA_SECTION_PHOTO : currentFile==='kikuchi' ? KIKUCHI_SECTION_PHOTO : currentFile==='isezaki' ? ISEZAKI_SECTION_PHOTO : null;
     if(isActive && sectionPhotoMap && sectionPhotoMap[i]!==undefined){
       const targetPhoto=sectionPhotoMap[i];
       if(targetPhoto!==photoIndex) showPhoto(targetPhoto);
@@ -600,9 +576,58 @@ document.getElementById('mp3-scroll').addEventListener('touchstart',()=>{
   uScrollTimer=setTimeout(()=>{userScrolling=false;},3000);
 },{passive:true});
 
-/* ── LIGHTBOX ── */
 function openLightbox(src){document.getElementById('lightbox-img').src=src;document.getElementById('lightbox').style.display='flex';}
 function closeLightbox(){document.getElementById('lightbox').style.display='none';document.getElementById('lightbox-img').style.transform='none';}
+
+/* ── LINK WITH YOU ── */
+const LWY_URL = 'https://script.google.com/macros/s/AKfycbxPt60Jqg8BlmvVZc4cNVLhyYm5vd0kGeLrJuwfOdPVg3sTMy-g4CbMUMGg2lH3L24/exec';
+
+function openLWY(){
+  goTo('lwy');
+  loadLinks();
+}
+
+function loadLinks(){
+  const list = document.getElementById('lwy-list');
+  list.innerHTML = '<div style="color:#ccc;font-size:12px;letter-spacing:0.1em;">loading...</div>';
+  fetch(LWY_URL)
+    .then(r=>r.json())
+    .then(links=>{
+      if(!links.length){ list.innerHTML='<div style="color:#ccc;font-size:12px;">no links yet</div>'; return; }
+      list.innerHTML = links.map((l,i)=>{
+        const d = l.timestamp ? new Date(l.timestamp).toLocaleDateString('ja-JP') : '';
+        const isYT = l.url && (l.url.includes('youtu') || l.url.includes('youtube'));
+        const ytId = isYT ? extractYTId(l.url) : null;
+        const embed = ytId ? `<iframe width="100%" height="160" src="https://www.youtube.com/embed/${ytId}?rel=0&modestbranding=1" allowfullscreen allow="autoplay" style="border:none;display:block;margin-top:10px;"></iframe>` : `<a href="${l.url}" target="_blank" style="font-size:12px;color:var(--accent);word-break:break-all;">${l.url}</a>`;
+        return `<div style="border-top:1px solid #e8e8e8;padding-top:20px;">
+          <div style="font-size:9px;color:#ccc;letter-spacing:0.1em;margin-bottom:6px;">${String(i+1).padStart(2,'0')} / ${d}</div>
+          ${embed}
+        </div>`;
+      }).join('');
+    })
+    .catch(()=>{ list.innerHTML='<div style="color:#ccc;font-size:12px;">could not load links</div>'; });
+}
+
+function extractYTId(url){
+  const m = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([a-zA-Z0-9_-]{11})/);
+  return m ? m[1] : null;
+}
+
+document.getElementById('link-submit-btn').addEventListener('click', ()=>{
+  const input = document.getElementById('link-input');
+  const status = document.getElementById('link-status');
+  const url = input.value.trim();
+  if(!url){ status.innerText='please enter a URL'; return; }
+  status.innerText='sharing...';
+  const params = new URLSearchParams({action:'post', url: url, note:''});
+  fetch(LWY_URL + '?' + params.toString())
+  .then(r=>r.json())
+  .then(d=>{ 
+    if(d.status==='ok'){ status.innerText='shared ✓'; input.value=''; setTimeout(()=>status.innerText='',3000); }
+    else { status.innerText='could not share — try again'; }
+  })
+  .catch(()=>{ status.innerText='could not share — try again'; });
+});
 
 goTo(0);
 </script>
